@@ -1,7 +1,8 @@
-import { useReducer, useCallback, useMemo } from 'react';
+import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS,
 } from '../data/gameData';
+import { saveGame } from '../api';
 
 // ---- INITIAL STATE ----
 function createInitialPlayer() {
@@ -68,9 +69,26 @@ function processLevelUps(player) {
   return { player: p, gains };
 }
 
+// Extract the saveable portion of state (no transient battle data)
+function extractSaveData(state) {
+  return {
+    player: state.player,
+    screen: (state.screen === 'battle' || state.screen === 'battle-result') ? 'town' : state.screen,
+  };
+}
+
 // ---- REDUCER ----
 function gameReducer(state, action) {
   switch (action.type) {
+    case 'LOAD_SAVE': {
+      const { player, screen } = action.saveData;
+      return {
+        ...INITIAL_STATE,
+        screen: screen || 'town',
+        player: { ...createInitialPlayer(), ...player },
+      };
+    }
+
     case 'START_GAME':
       return { ...state, screen: 'town', player: createInitialPlayer() };
 
@@ -368,11 +386,38 @@ function handleDefeat(state) {
 }
 
 // ---- HOOK ----
-export function useGameState() {
+export function useGameState(isLoggedIn) {
   const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
+  const saveTimerRef = useRef(null);
+  const lastSaveRef = useRef(null);
 
   const playerAtk = useMemo(() => getPlayerAtk(state.player, state.battle), [state.player, state.battle]);
   const playerDef = useMemo(() => getPlayerDef(state.player, state.battle), [state.player, state.battle]);
+
+  // Auto-save to server on every meaningful state change (debounced)
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (state.screen === 'menu') return;
+
+    const data = extractSaveData(state);
+    const serialized = JSON.stringify(data);
+
+    // Skip if nothing changed
+    if (serialized === lastSaveRef.current) return;
+    lastSaveRef.current = serialized;
+
+    // Debounce saves to avoid flooding the server
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      saveGame(data).catch(() => {
+        // Silent fail - game continues locally
+      });
+    }, 500);
+
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [state.player, state.screen, isLoggedIn]);
 
   const actions = useMemo(() => ({
     startGame: () => dispatch({ type: 'START_GAME' }),
@@ -394,6 +439,7 @@ export function useGameState() {
     sellItem: (item) => dispatch({ type: 'SELL_ITEM', item }),
     buyItem: (item) => dispatch({ type: 'BUY_ITEM', item }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
+    loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),
   }), []);
 
   return { state, actions, playerAtk, playerDef };
