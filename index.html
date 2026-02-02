@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Grind - Monster Hunter</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas" width="640" height="480"></canvas>
+
+    <div id="ui-overlay">
+      <!-- Top bar: Player stats -->
+      <div id="top-bar">
+        <div id="player-info">
+          <span id="player-name">Hero</span>
+          <span id="player-level">Lv. 1</span>
+        </div>
+        <div id="bars">
+          <div class="bar-container">
+            <div class="bar-label">HP</div>
+            <div class="bar hp-bar"><div class="bar-fill" id="hp-fill"></div></div>
+            <div class="bar-text" id="hp-text">100/100</div>
+          </div>
+          <div class="bar-container">
+            <div class="bar-label">EXP</div>
+            <div class="bar exp-bar"><div class="bar-fill" id="exp-fill"></div></div>
+            <div class="bar-text" id="exp-text">0/50</div>
+          </div>
+        </div>
+        <div id="gold-display">Gold: <span id="gold-amount">0</span></div>
+      </div>
+
+      <!-- Main menu screen -->
+      <div id="screen-menu" class="screen active">
+        <div class="screen-title">PIXEL GRIND</div>
+        <div class="screen-subtitle">Monster Hunter</div>
+        <button class="btn btn-primary" onclick="Game.startGame()">New Game</button>
+      </div>
+
+      <!-- Town screen -->
+      <div id="screen-town" class="screen">
+        <div class="town-actions">
+          <button class="btn" onclick="Game.openLocations()">Explore</button>
+          <button class="btn" onclick="Game.openInventory()">Inventory</button>
+          <button class="btn" onclick="Game.openShop()">Shop</button>
+          <button class="btn" onclick="Game.restAtInn()">Rest at Inn</button>
+        </div>
+      </div>
+
+      <!-- Location select screen -->
+      <div id="screen-locations" class="screen">
+        <div class="screen-header">Choose Location</div>
+        <div id="location-list"></div>
+        <button class="btn btn-back" onclick="Game.goToTown()">Back to Town</button>
+      </div>
+
+      <!-- Exploration screen -->
+      <div id="screen-explore" class="screen">
+        <div id="explore-location-name"></div>
+        <div id="explore-text"></div>
+        <div id="explore-actions">
+          <button class="btn" onclick="Game.exploreStep()">Continue</button>
+          <button class="btn btn-back" onclick="Game.goToTown()">Return to Town</button>
+        </div>
+      </div>
+
+      <!-- Battle screen -->
+      <div id="screen-battle" class="screen">
+        <div id="monster-info">
+          <span id="monster-name"></span>
+          <div class="bar-container">
+            <div class="bar-label">HP</div>
+            <div class="bar hp-bar"><div class="bar-fill" id="monster-hp-fill"></div></div>
+            <div class="bar-text" id="monster-hp-text"></div>
+          </div>
+        </div>
+        <div id="battle-log"></div>
+        <div id="battle-actions">
+          <button class="btn" onclick="Game.battleAction('attack')">Attack</button>
+          <button class="btn" onclick="Game.battleAction('defend')">Defend</button>
+          <button class="btn" onclick="Game.battleAction('skill')">Skill</button>
+          <button class="btn" onclick="Game.battleAction('potion')">Potion</button>
+          <button class="btn btn-back" onclick="Game.battleAction('run')">Run</button>
+        </div>
+      </div>
+
+      <!-- Battle result screen -->
+      <div id="screen-battle-result" class="screen">
+        <div id="result-title"></div>
+        <div id="result-rewards"></div>
+        <div id="result-levelup" class="hidden"></div>
+        <button class="btn btn-primary" id="result-continue-btn" onclick="Game.continueAfterBattle()">Continue</button>
+      </div>
+
+      <!-- Inventory screen -->
+      <div id="screen-inventory" class="screen">
+        <div class="screen-header">Inventory</div>
+        <div id="equipment-section">
+          <div class="section-title">Equipment</div>
+          <div id="equipment-slots"></div>
+        </div>
+        <div id="inventory-section">
+          <div class="section-title">Items</div>
+          <div id="inventory-list"></div>
+        </div>
+        <div id="player-stats-display"></div>
+        <button class="btn btn-back" onclick="Game.goToTown()">Back</button>
+      </div>
+
+      <!-- Shop screen -->
+      <div id="screen-shop" class="screen">
+        <div class="screen-header">Shop</div>
+        <div id="shop-list"></div>
+        <button class="btn btn-back" onclick="Game.goToTown()">Back</button>
+      </div>
+
+      <!-- Message overlay -->
+      <div id="message-overlay" class="hidden">
+        <div id="message-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sprites.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+</body>
+</html>
