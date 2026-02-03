@@ -171,9 +171,13 @@ export const BACKGROUNDS = {
   town:       { sky: '#04050b', ground: '#151515', accent: '#2a2a2a' },
   street:     { sky: '#05060f', ground: '#181818', accent: '#313131' },
   alley:      { sky: '#040408', ground: '#111111', accent: '#242424' },
+  sewer:      { sky: '#030608', ground: '#0c1210', accent: '#1a2a1f' },
   station:    { sky: '#06070f', ground: '#10141b', accent: '#1f2a35' },
   rooftop:    { sky: '#070912', ground: '#0f0f13', accent: '#2c2f3e' },
+  crypt:      { sky: '#060505', ground: '#120e0e', accent: '#2a1f1f' },
   industrial: { sky: '#080707', ground: '#151313', accent: '#2b251f' },
+  bazaar:     { sky: '#080610', ground: '#12101a', accent: '#2e2545' },
+  reactor:    { sky: '#0a0605', ground: '#1a100a', accent: '#3a2010' },
 };
 
 export function drawSprite(ctx, spriteData, x, y, scale = 3) {
@@ -321,6 +325,97 @@ function drawLocationDetails(ctx, key, w, h) {
       ctx.fillRect(w * 0.8, h * 0.7 - 60, 18, 60);
       ctx.fillStyle = '#222';
       ctx.fillRect(0, h * 0.78, w, 3);
+      break;
+    }
+    case 'sewer': {
+      // Curved pipe walls
+      ctx.fillStyle = '#1a2a1f';
+      ctx.fillRect(0, h * 0.55, w, 8);
+      ctx.fillRect(0, h * 0.72, w, 6);
+      // Dripping stalactites
+      ctx.fillStyle = '#2a3a2f';
+      for (let i = 0; i < 10; i++) {
+        const x = (i * 67 + 15) % w;
+        const stalH = 12 + (i * 9) % 18;
+        ctx.fillRect(x, h * 0.55 + 8, 4, stalH);
+      }
+      // Glowing puddles
+      ctx.fillStyle = '#1a4a3a';
+      for (let i = 0; i < 6; i++) {
+        const px = (i * 103 + 40) % w;
+        ctx.fillRect(px, h * 0.78, 30 + (i * 7) % 20, 4);
+      }
+      break;
+    }
+    case 'crypt': {
+      // Pillars
+      ctx.fillStyle = '#2a1f1f';
+      for (let i = 0; i < 5; i++) {
+        const x = i * 110 + 50;
+        ctx.fillRect(x, h * 0.5, 16, h * 0.2);
+        ctx.fillStyle = '#3a2a2a';
+        ctx.fillRect(x - 4, h * 0.5, 24, 6);
+        ctx.fillRect(x - 4, h * 0.7 - 6, 24, 6);
+        ctx.fillStyle = '#2a1f1f';
+      }
+      // Red emergency strips
+      ctx.fillStyle = '#4a1515';
+      ctx.fillRect(0, h * 0.74, w, 3);
+      // Scattered debris
+      ctx.fillStyle = '#1a1515';
+      for (let i = 0; i < 12; i++) {
+        const bx = (i * 53 + 20) % w;
+        ctx.fillRect(bx, h * 0.78 + (i % 3), 6 + (i % 4), 2);
+      }
+      break;
+    }
+    case 'bazaar': {
+      // Holographic stall frames
+      ctx.fillStyle = '#2e2545';
+      for (let i = 0; i < 5; i++) {
+        const x = i * 110 + 20;
+        const stallH = 50 + (i * 11) % 20;
+        ctx.fillRect(x, h * 0.7 - stallH, 60, stallH);
+        // Glitch lines
+        ctx.fillStyle = '#6a4aaa';
+        for (let j = 0; j < 3; j++) {
+          const ly = h * 0.7 - stallH + 10 + j * 14;
+          ctx.fillRect(x + 5, ly, 50, 2);
+        }
+        ctx.fillStyle = '#2e2545';
+      }
+      // Digital rain particles
+      ctx.fillStyle = '#5a3a9a';
+      for (let i = 0; i < 15; i++) {
+        const rx = (i * 43 + 7) % w;
+        const ry = (i * 31 + 5) % (h * 0.5);
+        ctx.fillRect(rx, ry, 2, 6);
+      }
+      break;
+    }
+    case 'reactor': {
+      // Cooling towers / coils
+      ctx.fillStyle = '#3a2010';
+      for (let i = 0; i < 3; i++) {
+        const x = i * 180 + 60;
+        const towerH = 80 + i * 15;
+        ctx.fillRect(x, h * 0.7 - towerH, 40, towerH);
+        // Glow strips
+        ctx.fillStyle = '#ff6020';
+        ctx.fillRect(x + 10, h * 0.7 - towerH + 15, 20, 3);
+        ctx.fillRect(x + 10, h * 0.7 - towerH + 35, 20, 3);
+        ctx.fillStyle = '#3a2010';
+      }
+      // Radiation glow on ground
+      ctx.fillStyle = '#4a2a0a';
+      ctx.fillRect(0, h * 0.76, w, 4);
+      // Heat shimmer dots
+      ctx.fillStyle = '#ff8040';
+      for (let i = 0; i < 8; i++) {
+        const sx = (i * 79 + 30) % w;
+        const sy = h * 0.68 + (i * 11) % 10;
+        ctx.fillRect(sx, sy, 3, 3);
+      }
       break;
     }
   }

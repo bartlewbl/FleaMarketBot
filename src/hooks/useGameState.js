@@ -2,6 +2,7 @@ import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS, generateItem,
 } from '../data/gameData';
+import { RANDOM_CONFIG } from '../data/randomConfig';
 import { saveGame } from '../api';
 
 export const ENERGY_MAX = 100;
@@ -61,17 +62,29 @@ function getPlayerDef(player, battle) {
   return Math.max(0, def - (battle?.defDebuff || 0));
 }
 
+// Resolve a location's encounter/loot/gold rates from the config, falling back to defaults.
+function getLocationConfig(locationId) {
+  const la = RANDOM_CONFIG.locationActions;
+  const overrides = la.overrides[locationId] || {};
+  return {
+    encounterRate: overrides.encounterRate ?? la.defaults.encounterRate,
+    lootRate: overrides.lootRate ?? la.defaults.lootRate,
+    goldFindChance: overrides.goldFindChance ?? la.defaults.goldFindChance,
+  };
+}
+
 function processLevelUps(player) {
   const p = { ...player };
   const gains = [];
+  const cfg = RANDOM_CONFIG.levelUp;
   while (p.exp >= p.expToLevel) {
     p.exp -= p.expToLevel;
     p.level++;
     p.expToLevel = expForLevel(p.level);
-    const hpGain = 8 + Math.floor(Math.random() * 5);
-    const atkGain = 1 + Math.floor(Math.random() * 2);
-    const defGain = 1 + Math.floor(Math.random() * 2);
-    const manaGain = 4 + Math.floor(Math.random() * 3);
+    const hpGain = cfg.hpGainBase + Math.floor(Math.random() * cfg.hpGainVariance);
+    const atkGain = cfg.atkGainBase + Math.floor(Math.random() * cfg.atkGainVariance);
+    const defGain = cfg.defGainBase + Math.floor(Math.random() * cfg.defGainVariance);
+    const manaGain = cfg.manaGainBase + Math.floor(Math.random() * cfg.manaGainVariance);
     p.maxHp += hpGain;
     p.hp = p.maxHp;
     p.maxMana += manaGain;
@@ -166,10 +179,11 @@ function gameReducer(state, action) {
     case 'EXPLORE_STEP': {
       const loc = state.currentLocation;
       if (!loc) return state;
+      const locCfg = getLocationConfig(loc.id);
       const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.street;
       const text = texts[Math.floor(Math.random() * texts.length)];
 
-      if (Math.random() < loc.encounterRate) {
+      if (Math.random() < locCfg.encounterRate) {
         const monsterId = loc.monsters[Math.floor(Math.random() * loc.monsters.length)];
         const monster = scaleMonster(monsterId, loc.levelReq);
         return {
@@ -185,22 +199,34 @@ function gameReducer(state, action) {
       }
 
       // No encounter - chance to find loot, gold, or nothing
-      const lootChance = loc.lootRate ?? 0.3;
       let newText = text;
       let newPlayer = state.player;
-      const lootTable = ['potion', 'ring', 'boots', 'helmet', 'armor', 'sword', 'shield'];
+      // Use location-specific loot table if available, else generic
+      const locLootTable = loc.lootTable && loc.lootTable.length > 0
+        ? loc.lootTable
+        : [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 10 }, { type: 'boots', weight: 10 },
+           { type: 'helmet', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'sword', weight: 10 },
+           { type: 'shield', weight: 10 }];
 
-      if (Math.random() < lootChance) {
+      if (Math.random() < locCfg.lootRate) {
         if (state.player.inventory.length < state.player.maxInventory) {
-          const dropType = lootTable[Math.floor(Math.random() * lootTable.length)];
+          // Weighted pick from location loot table
+          const totalW = locLootTable.reduce((s, e) => s + e.weight, 0);
+          let roll = Math.random() * totalW;
+          let dropType = locLootTable[locLootTable.length - 1].type;
+          for (const entry of locLootTable) {
+            roll -= entry.weight;
+            if (roll <= 0) { dropType = entry.type; break; }
+          }
           const foundItem = generateItem(dropType, Math.max(loc.levelReq, state.player.level));
           newPlayer = { ...state.player, inventory: [...state.player.inventory, foundItem] };
           newText = text + `\n\nYou scavenge ${foundItem.name} from a busted crate.`;
         } else {
           newText = text + '\n\nYou find loot but your pack is full.';
         }
-      } else if (Math.random() < 0.3) {
-        const found = Math.floor(3 + Math.random() * Math.max(2, state.player.level * 2));
+      } else if (Math.random() < locCfg.goldFindChance) {
+        const gCfg = RANDOM_CONFIG.goldFind;
+        const found = Math.floor(gCfg.baseGoldFind + Math.random() * Math.max(gCfg.minGoldVariance, state.player.level * gCfg.goldPerLevel));
         newPlayer = { ...state.player, gold: state.player.gold + found };
         newText = text + `\n\nYou find ${found} gold tucked under debris.`;
       } else {
@@ -227,7 +253,7 @@ function gameReducer(state, action) {
     case 'BATTLE_PLAYER_SKILL': {
       const b = { ...state.battle };
       const m = { ...b.monster };
-      const dmg = calcDamage(Math.floor(getPlayerAtk(state.player, b) * 1.5), m.def);
+      const dmg = calcDamage(Math.floor(getPlayerAtk(state.player, b) * RANDOM_CONFIG.battle.playerSkillMultiplier), m.def);
       m.hp = Math.max(0, m.hp - dmg);
       b.monster = m;
       b.defending = false;
@@ -259,7 +285,7 @@ function gameReducer(state, action) {
     }
 
     case 'BATTLE_RUN': {
-      if (Math.random() < 0.5) {
+      if (Math.random() < RANDOM_CONFIG.battle.runChance) {
         return {
           ...state, screen: 'explore', battle: null, battleLog: [],
           exploreText: 'You escaped the battle...',
@@ -275,42 +301,44 @@ function gameReducer(state, action) {
       const m = b.monster;
       let log = [...state.battleLog];
       let p = { ...state.player };
+      const bCfg = RANDOM_CONFIG.battle;
+      const sCfg = RANDOM_CONFIG.skillEffects;
 
-      const useSkill = m.skills.length > 0 && Math.random() < 0.3;
+      const useSkill = m.skills.length > 0 && Math.random() < bCfg.monsterSkillChance;
       const skillId = useSkill ? m.skills[Math.floor(Math.random() * m.skills.length)] : null;
       const skill = skillId ? SKILLS[skillId] : null;
 
       if (skill) {
         const rawAtk = Math.floor(m.atk * skill.multiplier);
         let dmg = calcDamage(rawAtk, getPlayerDef(p, b));
-        if (b.defending) dmg = Math.floor(dmg * 0.5);
+        if (b.defending) dmg = Math.floor(dmg * bCfg.defendMultiplier);
         p.hp = Math.max(0, p.hp - dmg);
         log.push({ text: `${m.name} uses ${skill.name} for ${dmg} damage!`, type: 'dmg-player' });
 
         if (skill.effect === 'poison') {
-          b.poisonTurns = 3;
+          b.poisonTurns = sCfg.poisonTurns;
           log.push({ text: 'You are poisoned!', type: 'dmg-player' });
         } else if (skill.effect === 'lower_def') {
-          b.defDebuff = (b.defDebuff || 0) + 2;
+          b.defDebuff = (b.defDebuff || 0) + sCfg.defDebuffAmount;
           log.push({ text: 'Your defense dropped!', type: 'dmg-player' });
         } else if (skill.effect === 'lower_atk') {
-          b.atkDebuff = (b.atkDebuff || 0) + 2;
+          b.atkDebuff = (b.atkDebuff || 0) + sCfg.atkDebuffAmount;
           log.push({ text: 'Your attack dropped!', type: 'dmg-player' });
         } else if (skill.effect === 'steal_gold') {
-          const stolen = Math.floor(Math.random() * 10 + 1);
+          const stolen = Math.floor(Math.random() * sCfg.stealGoldMax + sCfg.stealGoldMin);
           p.gold = Math.max(0, p.gold - stolen);
           log.push({ text: `Stole ${stolen} gold!`, type: 'dmg-player' });
         }
       } else {
         let dmg = calcDamage(m.atk, getPlayerDef(p, b));
-        if (b.defending) dmg = Math.floor(dmg * 0.5);
+        if (b.defending) dmg = Math.floor(dmg * bCfg.defendMultiplier);
         p.hp = Math.max(0, p.hp - dmg);
         log.push({ text: `${m.name} attacks for ${dmg} damage!`, type: 'dmg-player' });
       }
 
       // Poison tick
       if (b.poisonTurns > 0) {
-        const poisonDmg = Math.floor(p.maxHp * 0.05);
+        const poisonDmg = Math.floor(p.maxHp * sCfg.poisonDamagePercent);
         p.hp = Math.max(0, p.hp - poisonDmg);
         b.poisonTurns--;
         log.push({ text: `Poison deals ${poisonDmg} damage!`, type: 'dmg-player' });
@@ -480,12 +508,13 @@ function handleVictory(state) {
 }
 
 function handleDefeat(state) {
-  const goldLost = Math.floor(state.player.gold * 0.2);
+  const dCfg = RANDOM_CONFIG.defeat;
+  const goldLost = Math.floor(state.player.gold * dCfg.goldLostPercent);
   const p = {
     ...state.player,
     gold: state.player.gold - goldLost,
-    hp: Math.floor(state.player.maxHp * 0.3),
-    mana: Math.floor(state.player.maxMana * 0.5),
+    hp: Math.floor(state.player.maxHp * dCfg.hpRecoveryPercent),
+    mana: Math.floor(state.player.maxMana * dCfg.manaRecoveryPercent),
   };
 
   return {

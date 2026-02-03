@@ -1,4 +1,5 @@
 // All game data: locations, monsters, items, skills
+import { RANDOM_CONFIG } from './randomConfig';
 
 let _uid = 0;
 function uid() {
@@ -16,42 +17,85 @@ function pickWeighted(items) {
 }
 
 // ---- LOCATIONS ----
+// Each location has a lootTable that weights what gear types are found
+// while scavenging (outside of monster drops). This keeps loot thematic.
 export const LOCATIONS = [
   {
     id: 'neon-mile', name: 'Neon Mile',
     description: 'Flickering billboards and cracked asphalt full of gutter pests.',
-    levelReq: 1, monsters: ['rat', 'slime'],
-    encounterRate: 0.5, lootRate: 0.2, bgKey: 'street',
+    levelReq: 1, monsters: ['rat', 'slime', 'bat'],
+    bgKey: 'street',
+    lootTable: [{ type: 'potion', weight: 40 }, { type: 'boots', weight: 15 }, { type: 'ring', weight: 10 }],
   },
   {
     id: 'shadow-alley', name: 'Shadow Alley',
     description: 'Tight passages where feral vagrants lurk between dumpsters.',
-    levelReq: 3, monsters: ['rat', 'vagrant', 'slime'],
-    encounterRate: 0.55, lootRate: 0.2, bgKey: 'alley',
+    levelReq: 3, monsters: ['rat', 'vagrant', 'goblin'],
+    bgKey: 'alley',
+    lootTable: [{ type: 'potion', weight: 30 }, { type: 'sword', weight: 15 }, { type: 'boots', weight: 12 }, { type: 'helmet', weight: 10 }],
+  },
+  {
+    id: 'fungal-drain', name: 'Fungal Drain',
+    description: 'Damp sewer tunnels choked with bioluminescent spore colonies.',
+    levelReq: 4, monsters: ['mushroom', 'slime', 'snake'],
+    bgKey: 'sewer',
+    lootTable: [{ type: 'potion', weight: 45 }, { type: 'ring', weight: 15 }, { type: 'helmet', weight: 10 }],
   },
   {
     id: 'metro-underpass', name: 'Metro Underpass',
     description: 'Abandoned train tunnels dripping with mutant slime.',
-    levelReq: 6, monsters: ['slime', 'alpha-rat', 'rogue-vagrant'],
-    encounterRate: 0.6, lootRate: 0.25, bgKey: 'station',
+    levelReq: 6, monsters: ['slime', 'alpha-rat', 'ghost'],
+    bgKey: 'station',
+    lootTable: [{ type: 'potion', weight: 25 }, { type: 'armor', weight: 15 }, { type: 'shield', weight: 12 }, { type: 'ring', weight: 10 }],
+  },
+  {
+    id: 'wolf-district', name: 'Wolf District',
+    description: 'Fenced-off blocks where packs of augmented wolves roam free.',
+    levelReq: 8, monsters: ['wolf', 'alpha-rat', 'snake'],
+    bgKey: 'alley',
+    lootTable: [{ type: 'boots', weight: 18 }, { type: 'helmet', weight: 14 }, { type: 'potion', weight: 25 }, { type: 'sword', weight: 10 }],
   },
   {
     id: 'skyline-rooftops', name: 'Skyline Rooftops',
     description: 'Windy roofs patrolled by organized scavenger crews.',
-    levelReq: 10, monsters: ['vagrant', 'rogue-vagrant', 'alpha-rat'],
-    encounterRate: 0.65, lootRate: 0.3, bgKey: 'rooftop',
+    levelReq: 10, monsters: ['vagrant', 'rogue-vagrant', 'bat'],
+    bgKey: 'rooftop',
+    lootTable: [{ type: 'sword', weight: 15 }, { type: 'ring', weight: 14 }, { type: 'potion', weight: 20 }, { type: 'helmet', weight: 12 }],
+  },
+  {
+    id: 'bone-crypt', name: 'Bone Crypt',
+    description: 'Sealed sub-basement filled with reanimated security frames.',
+    levelReq: 12, monsters: ['skeleton', 'ghost', 'bat'],
+    bgKey: 'crypt',
+    lootTable: [{ type: 'shield', weight: 16 }, { type: 'helmet', weight: 14 }, { type: 'sword', weight: 12 }, { type: 'potion', weight: 20 }],
   },
   {
     id: 'ironworks-yard', name: 'Ironworks Yard',
-    description: 'Industrial lots buzzing with toxic runoff and slime.',
-    levelReq: 14, monsters: ['toxic-slime', 'rogue-vagrant', 'alpha-rat'],
-    encounterRate: 0.7, lootRate: 0.35, bgKey: 'industrial',
+    description: 'Industrial lots buzzing with toxic runoff and molten slag.',
+    levelReq: 14, monsters: ['toxic-slime', 'golem', 'goblin'],
+    bgKey: 'industrial',
+    lootTable: [{ type: 'armor', weight: 18 }, { type: 'shield', weight: 14 }, { type: 'potion', weight: 20 }, { type: 'boots', weight: 10 }],
   },
   {
     id: 'midnight-terminal', name: 'Midnight Terminal',
     description: 'Final stop where bold-face enforcers push back the grime.',
-    levelReq: 18, monsters: ['rogue-vagrant', 'toxic-slime'],
-    encounterRate: 0.72, lootRate: 0.4, bgKey: 'station',
+    levelReq: 17, monsters: ['rogue-vagrant', 'skeleton', 'toxic-slime'],
+    bgKey: 'station',
+    lootTable: [{ type: 'sword', weight: 14 }, { type: 'armor', weight: 14 }, { type: 'shield', weight: 12 }, { type: 'potion', weight: 18 }],
+  },
+  {
+    id: 'holo-bazaar', name: 'Holo Bazaar',
+    description: 'A glitching market dimension where data wraiths guard corrupted wares.',
+    levelReq: 20, monsters: ['ghost', 'golem', 'rogue-vagrant'],
+    bgKey: 'bazaar',
+    lootTable: [{ type: 'ring', weight: 18 }, { type: 'sword', weight: 14 }, { type: 'armor', weight: 12 }, { type: 'potion', weight: 16 }],
+  },
+  {
+    id: 'reactor-spire', name: 'Reactor Spire',
+    description: 'The irradiated tower core where mech dragons nest among fusion coils.',
+    levelReq: 23, monsters: ['dragon', 'golem', 'ghost'],
+    bgKey: 'reactor',
+    lootTable: [{ type: 'sword', weight: 16 }, { type: 'armor', weight: 16 }, { type: 'shield', weight: 14 }, { type: 'ring', weight: 12 }, { type: 'potion', weight: 12 }],
   },
 ];
 
@@ -87,6 +131,51 @@ const MONSTERS = {
     baseExp: 48, baseGold: 28, skills: ['slash', 'steal'],
     dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }],
   },
+  wolf: {
+    name: 'Circuit Wolf', sprite: 'wolf', baseHp: 34, baseAtk: 11, baseDef: 3,
+    baseExp: 22, baseGold: 12, skills: ['bite'],
+    dropTable: [{ type: 'boots', weight: 14 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 25 }],
+  },
+  bat: {
+    name: 'Voltage Bat', sprite: 'bat', baseHp: 18, baseAtk: 8, baseDef: 1,
+    baseExp: 10, baseGold: 5, skills: ['screech'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 40 }],
+  },
+  skeleton: {
+    name: 'Rust Skeleton', sprite: 'skeleton', baseHp: 48, baseAtk: 14, baseDef: 6,
+    baseExp: 36, baseGold: 22, skills: ['slash', 'curse'],
+    dropTable: [{ type: 'sword', weight: 14 }, { type: 'shield', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  goblin: {
+    name: 'Scrap Goblin', sprite: 'goblin', baseHp: 30, baseAtk: 9, baseDef: 4,
+    baseExp: 18, baseGold: 20, skills: ['steal'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'boots', weight: 10 }, { type: 'potion', weight: 30 }],
+  },
+  golem: {
+    name: 'Iron Golem', sprite: 'golem', baseHp: 80, baseAtk: 16, baseDef: 12,
+    baseExp: 55, baseGold: 35, skills: ['slam'],
+    dropTable: [{ type: 'armor', weight: 16 }, { type: 'shield', weight: 14 }, { type: 'helmet', weight: 10 }, { type: 'potion', weight: 15 }],
+  },
+  snake: {
+    name: 'Neon Viper', sprite: 'snake', baseHp: 26, baseAtk: 10, baseDef: 2,
+    baseExp: 14, baseGold: 9, skills: ['poison', 'bite'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 35 }],
+  },
+  dragon: {
+    name: 'Mech Dragon', sprite: 'dragon', baseHp: 120, baseAtk: 24, baseDef: 14,
+    baseExp: 80, baseGold: 55, skills: ['firebreath', 'slam'],
+    dropTable: [{ type: 'sword', weight: 14 }, { type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 15 }],
+  },
+  ghost: {
+    name: 'Data Wraith', sprite: 'ghost', baseHp: 42, baseAtk: 13, baseDef: 3,
+    baseExp: 32, baseGold: 18, skills: ['curse', 'poison'],
+    dropTable: [{ type: 'ring', weight: 15 }, { type: 'helmet', weight: 10 }, { type: 'potion', weight: 30 }],
+  },
+  mushroom: {
+    name: 'Spore Cluster', sprite: 'mushroom', baseHp: 35, baseAtk: 7, baseDef: 5,
+    baseExp: 20, baseGold: 14, skills: ['poison'],
+    dropTable: [{ type: 'potion', weight: 40 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }],
+  },
 };
 
 // ---- SKILLS ----
@@ -102,12 +191,13 @@ export const SKILLS = {
 };
 
 // ---- RARITIES ----
+const _rw = RANDOM_CONFIG.loot.rarityWeights;
 const RARITIES = [
-  { name: 'Common',    cssClass: 'rarity-common',    color: '#ccc',    multiplier: 1.0, weight: 60 },
-  { name: 'Uncommon',  cssClass: 'rarity-uncommon',  color: '#4fc3f7', multiplier: 1.3, weight: 25 },
-  { name: 'Rare',      cssClass: 'rarity-rare',      color: '#ab47bc', multiplier: 1.7, weight: 10 },
-  { name: 'Epic',      cssClass: 'rarity-epic',      color: '#ffa726', multiplier: 2.2, weight: 4 },
-  { name: 'Legendary', cssClass: 'rarity-legendary', color: '#ffd700', multiplier: 3.0, weight: 1 },
+  { name: 'Common',    cssClass: 'rarity-common',    color: '#ccc',    multiplier: 1.0, weight: _rw.Common },
+  { name: 'Uncommon',  cssClass: 'rarity-uncommon',  color: '#4fc3f7', multiplier: 1.3, weight: _rw.Uncommon },
+  { name: 'Rare',      cssClass: 'rarity-rare',      color: '#ab47bc', multiplier: 1.7, weight: _rw.Rare },
+  { name: 'Epic',      cssClass: 'rarity-epic',      color: '#ffa726', multiplier: 2.2, weight: _rw.Epic },
+  { name: 'Legendary', cssClass: 'rarity-legendary', color: '#ffd700', multiplier: 3.0, weight: _rw.Legendary },
 ];
 
 const RARITY_LOOKUP = RARITIES.reduce((acc, rarity) => {
@@ -270,7 +360,8 @@ export function expForLevel(level) {
 export function scaleMonster(monsterId, areaLevel) {
   const base = MONSTERS[monsterId];
   if (!base) return null;
-  const scale = 1 + (areaLevel - 1) * 0.2;
+  const cfg = RANDOM_CONFIG.monsterScaling;
+  const scale = 1 + (areaLevel - 1) * cfg.scaleFactor;
   return {
     id: monsterId,
     name: base.name,
@@ -280,7 +371,7 @@ export function scaleMonster(monsterId, areaLevel) {
     atk: Math.floor(base.baseAtk * scale),
     def: Math.floor(base.baseDef * scale),
     exp: Math.floor(base.baseExp * scale),
-    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 5),
+    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * cfg.goldSpawnVariance),
     skills: base.skills,
     dropTable: base.dropTable,
     level: areaLevel,
@@ -401,13 +492,15 @@ export function getShopItems(playerLevel) {
 
 export function rollDrop(dropTable, monsterLevel) {
   if (!dropTable || dropTable.length === 0) return null;
+  if (Math.random() > RANDOM_CONFIG.loot.monsterDropChance) return null;
   const drop = pickWeighted(dropTable);
   return generateItem(drop.type, monsterLevel);
 }
 
 export function calcDamage(atk, def) {
+  const cfg = RANDOM_CONFIG.battle;
   const base = Math.max(1, atk - def * 0.5);
-  const variance = 0.85 + Math.random() * 0.3;
+  const variance = cfg.damageVarianceLow + Math.random() * cfg.damageVarianceRange;
   return Math.max(1, Math.floor(base * variance));
 }
 
@@ -426,6 +519,13 @@ export const EXPLORE_TEXTS = {
     'Echoes bounce between walls, masking careful footsteps...',
     'A chain-link gate creaks somewhere deeper in the maze...',
   ],
+  sewer: [
+    'Bioluminescent mold coats the curved walls in sickly blue...',
+    'You wade through ankle-deep runoff that reeks of copper...',
+    'Mushroom caps the size of dinner plates sprout from cracks...',
+    'Spores drift lazily in the stale underground air...',
+    'A distant drip echoes through the pipe network like a heartbeat...',
+  ],
   station: [
     'The underpass lights flicker, revealing streaks of neon slime...',
     'Broken railcars loom like beasts in the dim glow...',
@@ -440,11 +540,32 @@ export const EXPLORE_TEXTS = {
     'Warning strobes pulse red, painting the skyline...',
     'You duck behind a billboard as drones buzz overhead...',
   ],
+  crypt: [
+    'Corroded security drones line the walls like standing coffins...',
+    'Your boots crunch on old circuit boards littering the floor...',
+    'Flickering emergency strips paint everything in dim red...',
+    'A cold draft carries the smell of ozone and rust...',
+    'Bone-white support beams arch overhead like ribs of a beast...',
+  ],
   industrial: [
     'Conveyor belts sit silent beneath layers of grime...',
     'You squeeze between shipping containers stained with chemicals...',
     'Loose chains rattle as steam hisses from cracked pipes...',
     'Old forklifts rest like sleeping beasts in the dark...',
     'Puddles of toxic runoff glow faint green under the moon...',
+  ],
+  bazaar: [
+    'Holographic stall signs flicker and glitch mid-sentence...',
+    'Phantom merchants hawk wares that phase in and out of reality...',
+    'Data streams cascade down invisible walls like digital rain...',
+    'The floor shifts between tile and pure static under your feet...',
+    'Corrupted price tags display impossible numbers...',
+  ],
+  reactor: [
+    'Radiation warnings blare from speakers caked in rust...',
+    'The air itself hums with raw electromagnetic energy...',
+    'Fusion coils tower overhead, still pulsing with faint light...',
+    'Heat waves distort your vision as you pass venting shafts...',
+    'Scorch marks trace the path of something massive on the walls...',
   ],
 };
