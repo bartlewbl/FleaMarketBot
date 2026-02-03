@@ -15,12 +15,9 @@ html, body, #root {
 }
 
 body {
-  background: #1a1a2e;
+  background: #0a0a1a;
   font-family: 'Press Start 2P', monospace;
   color: #e0e0e0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* ---- GAME CONTAINER ---- */
@@ -28,19 +25,8 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  max-width: 800px;
-  max-height: 100vh;
   overflow: hidden;
   background: #0a0a1a;
-}
-
-@media (min-width: 801px) {
-  .game-container {
-    border: 4px solid #444;
-    box-shadow: 0 0 40px rgba(100, 100, 255, 0.15);
-    height: 90vh;
-    max-height: 700px;
-  }
 }
 
 /* ---- CANVAS ---- */
@@ -253,23 +239,72 @@ body {
   cursor: not-allowed;
 }
 
-/* ---- MENU SCREEN ---- */
-.screen-menu {
-  padding-top: 0;
+
+/* ---- AUTH SCREEN ---- */
+.auth-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
 }
 
-.menu-title {
+.auth-subtitle {
+  font-size: 12px;
+  color: #ffd700;
+  margin-bottom: 8px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.auth-input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #555;
+  color: #fff;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-input:focus {
+  border-color: #ffd700;
+}
+
+.auth-error {
+  color: #ff6b6b;
+  font-size: 8px;
+  text-align: center;
+}
+
+/* ---- LOADING SCREEN ---- */
+.screen-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.loading-title {
   font-size: 24px;
   color: #ffd700;
   text-shadow: 3px 3px 0 #b8860b, -1px -1px 0 #000;
-  margin-bottom: 8px;
   letter-spacing: 4px;
 }
 
-.menu-subtitle {
+.loading-text {
   font-size: 10px;
   color: #aaa;
-  margin-bottom: 40px;
 }
 
 /* ---- TOWN SCREEN ---- */
@@ -283,7 +318,7 @@ body {
   flex-direction: column;
   gap: 6px;
   width: 100%;
-  max-width: 280px;
+  max-width: 360px;
 }
 
 .town-actions .btn {
@@ -302,7 +337,7 @@ body {
   flex-direction: column;
   gap: 6px;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   overflow-y: auto;
   flex: 1;
   padding: 4px 0;
@@ -483,7 +518,7 @@ body {
 
 .inv-content {
   width: 100%;
-  max-width: 540px;
+  max-width: 640px;
   overflow-y: auto;
   flex: 1;
   -webkit-overflow-scrolling: touch;
@@ -589,7 +624,7 @@ body {
   flex-direction: column;
   gap: 6px;
   width: 100%;
-  max-width: 450px;
+  max-width: 600px;
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -653,8 +688,6 @@ body {
 
 /* Small phones */
 @media (max-width: 400px) {
-  .menu-title { font-size: 18px; letter-spacing: 2px; }
-  .menu-subtitle { font-size: 8px; margin-bottom: 24px; }
   .btn { font-size: 9px; padding: 10px 16px; }
   .btn-large { font-size: 10px; padding: 14px 24px; }
   .btn-sm { font-size: 6px; padding: 5px 8px; }
@@ -669,7 +702,6 @@ body {
 
 /* Medium phones */
 @media (min-width: 401px) and (max-width: 600px) {
-  .menu-title { font-size: 22px; }
   .equipment-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -692,7 +724,7 @@ body {
 /* Tablets and desktops */
 @media (min-width: 601px) and (min-height: 501px) {
   .equipment-grid { grid-template-columns: repeat(3, 1fr); }
-  .town-actions { max-width: 300px; }
+  .town-actions { max-width: 400px; }
   .battle-log { max-height: 120px; }
 }
 
@@ -706,57 +738,6 @@ body {
   .result-title { font-size: 12px; margin-bottom: 6px; }
 }
 
-/* Auth Screen */
-.auth-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 20px;
-}
-
-.auth-subtitle {
-  font-size: 12px;
-  color: #ffd700;
-  margin-bottom: 8px;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 260px;
-}
-
-.auth-input {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 10px 12px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 2px solid #555;
-  color: #fff;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.auth-input:focus {
-  border-color: #ffd700;
-}
-
-.auth-error {
-  color: #ff6b6b;
-  font-size: 8px;
-  text-align: center;
-}
-
-.menu-user {
-  font-size: 8px;
-  color: #4fc3f7;
-  margin-bottom: 4px;
-}
 
 /* Safe area for notched phones */
 @supports (padding: env(safe-area-inset-top)) {
