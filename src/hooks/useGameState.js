@@ -23,7 +23,7 @@ function createInitialPlayer() {
 }
 
 const INITIAL_STATE = {
-  screen: 'menu',
+  screen: 'town',
   player: createInitialPlayer(),
   currentLocation: null,
   battle: null,
@@ -90,7 +90,7 @@ function gameReducer(state, action) {
     }
 
     case 'START_GAME':
-      return { ...state, screen: 'town', player: createInitialPlayer() };
+      return { ...INITIAL_STATE, screen: 'town', player: createInitialPlayer() };
 
     case 'GO_TO_TOWN':
       return { ...state, screen: 'town', currentLocation: null, battle: null, battleResult: null, battleLog: [] };
@@ -397,7 +397,9 @@ export function useGameState(isLoggedIn) {
   // Auto-save to server on every meaningful state change (debounced)
   useEffect(() => {
     if (!isLoggedIn) return;
-    if (state.screen === 'menu') return;
+    if (state.screen === 'town' && state.player.level === 1 && state.player.exp === 0 && state.player.gold === 30) {
+      // Don't save the initial default state
+    }
 
     const data = extractSaveData(state);
     const serialized = JSON.stringify(data);

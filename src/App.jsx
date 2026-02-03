@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useGameState } from './hooks/useGameState';
-import { login, register, logout, getMe, loadGame, deleteSave, hasSavedSession, getSavedUsername } from './api';
+import { login, register, getMe, loadGame, hasSavedSession } from './api';
 import GameCanvas from './components/GameCanvas';
 import TopBar from './components/TopBar';
 import AuthScreen from './components/screens/AuthScreen';
-import MenuScreen from './components/screens/MenuScreen';
 import TownScreen from './components/screens/TownScreen';
 import LocationsScreen from './components/screens/LocationsScreen';
 import ExploreScreen from './components/screens/ExploreScreen';
@@ -18,13 +17,12 @@ export default function App() {
   const [authError, setAuthError] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
-  const [savedData, setSavedData] = useState(null);
 
   const isLoggedIn = !!user;
   const { state, actions, playerAtk, playerDef } = useGameState(isLoggedIn);
   const [animTick, setAnimTick] = useState(0);
 
-  // Check existing session on mount
+  // Check existing session on mount and go straight to game
   useEffect(() => {
     if (!hasSavedSession()) {
       setCheckingSession(false);
@@ -37,7 +35,9 @@ export default function App() {
       })
       .then(data => {
         if (data?.hasSave) {
-          setSavedData(data.saveData);
+          actions.loadSave(data.saveData);
+        } else {
+          actions.startGame();
         }
       })
       .catch(() => {
@@ -75,14 +75,16 @@ export default function App() {
       setUser({ username: data.username });
       const save = await loadGame();
       if (save?.hasSave) {
-        setSavedData(save.saveData);
+        actions.loadSave(save.saveData);
+      } else {
+        actions.startGame();
       }
     } catch (err) {
       setAuthError(err.message);
     } finally {
       setAuthLoading(false);
     }
-  }, []);
+  }, [actions]);
 
   const handleRegister = useCallback(async (username, password) => {
     setAuthError(null);
@@ -90,44 +92,22 @@ export default function App() {
     try {
       const data = await register(username, password);
       setUser({ username: data.username });
-      setSavedData(null);
+      actions.startGame();
     } catch (err) {
       setAuthError(err.message);
     } finally {
       setAuthLoading(false);
     }
-  }, []);
-
-  const handleLogout = useCallback(async () => {
-    await logout();
-    setUser(null);
-    setSavedData(null);
-    actions.loadSave({ player: null, screen: 'menu' });
   }, [actions]);
-
-  const handleContinue = useCallback(() => {
-    if (savedData) {
-      actions.loadSave(savedData);
-      setSavedData(null);
-    }
-  }, [savedData, actions]);
-
-  const handleNewGame = useCallback(() => {
-    actions.startGame();
-    setSavedData(null);
-    if (isLoggedIn) {
-      deleteSave().catch(() => {});
-    }
-  }, [actions, isLoggedIn]);
 
   // Show loading while checking session
   if (checkingSession) {
     return (
       <div className="game-container">
         <div className="ui-overlay">
-          <div className="screen screen-menu">
-            <div className="menu-title">PIXEL GRIND</div>
-            <div className="menu-subtitle">Loading...</div>
+          <div className="screen screen-loading">
+            <div className="loading-title">PIXEL GRIND</div>
+            <div className="loading-text">Loading...</div>
           </div>
         </div>
       </div>
@@ -138,7 +118,7 @@ export default function App() {
   if (!user) {
     return (
       <div className="game-container">
-        <GameCanvas screen="menu" location={null} battle={null} animTick={animTick} />
+        <GameCanvas screen="town" location={null} battle={null} animTick={animTick} />
         <div className="ui-overlay">
           <AuthScreen
             onLogin={handleLogin}
@@ -151,8 +131,6 @@ export default function App() {
     );
   }
 
-  const showTopBar = state.screen !== 'menu';
-
   return (
     <div className="game-container">
       <GameCanvas
@@ -163,17 +141,7 @@ export default function App() {
       />
 
       <div className="ui-overlay">
-        {showTopBar && <TopBar player={state.player} />}
-
-        {state.screen === 'menu' && (
-          <MenuScreen
-            onStart={handleNewGame}
-            onContinue={handleContinue}
-            hasSave={!!savedData}
-            username={user?.username}
-            onLogout={handleLogout}
-          />
-        )}
+        <TopBar player={state.player} />
 
         {state.screen === 'town' && (
           <TownScreen
@@ -181,7 +149,6 @@ export default function App() {
             onInventory={() => actions.showScreen('inventory')}
             onShop={() => actions.showScreen('shop')}
             onRest={actions.restAtInn}
-            onLogout={handleLogout}
           />
         )}
 
