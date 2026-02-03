@@ -178,6 +178,9 @@ export const BACKGROUNDS = {
   industrial: { sky: '#080707', ground: '#151313', accent: '#2b251f' },
   bazaar:     { sky: '#080610', ground: '#12101a', accent: '#2e2545' },
   reactor:    { sky: '#0a0605', ground: '#1a100a', accent: '#3a2010' },
+  void:       { sky: '#050008', ground: '#0a0510', accent: '#1a0a2a' },
+  orbital:    { sky: '#000308', ground: '#0a0e14', accent: '#1a2535' },
+  singularity:{ sky: '#08020a', ground: '#14080e', accent: '#2a1020' },
 };
 
 export function drawSprite(ctx, spriteData, x, y, scale = 3) {
@@ -415,6 +418,89 @@ function drawLocationDetails(ctx, key, w, h) {
         const sx = (i * 79 + 30) % w;
         const sy = h * 0.68 + (i * 11) % 10;
         ctx.fillRect(sx, sy, 3, 3);
+      }
+      break;
+    }
+    case 'void': {
+      // Reality cracks
+      ctx.fillStyle = '#3a1a5a';
+      for (let i = 0; i < 7; i++) {
+        const x1 = (i * 83 + 20) % w;
+        const y1 = h * 0.3 + (i * 29) % (h * 0.4);
+        ctx.fillRect(x1, y1, 2, 20 + (i * 7) % 30);
+      }
+      // Floating code fragments
+      ctx.fillStyle = '#6a3aaa';
+      for (let i = 0; i < 12; i++) {
+        const fx = (i * 47 + 10) % w;
+        const fy = (i * 37 + 5) % (h * 0.6);
+        ctx.fillRect(fx, fy, 8 + (i % 4) * 3, 2);
+      }
+      // Fractured ground line
+      ctx.fillStyle = '#2a0a4a';
+      ctx.fillRect(0, h * 0.74, w, 3);
+      for (let i = 0; i < 10; i++) {
+        const gx = (i * 61 + 15) % w;
+        ctx.fillRect(gx, h * 0.74, 2, 8 + (i % 3) * 4);
+      }
+      break;
+    }
+    case 'orbital': {
+      // Hull sections
+      ctx.fillStyle = '#1a2535';
+      ctx.fillRect(0, h * 0.65, w, 8);
+      ctx.fillRect(0, h * 0.72, w, 4);
+      // Viewport
+      ctx.fillStyle = '#0a1a30';
+      ctx.fillRect(w * 0.3, h * 0.2, 120, 60);
+      ctx.fillStyle = '#1a3a60';
+      ctx.fillRect(w * 0.3 + 4, h * 0.2 + 4, 112, 52);
+      // Stars through viewport
+      ctx.fillStyle = '#fff';
+      for (let i = 0; i < 8; i++) {
+        const sx = w * 0.3 + 10 + (i * 13) % 100;
+        const sy = h * 0.2 + 10 + (i * 7) % 40;
+        ctx.fillRect(sx, sy, 2, 2);
+      }
+      // Floating debris
+      ctx.fillStyle = '#2a3a4a';
+      for (let i = 0; i < 8; i++) {
+        const dx = (i * 71 + 30) % w;
+        const dy = h * 0.5 + (i * 23) % (h * 0.15);
+        ctx.fillRect(dx, dy, 10 + (i % 3) * 5, 6);
+      }
+      // Sparking wire
+      ctx.fillStyle = '#ff0';
+      ctx.fillRect(w * 0.6, h * 0.65 + 8, 3, 12);
+      ctx.fillRect(w * 0.6 + 3, h * 0.65 + 18, 4, 3);
+      break;
+    }
+    case 'singularity': {
+      // Central convergence point
+      ctx.fillStyle = '#5a1030';
+      ctx.fillRect(w * 0.45, h * 0.15, 30, 30);
+      ctx.fillStyle = '#8a2050';
+      ctx.fillRect(w * 0.45 + 6, h * 0.15 + 6, 18, 18);
+      ctx.fillStyle = '#ff4080';
+      ctx.fillRect(w * 0.45 + 12, h * 0.15 + 12, 6, 6);
+      // Data streams converging to center
+      ctx.fillStyle = '#4a1030';
+      for (let i = 0; i < 6; i++) {
+        const sx = (i * 97 + 20) % w;
+        ctx.fillRect(sx, h * 0.15 + 30, 2, h * 0.4);
+      }
+      // Pulsing floor
+      ctx.fillStyle = '#2a1020';
+      ctx.fillRect(0, h * 0.72, w, 5);
+      ctx.fillStyle = '#4a1030';
+      for (let i = 0; i < w; i += 40) {
+        ctx.fillRect(i + 5, h * 0.73, 20, 3);
+      }
+      // Mirror reflections
+      ctx.fillStyle = '#3a0a1a';
+      for (let i = 0; i < 5; i++) {
+        const mx = (i * 109 + 40) % w;
+        ctx.fillRect(mx, h * 0.78, 12, 16);
       }
       break;
     }

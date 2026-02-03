@@ -27,6 +27,9 @@ export const RANDOM_CONFIG = {
       'midnight-terminal':  { encounterRate: 0.72, lootRate: 0.38, goldFindChance: 0.22 },
       'holo-bazaar':        { encounterRate: 0.74, lootRate: 0.42, goldFindChance: 0.20 },
       'reactor-spire':      { encounterRate: 0.78, lootRate: 0.45, goldFindChance: 0.18 },
+      'void-nexus':         { encounterRate: 0.80, lootRate: 0.46, goldFindChance: 0.16 },
+      'orbital-ruins':      { encounterRate: 0.82, lootRate: 0.48, goldFindChance: 0.14 },
+      'singularity-core':   { encounterRate: 0.85, lootRate: 0.50, goldFindChance: 0.12 },
     },
   },
 

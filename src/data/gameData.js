@@ -1,5 +1,6 @@
 // All game data: locations, monsters, items, skills
 import { RANDOM_CONFIG } from './randomConfig';
+import { SWORDS, SHIELDS, HELMETS, ARMORS, BOOTS, RINGS, POTIONS } from './itemConfig';
 
 let _uid = 0;
 function uid() {
@@ -97,6 +98,27 @@ export const LOCATIONS = [
     bgKey: 'reactor',
     lootTable: [{ type: 'sword', weight: 16 }, { type: 'armor', weight: 16 }, { type: 'shield', weight: 14 }, { type: 'ring', weight: 12 }, { type: 'potion', weight: 12 }],
   },
+  {
+    id: 'void-nexus', name: 'Void Nexus',
+    description: 'A rift in reality where corrupted code manifests as living nightmares.',
+    levelReq: 25, monsters: ['dragon', 'ghost', 'void-stalker'],
+    bgKey: 'void',
+    lootTable: [{ type: 'ring', weight: 18 }, { type: 'sword', weight: 16 }, { type: 'armor', weight: 14 }, { type: 'potion', weight: 12 }],
+  },
+  {
+    id: 'orbital-ruins', name: 'Orbital Ruins',
+    description: 'Wreckage of a fallen space station crawling with apex predators.',
+    levelReq: 27, monsters: ['void-stalker', 'mech-titan', 'dragon'],
+    bgKey: 'orbital',
+    lootTable: [{ type: 'armor', weight: 16 }, { type: 'shield', weight: 16 }, { type: 'sword', weight: 14 }, { type: 'boots', weight: 12 }, { type: 'potion', weight: 10 }],
+  },
+  {
+    id: 'singularity-core', name: 'Singularity Core',
+    description: 'The collapsing heart of an ancient AI god — only the strongest survive.',
+    levelReq: 30, monsters: ['mech-titan', 'void-stalker', 'dragon'],
+    bgKey: 'singularity',
+    lootTable: [{ type: 'sword', weight: 16 }, { type: 'armor', weight: 16 }, { type: 'shield', weight: 14 }, { type: 'ring', weight: 14 }, { type: 'helmet', weight: 12 }, { type: 'boots', weight: 10 }],
+  },
 ];
 
 // ---- MONSTERS ----
@@ -176,6 +198,16 @@ const MONSTERS = {
     baseExp: 20, baseGold: 14, skills: ['poison'],
     dropTable: [{ type: 'potion', weight: 40 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }],
   },
+  'void-stalker': {
+    name: 'Void Stalker', sprite: 'ghost', baseHp: 100, baseAtk: 22, baseDef: 10,
+    baseExp: 70, baseGold: 45, skills: ['curse', 'poison', 'slash'],
+    dropTable: [{ type: 'ring', weight: 14 }, { type: 'sword', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 18 }],
+  },
+  'mech-titan': {
+    name: 'Mech Titan', sprite: 'golem', baseHp: 160, baseAtk: 28, baseDef: 18,
+    baseExp: 100, baseGold: 70, skills: ['slam', 'firebreath'],
+    dropTable: [{ type: 'armor', weight: 16 }, { type: 'shield', weight: 14 }, { type: 'sword', weight: 12 }, { type: 'helmet', weight: 10 }, { type: 'potion', weight: 12 }],
+  },
 };
 
 // ---- SKILLS ----
@@ -216,139 +248,14 @@ function createGearList(slot, icon, entries) {
   }));
 }
 
+// Build item library from the itemConfig arrays
 const ITEM_LIBRARY = {
-  sword: createGearList('weapon', 'sword', [
-    { name: 'Rusty Shiv', rarity: 'Common', level: 1, baseAtk: 3 },
-    { name: 'Copper Dagger', rarity: 'Common', level: 2, baseAtk: 4 },
-    { name: 'Scrap Axe', rarity: 'Common', level: 3, baseAtk: 5 },
-    { name: 'Rebar Club', rarity: 'Common', level: 4, baseAtk: 6, baseDef: 1 },
-    { name: 'Iron Shortsword', rarity: 'Common', level: 5, baseAtk: 7 },
-    { name: 'Tempered Rod', rarity: 'Uncommon', level: 6, baseAtk: 8 },
-    { name: 'Serrated Baton', rarity: 'Uncommon', level: 7, baseAtk: 9 },
-    { name: 'Carbon Spear', rarity: 'Uncommon', level: 8, baseAtk: 10, baseDef: 1 },
-    { name: 'Twin Cleavers', rarity: 'Rare', level: 9, baseAtk: 11 },
-    { name: 'Storm Falchion', rarity: 'Rare', level: 10, baseAtk: 12 },
-    { name: 'Chainbreaker Axe', rarity: 'Rare', level: 11, baseAtk: 13, baseDef: 1 },
-    { name: 'Volt Edge', rarity: 'Rare', level: 12, baseAtk: 14 },
-    { name: 'Neon Katana', rarity: 'Epic', level: 13, baseAtk: 15 },
-    { name: 'Solar Halberd', rarity: 'Epic', level: 14, baseAtk: 16, baseDef: 1 },
-    { name: 'Tempest Claymore', rarity: 'Epic', level: 15, baseAtk: 17 },
-    { name: 'Graviton Pike', rarity: 'Legendary', level: 16, baseAtk: 19, baseDef: 1 },
-    { name: 'Phantom Rapier', rarity: 'Legendary', level: 17, baseAtk: 20 },
-    { name: 'Apex Warstaff', rarity: 'Legendary', level: 18, baseAtk: 21 },
-    { name: 'Singularity Edge', rarity: 'Legendary', level: 19, baseAtk: 23 },
-    { name: 'Cosmic Guillotine', rarity: 'Legendary', level: 20, baseAtk: 25, baseDef: 2 },
-  ]),
-  shield: createGearList('shield', 'shield', [
-    { name: 'Splintered Plank', rarity: 'Common', level: 1, baseDef: 3 },
-    { name: 'Tin Buckler', rarity: 'Common', level: 2, baseDef: 4 },
-    { name: 'Patchwork Guard', rarity: 'Common', level: 3, baseDef: 5 },
-    { name: 'Riveted Disc', rarity: 'Common', level: 4, baseDef: 6 },
-    { name: 'Bronze Kite Shield', rarity: 'Uncommon', level: 5, baseDef: 7 },
-    { name: 'Chainmail Barrier', rarity: 'Uncommon', level: 6, baseDef: 8 },
-    { name: 'Iron Tower Shield', rarity: 'Uncommon', level: 7, baseDef: 9 },
-    { name: 'Reinforced Pavise', rarity: 'Rare', level: 8, baseDef: 10 },
-    { name: 'Shock Bumper', rarity: 'Rare', level: 9, baseDef: 11, baseAtk: 1 },
-    { name: 'Mirror Aegis', rarity: 'Rare', level: 10, baseDef: 12 },
-    { name: 'Bulwark of Cogs', rarity: 'Rare', level: 11, baseDef: 13 },
-    { name: 'Helios Ward', rarity: 'Epic', level: 12, baseDef: 14 },
-    { name: 'Stormbreaker Rampart', rarity: 'Epic', level: 13, baseDef: 15 },
-    { name: 'Dragon Spine Shield', rarity: 'Epic', level: 14, baseDef: 16 },
-    { name: 'Obsidian Bulwark', rarity: 'Legendary', level: 15, baseDef: 17 },
-    { name: 'Nova Barrier', rarity: 'Legendary', level: 16, baseDef: 18 },
-    { name: 'Eternity Wall', rarity: 'Legendary', level: 17, baseDef: 19 },
-    { name: 'Voidcarapace', rarity: 'Legendary', level: 18, baseDef: 20 },
-    { name: 'Celestial Rampart', rarity: 'Legendary', level: 19, baseDef: 21 },
-    { name: 'Infinity Guard', rarity: 'Legendary', level: 20, baseDef: 23 },
-  ]),
-  helmet: createGearList('helmet', 'helmet', [
-    { name: 'Frayed Bandana', rarity: 'Common', level: 1, baseDef: 2 },
-    { name: 'Cloth Cap', rarity: 'Common', level: 2, baseDef: 2 },
-    { name: 'Leather Hood', rarity: 'Common', level: 3, baseDef: 3 },
-    { name: 'Welded Visor', rarity: 'Common', level: 4, baseDef: 4 },
-    { name: 'Scrap Helm', rarity: 'Common', level: 5, baseDef: 4, baseAtk: 1 },
-    { name: 'Chainmail Cowl', rarity: 'Uncommon', level: 6, baseDef: 5 },
-    { name: 'Iron Dome', rarity: 'Uncommon', level: 7, baseDef: 6 },
-    { name: 'Carbon Mask', rarity: 'Uncommon', level: 8, baseDef: 6, baseAtk: 1 },
-    { name: 'Tactical Goggles', rarity: 'Rare', level: 9, baseDef: 7 },
-    { name: 'Hazard Rebreather', rarity: 'Rare', level: 10, baseDef: 8 },
-    { name: 'Sentinel Helm', rarity: 'Rare', level: 11, baseDef: 9 },
-    { name: 'Aurora Crown', rarity: 'Rare', level: 12, baseDef: 9, baseAtk: 1 },
-    { name: 'Stormcall Circlet', rarity: 'Epic', level: 13, baseDef: 10 },
-    { name: 'Dragon Crest Helm', rarity: 'Epic', level: 14, baseDef: 11 },
-    { name: 'Vanguard Visage', rarity: 'Epic', level: 15, baseDef: 12 },
-    { name: 'Celestial Veil', rarity: 'Legendary', level: 16, baseDef: 13 },
-    { name: 'Phoenix Halo', rarity: 'Legendary', level: 17, baseDef: 14 },
-    { name: 'Void Prophet Hood', rarity: 'Legendary', level: 18, baseDef: 15 },
-    { name: 'Astral Mindguard', rarity: 'Legendary', level: 19, baseDef: 16 },
-    { name: 'Infinity Circlet', rarity: 'Legendary', level: 20, baseDef: 17, baseAtk: 2 },
-  ]),
-  armor: createGearList('armor', 'armor', [
-    { name: 'Tattered Vest', rarity: 'Common', level: 1, baseDef: 4 },
-    { name: 'Scrap Leathers', rarity: 'Common', level: 2, baseDef: 5 },
-    { name: 'Patchwork Coat', rarity: 'Common', level: 3, baseDef: 6 },
-    { name: 'Street Brigandine', rarity: 'Common', level: 4, baseDef: 7 },
-    { name: 'Chainmail Vest', rarity: 'Common', level: 5, baseDef: 8 },
-    { name: 'Iron Carapace', rarity: 'Uncommon', level: 6, baseDef: 9 },
-    { name: 'Reinforced Jacket', rarity: 'Uncommon', level: 7, baseDef: 9, baseAtk: 1 },
-    { name: 'Alloy Breastplate', rarity: 'Uncommon', level: 8, baseDef: 10 },
-    { name: 'Composite Harness', rarity: 'Rare', level: 9, baseDef: 11 },
-    { name: 'Dynamo Mail', rarity: 'Rare', level: 10, baseDef: 12 },
-    { name: 'Riot Gear Hauberk', rarity: 'Rare', level: 11, baseDef: 13 },
-    { name: 'Arctic Exo-Shell', rarity: 'Rare', level: 12, baseDef: 14 },
-    { name: 'Solar Scale Armor', rarity: 'Epic', level: 13, baseDef: 15 },
-    { name: 'Thunderborn Plate', rarity: 'Epic', level: 14, baseDef: 16 },
-    { name: 'Obsidian Warplate', rarity: 'Epic', level: 15, baseDef: 17 },
-    { name: 'Voidwoven Raiment', rarity: 'Legendary', level: 16, baseDef: 18 },
-    { name: 'Phoenix Bodyguard', rarity: 'Legendary', level: 17, baseDef: 19 },
-    { name: 'Celestial Bulwark Suit', rarity: 'Legendary', level: 18, baseDef: 20 },
-    { name: 'Eternium Aegis Frame', rarity: 'Legendary', level: 19, baseDef: 21 },
-    { name: 'Singularity Battlesuit', rarity: 'Legendary', level: 20, baseDef: 23, baseAtk: 1 },
-  ]),
-  boots: createGearList('boots', 'boots', [
-    { name: 'Cracked Sandals', rarity: 'Common', level: 1, baseDef: 1 },
-    { name: 'Street Sneakers', rarity: 'Common', level: 2, baseDef: 1 },
-    { name: 'Reinforced Work Boots', rarity: 'Common', level: 3, baseDef: 2 },
-    { name: 'Courier Striders', rarity: 'Common', level: 4, baseDef: 2, baseAtk: 1 },
-    { name: 'Chain-Lashed Greaves', rarity: 'Common', level: 5, baseDef: 3 },
-    { name: 'Iron March Boots', rarity: 'Uncommon', level: 6, baseDef: 3, baseAtk: 1 },
-    { name: 'Shock Dampers', rarity: 'Uncommon', level: 7, baseDef: 4 },
-    { name: 'Carbon Skates', rarity: 'Uncommon', level: 8, baseDef: 4, baseAtk: 1 },
-    { name: 'Scout Talons', rarity: 'Rare', level: 9, baseDef: 5 },
-    { name: 'Dynamo Greaves', rarity: 'Rare', level: 10, baseDef: 5, baseAtk: 1 },
-    { name: 'Meteor Treads', rarity: 'Rare', level: 11, baseDef: 6 },
-    { name: 'Stormsurge Boots', rarity: 'Rare', level: 12, baseDef: 6, baseAtk: 1 },
-    { name: 'Phoenix Spurs', rarity: 'Epic', level: 13, baseDef: 7, baseAtk: 1 },
-    { name: 'Grav-null Boots', rarity: 'Epic', level: 14, baseDef: 7 },
-    { name: 'Tempest Striders', rarity: 'Epic', level: 15, baseDef: 8 },
-    { name: 'Voidstep Boots', rarity: 'Legendary', level: 16, baseDef: 8, baseAtk: 2 },
-    { name: 'Celestial Walkers', rarity: 'Legendary', level: 17, baseDef: 9 },
-    { name: 'Chrono Greaves', rarity: 'Legendary', level: 18, baseDef: 9, baseAtk: 1 },
-    { name: 'Rift Sabatons', rarity: 'Legendary', level: 19, baseDef: 10 },
-    { name: 'Infinity Marchers', rarity: 'Legendary', level: 20, baseDef: 11, baseAtk: 2 },
-  ]),
-  ring: createGearList('accessory', 'ring', [
-    { name: 'Copper Ring', rarity: 'Common', level: 1, baseAtk: 1 },
-    { name: 'Wired Loop', rarity: 'Common', level: 2, baseAtk: 1, baseDef: 1 },
-    { name: 'Scrap Charm', rarity: 'Common', level: 3, baseAtk: 1, baseDef: 1 },
-    { name: 'Fiber Bracelet', rarity: 'Common', level: 4, baseAtk: 2, baseDef: 1 },
-    { name: 'Chainlink Pendant', rarity: 'Common', level: 5, baseAtk: 2, baseDef: 1 },
-    { name: 'Silver Band', rarity: 'Uncommon', level: 6, baseAtk: 2, baseDef: 2 },
-    { name: 'Static Anklet', rarity: 'Uncommon', level: 7, baseAtk: 3, baseDef: 1 },
-    { name: 'Neon Choker', rarity: 'Uncommon', level: 8, baseAtk: 3, baseDef: 2 },
-    { name: 'Dynamo Locket', rarity: 'Rare', level: 9, baseAtk: 4, baseDef: 2 },
-    { name: 'Quartz Signet', rarity: 'Rare', level: 10, baseAtk: 4, baseDef: 3 },
-    { name: 'Reactor Torque', rarity: 'Rare', level: 11, baseAtk: 5, baseDef: 2 },
-    { name: 'Stormcall Ring', rarity: 'Rare', level: 12, baseAtk: 5, baseDef: 3 },
-    { name: 'Phoenix Emblem', rarity: 'Epic', level: 13, baseAtk: 6, baseDef: 3 },
-    { name: 'Void Harmonizer', rarity: 'Epic', level: 14, baseAtk: 6, baseDef: 4 },
-    { name: 'Celestial Prism', rarity: 'Epic', level: 15, baseAtk: 7, baseDef: 4 },
-    { name: 'Chrono Loop', rarity: 'Legendary', level: 16, baseAtk: 8, baseDef: 4 },
-    { name: 'Nova Signet', rarity: 'Legendary', level: 17, baseAtk: 8, baseDef: 5 },
-    { name: 'Infinity Anklet', rarity: 'Legendary', level: 18, baseAtk: 9, baseDef: 5 },
-    { name: 'Singularity Charm', rarity: 'Legendary', level: 19, baseAtk: 10, baseDef: 5 },
-    { name: 'Paradox Halo', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 6 },
-  ]),
+  sword:  createGearList('weapon',    'sword',  SWORDS),
+  shield: createGearList('shield',    'shield', SHIELDS),
+  helmet: createGearList('helmet',    'helmet', HELMETS),
+  armor:  createGearList('armor',     'armor',  ARMORS),
+  boots:  createGearList('boots',     'boots',  BOOTS),
+  ring:   createGearList('accessory', 'ring',   RINGS),
 };
 
 // ---- PUBLIC FUNCTIONS ----
@@ -378,13 +285,7 @@ export function scaleMonster(monsterId, areaLevel) {
   };
 }
 
-const POTION_TIERS = [
-  { name: 'Small Medkit', baseHeal: 35 },
-  { name: 'Field Syringe', baseHeal: 55 },
-  { name: 'Combat Stims', baseHeal: 75 },
-  { name: 'Mega Infusion', baseHeal: 100 },
-  { name: 'Phoenix Serum', baseHeal: 130 },
-];
+const POTION_TIERS = POTIONS;
 
 function pickFromLibrary(pool, targetLevel) {
   if (!pool || pool.length === 0) return null;
@@ -567,5 +468,26 @@ export const EXPLORE_TEXTS = {
     'Fusion coils tower overhead, still pulsing with faint light...',
     'Heat waves distort your vision as you pass venting shafts...',
     'Scorch marks trace the path of something massive on the walls...',
+  ],
+  void: [
+    'Reality fractures into shards of static around your feet...',
+    'Impossible geometry stretches in every direction at once...',
+    'Your shadow moves independently, reaching for things unseen...',
+    'Code fragments float in the air like frozen rain...',
+    'The ground shifts between solid and translucent with each step...',
+  ],
+  orbital: [
+    'Zero-G debris drifts lazily between twisted hull sections...',
+    'Exposed wiring sparks against the vacuum-sealed bulkheads...',
+    'Through a cracked viewport you glimpse the planet far below...',
+    'Emergency oxygen hisses from a ruptured conduit nearby...',
+    'The hum of failing artificial gravity makes your stomach lurch...',
+  ],
+  singularity: [
+    'Time itself seems to stutter and loop around you...',
+    'The walls pulse with the heartbeat of a dying machine god...',
+    'Data streams converge overhead into a blinding point of light...',
+    'Every surface reflects a version of you that moves too late...',
+    'The air tastes of ozone and endings...',
   ],
 };
