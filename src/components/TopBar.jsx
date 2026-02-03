@@ -1,6 +1,9 @@
-export default function TopBar({ player }) {
+export default function TopBar({ player, energy, energyMax }) {
   const hpPct = (player.hp / player.maxHp) * 100;
   const expPct = (player.exp / player.expToLevel) * 100;
+  const safeMax = energyMax ?? 1;
+  const energyValue = energy ?? safeMax;
+  const energyPct = Math.min(100, Math.max(0, (energyValue / safeMax) * 100));
 
   return (
     <div className="top-bar">
@@ -22,6 +25,13 @@ export default function TopBar({ player }) {
             <div className="bar-fill" style={{ width: expPct + '%' }} />
           </div>
           <span className="bar-text">{player.exp}/{player.expToLevel}</span>
+        </div>
+        <div className="stat-bar">
+          <span className="bar-label">ENG</span>
+          <div className="bar energy-bar">
+            <div className="bar-fill" style={{ width: energyPct + '%' }} />
+          </div>
+          <span className="bar-text">{energyValue}/{safeMax}</span>
         </div>
       </div>
       <div className="top-bar-gold">

@@ -56,10 +56,10 @@ function renderMenu(ctx, w, h, tick) {
     }
   }
   drawSpriteCentered(ctx, SPRITES.player.idle, w / 2, h * 0.45, 5);
-  drawSpriteCentered(ctx, SPRITES.monsters.slime, w * 0.2, h * 0.5, 3);
-  drawSpriteCentered(ctx, SPRITES.monsters.skeleton, w * 0.8, h * 0.48, 3);
-  drawSpriteCentered(ctx, SPRITES.monsters.dragon, w * 0.65, h * 0.4, 2);
-  drawSpriteCentered(ctx, SPRITES.monsters.bat, w * 0.35, h * 0.35, 2);
+  drawSpriteCentered(ctx, SPRITES.monsters.rat, w * 0.2, h * 0.52, 3);
+  drawSpriteCentered(ctx, SPRITES.monsters.slime, w * 0.8, h * 0.48, 3);
+  drawSpriteCentered(ctx, SPRITES.monsters.vagrant, w * 0.65, h * 0.4, 2);
+  drawSpriteCentered(ctx, SPRITES.monsters.rat, w * 0.35, h * 0.35, 2);
 }
 
 function renderBattle(ctx, w, h, location, battle, tick) {

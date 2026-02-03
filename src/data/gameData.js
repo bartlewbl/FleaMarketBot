@@ -18,55 +18,75 @@ function pickWeighted(items) {
 // ---- LOCATIONS ----
 export const LOCATIONS = [
   {
-    id: 'forest', name: 'Whispering Forest',
-    description: 'Dense forest with low-level creatures.',
-    levelReq: 1, monsters: ['slime', 'mushroom', 'wolf'],
-    encounterRate: 0.6, bgKey: 'forest',
+    id: 'neon-mile', name: 'Neon Mile',
+    description: 'Flickering billboards and cracked asphalt full of gutter pests.',
+    levelReq: 1, monsters: ['rat', 'slime'],
+    encounterRate: 0.5, lootRate: 0.2, bgKey: 'street',
   },
   {
-    id: 'cave', name: 'Dark Caverns',
-    description: 'Underground tunnels with bats and undead.',
-    levelReq: 3, monsters: ['bat', 'skeleton', 'slime'],
-    encounterRate: 0.65, bgKey: 'cave',
+    id: 'shadow-alley', name: 'Shadow Alley',
+    description: 'Tight passages where feral vagrants lurk between dumpsters.',
+    levelReq: 3, monsters: ['rat', 'vagrant', 'slime'],
+    encounterRate: 0.55, lootRate: 0.2, bgKey: 'alley',
   },
   {
-    id: 'swamp', name: 'Murky Swamp',
-    description: 'Foul swamp with goblins and serpents.',
-    levelReq: 5, monsters: ['snake', 'goblin', 'mushroom'],
-    encounterRate: 0.7, bgKey: 'swamp',
+    id: 'metro-underpass', name: 'Metro Underpass',
+    description: 'Abandoned train tunnels dripping with mutant slime.',
+    levelReq: 6, monsters: ['slime', 'alpha-rat', 'rogue-vagrant'],
+    encounterRate: 0.6, lootRate: 0.25, bgKey: 'station',
   },
   {
-    id: 'ruins', name: 'Ancient Ruins',
-    description: 'Crumbling ruins guarded by golems and spirits.',
-    levelReq: 8, monsters: ['ghost', 'golem', 'skeleton'],
-    encounterRate: 0.7, bgKey: 'ruins',
+    id: 'skyline-rooftops', name: 'Skyline Rooftops',
+    description: 'Windy roofs patrolled by organized scavenger crews.',
+    levelReq: 10, monsters: ['vagrant', 'rogue-vagrant', 'alpha-rat'],
+    encounterRate: 0.65, lootRate: 0.3, bgKey: 'rooftop',
   },
   {
-    id: 'desert', name: 'Scorching Desert',
-    description: 'Harsh desert where only the strong survive.',
-    levelReq: 12, monsters: ['snake', 'golem', 'goblin'],
-    encounterRate: 0.75, bgKey: 'desert',
+    id: 'ironworks-yard', name: 'Ironworks Yard',
+    description: 'Industrial lots buzzing with toxic runoff and slime.',
+    levelReq: 14, monsters: ['toxic-slime', 'rogue-vagrant', 'alpha-rat'],
+    encounterRate: 0.7, lootRate: 0.35, bgKey: 'industrial',
   },
   {
-    id: 'volcano', name: "Dragon's Volcano",
-    description: 'Fiery mountain with the deadliest monsters.',
-    levelReq: 16, monsters: ['golem', 'dragon', 'ghost'],
-    encounterRate: 0.8, bgKey: 'volcano',
+    id: 'midnight-terminal', name: 'Midnight Terminal',
+    description: 'Final stop where bold-face enforcers push back the grime.',
+    levelReq: 18, monsters: ['rogue-vagrant', 'toxic-slime'],
+    encounterRate: 0.72, lootRate: 0.4, bgKey: 'station',
   },
 ];
 
 // ---- MONSTERS ----
 const MONSTERS = {
-  slime:    { name: 'Green Slime',       sprite: 'slime',    baseHp: 20,  baseAtk: 4,  baseDef: 1,  baseExp: 10, baseGold: 5,  skills: [],            dropTable: [{ type: 'potion', weight: 40 }, { type: 'armor', weight: 5 }] },
-  mushroom: { name: 'Toxic Mushroom',    sprite: 'mushroom', baseHp: 15,  baseAtk: 6,  baseDef: 0,  baseExp: 12, baseGold: 6,  skills: ['poison'],    dropTable: [{ type: 'potion', weight: 50 }, { type: 'ring', weight: 3 }] },
-  wolf:     { name: 'Shadow Wolf',       sprite: 'wolf',     baseHp: 30,  baseAtk: 8,  baseDef: 2,  baseExp: 18, baseGold: 10, skills: ['bite'],      dropTable: [{ type: 'sword', weight: 8 }, { type: 'boots', weight: 10 }, { type: 'potion', weight: 30 }] },
-  bat:      { name: 'Cave Bat',          sprite: 'bat',      baseHp: 18,  baseAtk: 7,  baseDef: 1,  baseExp: 14, baseGold: 7,  skills: ['screech'],   dropTable: [{ type: 'potion', weight: 40 }, { type: 'ring', weight: 5 }] },
-  skeleton: { name: 'Skeleton Warrior',  sprite: 'skeleton', baseHp: 40,  baseAtk: 12, baseDef: 5,  baseExp: 28, baseGold: 18, skills: ['slash'],     dropTable: [{ type: 'sword', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 25 }] },
-  goblin:   { name: 'Goblin Thief',      sprite: 'goblin',   baseHp: 35,  baseAtk: 14, baseDef: 4,  baseExp: 32, baseGold: 25, skills: ['steal'],     dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 8 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }] },
-  snake:    { name: 'Venom Serpent',      sprite: 'snake',    baseHp: 28,  baseAtk: 16, baseDef: 2,  baseExp: 25, baseGold: 15, skills: ['poison'],    dropTable: [{ type: 'ring', weight: 10 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 35 }] },
-  ghost:    { name: 'Phantom',           sprite: 'ghost',    baseHp: 45,  baseAtk: 18, baseDef: 8,  baseExp: 40, baseGold: 22, skills: ['curse'],     dropTable: [{ type: 'ring', weight: 15 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 25 }] },
-  golem:    { name: 'Stone Golem',       sprite: 'golem',    baseHp: 70,  baseAtk: 15, baseDef: 15, baseExp: 50, baseGold: 30, skills: ['slam'],      dropTable: [{ type: 'armor', weight: 15 }, { type: 'shield', weight: 12 }, { type: 'helmet', weight: 10 }, { type: 'potion', weight: 20 }] },
-  dragon:   { name: 'Fire Drake',        sprite: 'dragon',   baseHp: 100, baseAtk: 25, baseDef: 12, baseExp: 80, baseGold: 60, skills: ['firebreath', 'slash'], dropTable: [{ type: 'sword', weight: 15 }, { type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 20 }] },
+  rat: {
+    name: 'Gutter Rat', sprite: 'rat', baseHp: 22, baseAtk: 5, baseDef: 1,
+    baseExp: 12, baseGold: 6, skills: ['bite'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'boots', weight: 8 }],
+  },
+  'alpha-rat': {
+    name: 'Alpha Rat', sprite: 'rat', baseHp: 40, baseAtk: 10, baseDef: 3,
+    baseExp: 24, baseGold: 15, skills: ['bite'],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  slime: {
+    name: 'Neon Slime', sprite: 'slime', baseHp: 28, baseAtk: 6, baseDef: 2,
+    baseExp: 16, baseGold: 8, skills: [],
+    dropTable: [{ type: 'potion', weight: 45 }, { type: 'ring', weight: 5 }],
+  },
+  'toxic-slime': {
+    name: 'Toxic Slime', sprite: 'slime', baseHp: 45, baseAtk: 12, baseDef: 4,
+    baseExp: 34, baseGold: 20, skills: ['poison'],
+    dropTable: [{ type: 'armor', weight: 10 }, { type: 'ring', weight: 7 }, { type: 'potion', weight: 35 }],
+  },
+  vagrant: {
+    name: 'Feral Vagrant', sprite: 'vagrant', baseHp: 36, baseAtk: 12, baseDef: 5,
+    baseExp: 30, baseGold: 18, skills: ['slash'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 25 }],
+  },
+  'rogue-vagrant': {
+    name: 'Rogue Vagrant', sprite: 'vagrant', baseHp: 60, baseAtk: 18, baseDef: 7,
+    baseExp: 48, baseGold: 28, skills: ['slash', 'steal'],
+    dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }],
+  },
 };
 
 // ---- SKILLS ----
@@ -90,15 +110,155 @@ const RARITIES = [
   { name: 'Legendary', cssClass: 'rarity-legendary', color: '#ffd700', multiplier: 3.0, weight: 1 },
 ];
 
-// ---- ITEM TEMPLATES ----
-const ITEM_TEMPLATES = {
-  sword:  { names: ['Rusty Sword','Iron Blade','Steel Saber','War Cleaver','Dragon Fang'],        slot: 'weapon',    baseAtk: 3, baseDef: 0, icon: 'sword' },
-  shield: { names: ['Wooden Shield','Iron Buckler','Tower Shield','Knight Guard','Aegis'],         slot: 'shield',    baseAtk: 0, baseDef: 3, icon: 'shield' },
-  helmet: { names: ['Leather Cap','Iron Helm','Steel Visor','War Helm','Crown of Might'],          slot: 'helmet',    baseAtk: 0, baseDef: 2, icon: 'helmet' },
-  armor:  { names: ['Cloth Tunic','Chain Mail','Plate Armor','War Plate','Dragon Scale'],          slot: 'armor',     baseAtk: 0, baseDef: 4, icon: 'armor' },
-  boots:  { names: ['Sandals','Leather Boots','Iron Greaves','Swift Boots','Wind Striders'],       slot: 'boots',     baseAtk: 1, baseDef: 1, icon: 'boots' },
-  ring:   { names: ['Copper Ring','Silver Band','Gold Ring','Mystic Loop','Ring of Power'],         slot: 'accessory', baseAtk: 2, baseDef: 1, icon: 'ring' },
-  potion: { names: ['Small Potion','Medium Potion','Large Potion','Mega Potion','Elixir'],         slot: null,        healPercent: 0.3, icon: 'potion' },
+const RARITY_LOOKUP = RARITIES.reduce((acc, rarity) => {
+  acc[rarity.name] = rarity;
+  return acc;
+}, {});
+
+function createGearList(slot, icon, entries) {
+  return entries.map(entry => ({
+    ...entry,
+    slot,
+    icon,
+    baseAtk: entry.baseAtk ?? 0,
+    baseDef: entry.baseDef ?? 0,
+    weight: entry.weight ?? (RARITY_LOOKUP[entry.rarity]?.weight ?? 1),
+  }));
+}
+
+const ITEM_LIBRARY = {
+  sword: createGearList('weapon', 'sword', [
+    { name: 'Rusty Shiv', rarity: 'Common', level: 1, baseAtk: 3 },
+    { name: 'Copper Dagger', rarity: 'Common', level: 2, baseAtk: 4 },
+    { name: 'Scrap Axe', rarity: 'Common', level: 3, baseAtk: 5 },
+    { name: 'Rebar Club', rarity: 'Common', level: 4, baseAtk: 6, baseDef: 1 },
+    { name: 'Iron Shortsword', rarity: 'Common', level: 5, baseAtk: 7 },
+    { name: 'Tempered Rod', rarity: 'Uncommon', level: 6, baseAtk: 8 },
+    { name: 'Serrated Baton', rarity: 'Uncommon', level: 7, baseAtk: 9 },
+    { name: 'Carbon Spear', rarity: 'Uncommon', level: 8, baseAtk: 10, baseDef: 1 },
+    { name: 'Twin Cleavers', rarity: 'Rare', level: 9, baseAtk: 11 },
+    { name: 'Storm Falchion', rarity: 'Rare', level: 10, baseAtk: 12 },
+    { name: 'Chainbreaker Axe', rarity: 'Rare', level: 11, baseAtk: 13, baseDef: 1 },
+    { name: 'Volt Edge', rarity: 'Rare', level: 12, baseAtk: 14 },
+    { name: 'Neon Katana', rarity: 'Epic', level: 13, baseAtk: 15 },
+    { name: 'Solar Halberd', rarity: 'Epic', level: 14, baseAtk: 16, baseDef: 1 },
+    { name: 'Tempest Claymore', rarity: 'Epic', level: 15, baseAtk: 17 },
+    { name: 'Graviton Pike', rarity: 'Legendary', level: 16, baseAtk: 19, baseDef: 1 },
+    { name: 'Phantom Rapier', rarity: 'Legendary', level: 17, baseAtk: 20 },
+    { name: 'Apex Warstaff', rarity: 'Legendary', level: 18, baseAtk: 21 },
+    { name: 'Singularity Edge', rarity: 'Legendary', level: 19, baseAtk: 23 },
+    { name: 'Cosmic Guillotine', rarity: 'Legendary', level: 20, baseAtk: 25, baseDef: 2 },
+  ]),
+  shield: createGearList('shield', 'shield', [
+    { name: 'Splintered Plank', rarity: 'Common', level: 1, baseDef: 3 },
+    { name: 'Tin Buckler', rarity: 'Common', level: 2, baseDef: 4 },
+    { name: 'Patchwork Guard', rarity: 'Common', level: 3, baseDef: 5 },
+    { name: 'Riveted Disc', rarity: 'Common', level: 4, baseDef: 6 },
+    { name: 'Bronze Kite Shield', rarity: 'Uncommon', level: 5, baseDef: 7 },
+    { name: 'Chainmail Barrier', rarity: 'Uncommon', level: 6, baseDef: 8 },
+    { name: 'Iron Tower Shield', rarity: 'Uncommon', level: 7, baseDef: 9 },
+    { name: 'Reinforced Pavise', rarity: 'Rare', level: 8, baseDef: 10 },
+    { name: 'Shock Bumper', rarity: 'Rare', level: 9, baseDef: 11, baseAtk: 1 },
+    { name: 'Mirror Aegis', rarity: 'Rare', level: 10, baseDef: 12 },
+    { name: 'Bulwark of Cogs', rarity: 'Rare', level: 11, baseDef: 13 },
+    { name: 'Helios Ward', rarity: 'Epic', level: 12, baseDef: 14 },
+    { name: 'Stormbreaker Rampart', rarity: 'Epic', level: 13, baseDef: 15 },
+    { name: 'Dragon Spine Shield', rarity: 'Epic', level: 14, baseDef: 16 },
+    { name: 'Obsidian Bulwark', rarity: 'Legendary', level: 15, baseDef: 17 },
+    { name: 'Nova Barrier', rarity: 'Legendary', level: 16, baseDef: 18 },
+    { name: 'Eternity Wall', rarity: 'Legendary', level: 17, baseDef: 19 },
+    { name: 'Voidcarapace', rarity: 'Legendary', level: 18, baseDef: 20 },
+    { name: 'Celestial Rampart', rarity: 'Legendary', level: 19, baseDef: 21 },
+    { name: 'Infinity Guard', rarity: 'Legendary', level: 20, baseDef: 23 },
+  ]),
+  helmet: createGearList('helmet', 'helmet', [
+    { name: 'Frayed Bandana', rarity: 'Common', level: 1, baseDef: 2 },
+    { name: 'Cloth Cap', rarity: 'Common', level: 2, baseDef: 2 },
+    { name: 'Leather Hood', rarity: 'Common', level: 3, baseDef: 3 },
+    { name: 'Welded Visor', rarity: 'Common', level: 4, baseDef: 4 },
+    { name: 'Scrap Helm', rarity: 'Common', level: 5, baseDef: 4, baseAtk: 1 },
+    { name: 'Chainmail Cowl', rarity: 'Uncommon', level: 6, baseDef: 5 },
+    { name: 'Iron Dome', rarity: 'Uncommon', level: 7, baseDef: 6 },
+    { name: 'Carbon Mask', rarity: 'Uncommon', level: 8, baseDef: 6, baseAtk: 1 },
+    { name: 'Tactical Goggles', rarity: 'Rare', level: 9, baseDef: 7 },
+    { name: 'Hazard Rebreather', rarity: 'Rare', level: 10, baseDef: 8 },
+    { name: 'Sentinel Helm', rarity: 'Rare', level: 11, baseDef: 9 },
+    { name: 'Aurora Crown', rarity: 'Rare', level: 12, baseDef: 9, baseAtk: 1 },
+    { name: 'Stormcall Circlet', rarity: 'Epic', level: 13, baseDef: 10 },
+    { name: 'Dragon Crest Helm', rarity: 'Epic', level: 14, baseDef: 11 },
+    { name: 'Vanguard Visage', rarity: 'Epic', level: 15, baseDef: 12 },
+    { name: 'Celestial Veil', rarity: 'Legendary', level: 16, baseDef: 13 },
+    { name: 'Phoenix Halo', rarity: 'Legendary', level: 17, baseDef: 14 },
+    { name: 'Void Prophet Hood', rarity: 'Legendary', level: 18, baseDef: 15 },
+    { name: 'Astral Mindguard', rarity: 'Legendary', level: 19, baseDef: 16 },
+    { name: 'Infinity Circlet', rarity: 'Legendary', level: 20, baseDef: 17, baseAtk: 2 },
+  ]),
+  armor: createGearList('armor', 'armor', [
+    { name: 'Tattered Vest', rarity: 'Common', level: 1, baseDef: 4 },
+    { name: 'Scrap Leathers', rarity: 'Common', level: 2, baseDef: 5 },
+    { name: 'Patchwork Coat', rarity: 'Common', level: 3, baseDef: 6 },
+    { name: 'Street Brigandine', rarity: 'Common', level: 4, baseDef: 7 },
+    { name: 'Chainmail Vest', rarity: 'Common', level: 5, baseDef: 8 },
+    { name: 'Iron Carapace', rarity: 'Uncommon', level: 6, baseDef: 9 },
+    { name: 'Reinforced Jacket', rarity: 'Uncommon', level: 7, baseDef: 9, baseAtk: 1 },
+    { name: 'Alloy Breastplate', rarity: 'Uncommon', level: 8, baseDef: 10 },
+    { name: 'Composite Harness', rarity: 'Rare', level: 9, baseDef: 11 },
+    { name: 'Dynamo Mail', rarity: 'Rare', level: 10, baseDef: 12 },
+    { name: 'Riot Gear Hauberk', rarity: 'Rare', level: 11, baseDef: 13 },
+    { name: 'Arctic Exo-Shell', rarity: 'Rare', level: 12, baseDef: 14 },
+    { name: 'Solar Scale Armor', rarity: 'Epic', level: 13, baseDef: 15 },
+    { name: 'Thunderborn Plate', rarity: 'Epic', level: 14, baseDef: 16 },
+    { name: 'Obsidian Warplate', rarity: 'Epic', level: 15, baseDef: 17 },
+    { name: 'Voidwoven Raiment', rarity: 'Legendary', level: 16, baseDef: 18 },
+    { name: 'Phoenix Bodyguard', rarity: 'Legendary', level: 17, baseDef: 19 },
+    { name: 'Celestial Bulwark Suit', rarity: 'Legendary', level: 18, baseDef: 20 },
+    { name: 'Eternium Aegis Frame', rarity: 'Legendary', level: 19, baseDef: 21 },
+    { name: 'Singularity Battlesuit', rarity: 'Legendary', level: 20, baseDef: 23, baseAtk: 1 },
+  ]),
+  boots: createGearList('boots', 'boots', [
+    { name: 'Cracked Sandals', rarity: 'Common', level: 1, baseDef: 1 },
+    { name: 'Street Sneakers', rarity: 'Common', level: 2, baseDef: 1 },
+    { name: 'Reinforced Work Boots', rarity: 'Common', level: 3, baseDef: 2 },
+    { name: 'Courier Striders', rarity: 'Common', level: 4, baseDef: 2, baseAtk: 1 },
+    { name: 'Chain-Lashed Greaves', rarity: 'Common', level: 5, baseDef: 3 },
+    { name: 'Iron March Boots', rarity: 'Uncommon', level: 6, baseDef: 3, baseAtk: 1 },
+    { name: 'Shock Dampers', rarity: 'Uncommon', level: 7, baseDef: 4 },
+    { name: 'Carbon Skates', rarity: 'Uncommon', level: 8, baseDef: 4, baseAtk: 1 },
+    { name: 'Scout Talons', rarity: 'Rare', level: 9, baseDef: 5 },
+    { name: 'Dynamo Greaves', rarity: 'Rare', level: 10, baseDef: 5, baseAtk: 1 },
+    { name: 'Meteor Treads', rarity: 'Rare', level: 11, baseDef: 6 },
+    { name: 'Stormsurge Boots', rarity: 'Rare', level: 12, baseDef: 6, baseAtk: 1 },
+    { name: 'Phoenix Spurs', rarity: 'Epic', level: 13, baseDef: 7, baseAtk: 1 },
+    { name: 'Grav-null Boots', rarity: 'Epic', level: 14, baseDef: 7 },
+    { name: 'Tempest Striders', rarity: 'Epic', level: 15, baseDef: 8 },
+    { name: 'Voidstep Boots', rarity: 'Legendary', level: 16, baseDef: 8, baseAtk: 2 },
+    { name: 'Celestial Walkers', rarity: 'Legendary', level: 17, baseDef: 9 },
+    { name: 'Chrono Greaves', rarity: 'Legendary', level: 18, baseDef: 9, baseAtk: 1 },
+    { name: 'Rift Sabatons', rarity: 'Legendary', level: 19, baseDef: 10 },
+    { name: 'Infinity Marchers', rarity: 'Legendary', level: 20, baseDef: 11, baseAtk: 2 },
+  ]),
+  ring: createGearList('accessory', 'ring', [
+    { name: 'Copper Ring', rarity: 'Common', level: 1, baseAtk: 1 },
+    { name: 'Wired Loop', rarity: 'Common', level: 2, baseAtk: 1, baseDef: 1 },
+    { name: 'Scrap Charm', rarity: 'Common', level: 3, baseAtk: 1, baseDef: 1 },
+    { name: 'Fiber Bracelet', rarity: 'Common', level: 4, baseAtk: 2, baseDef: 1 },
+    { name: 'Chainlink Pendant', rarity: 'Common', level: 5, baseAtk: 2, baseDef: 1 },
+    { name: 'Silver Band', rarity: 'Uncommon', level: 6, baseAtk: 2, baseDef: 2 },
+    { name: 'Static Anklet', rarity: 'Uncommon', level: 7, baseAtk: 3, baseDef: 1 },
+    { name: 'Neon Choker', rarity: 'Uncommon', level: 8, baseAtk: 3, baseDef: 2 },
+    { name: 'Dynamo Locket', rarity: 'Rare', level: 9, baseAtk: 4, baseDef: 2 },
+    { name: 'Quartz Signet', rarity: 'Rare', level: 10, baseAtk: 4, baseDef: 3 },
+    { name: 'Reactor Torque', rarity: 'Rare', level: 11, baseAtk: 5, baseDef: 2 },
+    { name: 'Stormcall Ring', rarity: 'Rare', level: 12, baseAtk: 5, baseDef: 3 },
+    { name: 'Phoenix Emblem', rarity: 'Epic', level: 13, baseAtk: 6, baseDef: 3 },
+    { name: 'Void Harmonizer', rarity: 'Epic', level: 14, baseAtk: 6, baseDef: 4 },
+    { name: 'Celestial Prism', rarity: 'Epic', level: 15, baseAtk: 7, baseDef: 4 },
+    { name: 'Chrono Loop', rarity: 'Legendary', level: 16, baseAtk: 8, baseDef: 4 },
+    { name: 'Nova Signet', rarity: 'Legendary', level: 17, baseAtk: 8, baseDef: 5 },
+    { name: 'Infinity Anklet', rarity: 'Legendary', level: 18, baseAtk: 9, baseDef: 5 },
+    { name: 'Singularity Charm', rarity: 'Legendary', level: 19, baseAtk: 10, baseDef: 5 },
+    { name: 'Paradox Halo', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 6 },
+  ]),
 };
 
 // ---- PUBLIC FUNCTIONS ----
@@ -127,55 +287,120 @@ export function scaleMonster(monsterId, areaLevel) {
   };
 }
 
-export function generateItem(dropType, monsterLevel) {
-  const template = ITEM_TEMPLATES[dropType];
-  if (!template) return null;
+const POTION_TIERS = [
+  { name: 'Small Medkit', baseHeal: 35 },
+  { name: 'Field Syringe', baseHeal: 55 },
+  { name: 'Combat Stims', baseHeal: 75 },
+  { name: 'Mega Infusion', baseHeal: 100 },
+  { name: 'Phoenix Serum', baseHeal: 130 },
+];
 
-  const rarity = pickWeighted(RARITIES);
-  const rarityIdx = RARITIES.indexOf(rarity);
-  const nameIdx = Math.min(rarityIdx, template.names.length - 1);
-
-  if (!template.slot) {
-    const healAmount = Math.floor(20 + monsterLevel * 5 * rarity.multiplier);
-    return {
-      id: uid(), name: template.names[nameIdx], type: dropType,
-      slot: null, rarity: rarity.name, rarityClass: rarity.cssClass,
-      rarityColor: rarity.color, healAmount, icon: template.icon,
-      sellPrice: Math.floor(healAmount * 0.5),
-    };
+function pickFromLibrary(pool, targetLevel) {
+  if (!pool || pool.length === 0) return null;
+  const weighted = pool.map(item => {
+    const levelDiff = Math.abs(item.level - targetLevel);
+    const levelWeight = Math.max(1, 18 - levelDiff * 2);
+    return { item, weight: (item.weight || 1) * levelWeight };
+  });
+  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
+  let roll = Math.random() * total;
+  for (const entry of weighted) {
+    roll -= entry.weight;
+    if (roll <= 0) return entry.item;
   }
+  return weighted[weighted.length - 1].item;
+}
 
-  const levelMod = 1 + monsterLevel * 0.15;
-  const atk = template.baseAtk > 0 ? Math.floor(template.baseAtk * rarity.multiplier * levelMod) : 0;
-  const def = template.baseDef > 0 ? Math.floor(template.baseDef * rarity.multiplier * levelMod) : 0;
+function buildGearDrop(template, monsterLevel, dropType) {
+  const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
+  const baseLevelFactor = 1 + template.level * 0.05;
+  const adaptFactor = 1 + Math.max(0, monsterLevel - template.level) * 0.04;
+  const atk = template.baseAtk > 0
+    ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * adaptFactor * rarityData.multiplier))
+    : 0;
+  const def = template.baseDef > 0
+    ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * adaptFactor * rarityData.multiplier))
+    : 0;
+  const effectiveLevel = Math.max(template.level, monsterLevel);
 
   return {
-    id: uid(), name: template.names[nameIdx], type: dropType,
-    slot: template.slot, rarity: rarity.name, rarityClass: rarity.cssClass,
-    rarityColor: rarity.color, atk, def, icon: template.icon,
-    sellPrice: Math.floor((atk + def) * 3 + rarityIdx * 5),
+    id: uid(),
+    name: template.name,
+    type: dropType,
+    slot: template.slot,
+    level: effectiveLevel,
+    rarity: template.rarity,
+    rarityClass: rarityData.cssClass,
+    rarityColor: rarityData.color,
+    atk,
+    def,
+    icon: template.icon,
+    sellPrice: Math.max(10, Math.floor((atk + def) * 4 + effectiveLevel * 3 + rarityData.multiplier * 10)),
   };
 }
 
-export function getShopItems(playerLevel) {
-  return [0, 1, 2].map(i => {
-    const healAmount = Math.floor(30 + playerLevel * 8 + i * 15);
+export function generateItem(dropType, monsterLevel) {
+  if (dropType === 'potion') {
+    const rarity = pickWeighted(RARITIES);
+    const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(monsterLevel / 4));
+    const tier = POTION_TIERS[tierIndex];
+    const healAmount = Math.floor(tier.baseHeal + monsterLevel * 4 * rarity.multiplier);
     return {
       id: uid(),
-      name: ['Small Potion', 'Medium Potion', 'Large Potion'][i],
-      type: 'potion', slot: null, rarity: 'Common',
-      rarityClass: 'rarity-common', rarityColor: '#ccc',
-      healAmount, icon: 'potion',
-      buyPrice: Math.floor(healAmount * 1.5),
-      sellPrice: Math.floor(healAmount * 0.5),
+      name: tier.name,
+      type: 'potion',
+      slot: null,
+      level: Math.max(1, monsterLevel),
+      rarity: rarity.name,
+      rarityClass: rarity.cssClass,
+      rarityColor: rarity.color,
+      healAmount,
+      icon: 'potion',
+      sellPrice: Math.floor(healAmount * 0.6),
+    };
+  }
+
+  const pool = ITEM_LIBRARY[dropType];
+  if (!pool) return null;
+  const template = pickFromLibrary(pool, monsterLevel);
+  if (!template) return null;
+
+  return buildGearDrop(template, monsterLevel, dropType);
+}
+
+export function getShopItems(playerLevel) {
+  const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(playerLevel / 4));
+  const start = Math.max(0, tierIndex - 1);
+  const end = Math.min(POTION_TIERS.length - 1, start + 2);
+  const normalizedStart = Math.max(0, end - 2);
+  const tiers = POTION_TIERS.slice(normalizedStart, end + 1);
+
+  return tiers.map((tier, offset) => {
+    const absoluteIdx = normalizedStart + offset;
+    const rarity = RARITIES[Math.min(RARITIES.length - 1, absoluteIdx)];
+    const effectiveLevel = Math.max(1, absoluteIdx * 4 + 1);
+    const healAmount = Math.floor(tier.baseHeal + playerLevel * 3 + absoluteIdx * 10);
+    const buyPrice = Math.floor(healAmount * 1.4 + effectiveLevel * 5);
+
+    return {
+      id: uid(),
+      name: tier.name,
+      type: 'potion',
+      slot: null,
+      level: effectiveLevel,
+      rarity: rarity.name,
+      rarityClass: rarity.cssClass,
+      rarityColor: rarity.color,
+      healAmount,
+      icon: 'potion',
+      buyPrice,
+      sellPrice: Math.floor(healAmount * 0.6),
     };
   });
 }
 
 export function rollDrop(dropTable, monsterLevel) {
   if (!dropTable || dropTable.length === 0) return null;
-  const totalWeight = dropTable.reduce((s, d) => s + d.weight, 0);
-  if (Math.random() * 100 >= totalWeight) return null;
   const drop = pickWeighted(dropTable);
   return generateItem(drop.type, monsterLevel);
 }
@@ -187,46 +412,39 @@ export function calcDamage(atk, def) {
 }
 
 export const EXPLORE_TEXTS = {
-  forest: [
-    'You walk through dense undergrowth...',
-    'Sunlight filters through the canopy...',
-    'You hear rustling in the bushes...',
-    'A narrow path winds deeper...',
-    'The trees grow thicker ahead...',
+  street: [
+    'Neon signs buzz overhead as you weave between rusted cars...',
+    'A busted hydrant steams, bathing the block in hazy pink light...',
+    'You sidestep shattered glass and listen for skittering claws...',
+    'Graffiti tags glow faintly under ultraviolet lamps...',
+    'The hum of distant transformers blankets the asphalt...',
   ],
-  cave: [
-    'Water drips from the ceiling...',
-    'The tunnel narrows ahead...',
-    'Strange markings cover the wall...',
-    'A cold breeze blows from deeper within...',
-    'Glowing crystals illuminate the passage...',
+  alley: [
+    'Water drips from fire escapes onto the cracked pavement...',
+    'Dumpster fires flicker against the brick walls...',
+    'You pass overturned crates and torn tarps fluttering like ghosts...',
+    'Echoes bounce between walls, masking careful footsteps...',
+    'A chain-link gate creaks somewhere deeper in the maze...',
   ],
-  swamp: [
-    'The ground squelches beneath you...',
-    'Thick fog rolls across the swamp...',
-    'Bubbles rise from murky water...',
-    'Dead trees stand like sentinels...',
-    'An eerie glow flickers ahead...',
+  station: [
+    'The underpass lights flicker, revealing streaks of neon slime...',
+    'Broken railcars loom like beasts in the dim glow...',
+    'You follow old maintenance lines painted across concrete...',
+    'Vents exhale metallic air that smells of ozone...',
+    'The distant rumble of trains that no longer run shakes dust loose...',
   ],
-  ruins: [
-    'Crumbling pillars line the hall...',
-    'You decipher old runes on stone...',
-    'Dust and debris cover the floor...',
-    'Cold wind whistles through gaps...',
-    'Faded murals depict a lost age...',
+  rooftop: [
+    'Wind howls between aerials and satellite dishes...',
+    'You leap rooftop gaps, scanning for hostile silhouettes...',
+    'Glass gardens glimmer beside jury-rigged antenna towers...',
+    'Warning strobes pulse red, painting the skyline...',
+    'You duck behind a billboard as drones buzz overhead...',
   ],
-  desert: [
-    'The scorching sun beats down...',
-    'Sand swirls around your feet...',
-    'A mirage shimmers in the distance...',
-    'Ancient bones protrude from sand...',
-    'The heat is almost unbearable...',
-  ],
-  volcano: [
-    'The ground trembles beneath you...',
-    'Rivers of lava flow nearby...',
-    'Ash and embers fill the air...',
-    'Heat radiates from every surface...',
-    'A deep rumbling comes from below...',
+  industrial: [
+    'Conveyor belts sit silent beneath layers of grime...',
+    'You squeeze between shipping containers stained with chemicals...',
+    'Loose chains rattle as steam hisses from cracked pipes...',
+    'Old forklifts rest like sleeping beasts in the dark...',
+    'Puddles of toxic runoff glow faint green under the moon...',
   ],
 };

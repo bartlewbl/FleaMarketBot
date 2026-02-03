@@ -35,6 +35,15 @@ export const SPRITES = {
   },
 
   monsters: {
+    rat: [
+      [_,_,_,'#312','#433','#433','#312',_,_],
+      [_,_,'#312','#544','#655','#655','#433','#312',_],
+      [_,'#433','#766','#988','#988','#877','#655','#433','#312'],
+      [_,'#433','#988','#000','#766','#000','#766','#433','#312'],
+      [_,'#433','#988','#988','#988','#988','#988','#433','#312'],
+      [_,'#211','#433','#433','#433','#433','#433','#211',_],
+      [_,_,'#211','#211','#211','#211','#211',_,_],
+    ],
     slime: [
       [_,_,_,'#4caf50','#4caf50','#4caf50',_,_,_],
       [_,_,'#4caf50','#66bb6a','#66bb6a','#66bb6a','#4caf50',_,_],
@@ -43,6 +52,20 @@ export const SPRITES = {
       [_,'#4caf50','#66bb6a','#66bb6a','#66bb6a','#66bb6a','#66bb6a','#4caf50',_],
       [_,'#388e3c','#4caf50','#4caf50','#4caf50','#4caf50','#4caf50','#388e3c',_],
       [_,_,'#388e3c','#388e3c','#388e3c','#388e3c','#388e3c',_,_],
+    ],
+    vagrant: [
+      [_,_,_,'#1f1f1f','#1f1f1f','#1f1f1f',_,_,_],
+      [_,_,'#1f1f1f','#2a2a2a','#2a2a2a','#2a2a2a','#1f1f1f',_,_],
+      [_,'#fcd5b0','#fcd5b0','#fcd5b0','#cfa17a','#fcd5b0','#fcd5b0','#fcd5b0',_],
+      [_,'#fcd5b0','#000','#fcd5b0','#fcd5b0','#000','#fcd5b0','#fcd5b0',_],
+      [_,_,'#3a2a1a','#3a2a1a','#3a2a1a','#3a2a1a','#3a2a1a',_,_],
+      [_,_,'#2f4a5a','#4a6a7a','#4a6a7a','#4a6a7a','#2f4a5a',_,_],
+      [_,'#2f4a5a','#4a6a7a','#4a6a7a','#4a6a7a','#4a6a7a','#4a6a7a','#2f4a5a',_],
+      [_,_,'#4a6a7a','#4a6a7a','#2a2a2a','#4a6a7a','#4a6a7a',_,_],
+      [_,_,'#2a2a2a','#2a2a2a','#2a2a2a','#2a2a2a','#2a2a2a',_,_],
+      [_,_,'#2a2a2a','#2a2a2a',_,'#2a2a2a','#2a2a2a',_,_],
+      [_,_,'#2a2a2a','#2a2a2a',_,'#2a2a2a','#2a2a2a',_,_],
+      [_,_,'#1a1a1a','#1a1a1a',_,'#1a1a1a','#1a1a1a',_,_],
     ],
     wolf: [
       [_,_,'#666',_,_,_,'#666',_,_,_],
@@ -145,13 +168,12 @@ export const SPRITES = {
 };
 
 export const BACKGROUNDS = {
-  town:    { sky: '#1a1a3a', ground: '#2d5a1e', accent: '#3a7a2e' },
-  forest:  { sky: '#0d1a0d', ground: '#1a3a0e', accent: '#2d5a1e' },
-  cave:    { sky: '#0a0a14', ground: '#1a1a2a', accent: '#2a2a3a' },
-  desert:  { sky: '#2a2010', ground: '#c4a03a', accent: '#a08030' },
-  swamp:   { sky: '#0a1a0a', ground: '#1a2a1a', accent: '#2a3a2a' },
-  volcano: { sky: '#1a0a0a', ground: '#3a1a0a', accent: '#5a2a0a' },
-  ruins:   { sky: '#0d0d1a', ground: '#2a2a3a', accent: '#3a3a4a' },
+  town:       { sky: '#04050b', ground: '#151515', accent: '#2a2a2a' },
+  street:     { sky: '#05060f', ground: '#181818', accent: '#313131' },
+  alley:      { sky: '#040408', ground: '#111111', accent: '#242424' },
+  station:    { sky: '#06070f', ground: '#10141b', accent: '#1f2a35' },
+  rooftop:    { sky: '#070912', ground: '#0f0f13', accent: '#2c2f3e' },
+  industrial: { sky: '#080707', ground: '#151313', accent: '#2b251f' },
 };
 
 export function drawSprite(ctx, spriteData, x, y, scale = 3) {
@@ -208,109 +230,97 @@ export function drawBackground(ctx, locationKey, width, height) {
 
 function drawLocationDetails(ctx, key, w, h) {
   switch (key) {
-    case 'forest': {
-      const positions = [60, 180, 380, 520];
-      positions.forEach(tx => {
-        const th = 60 + (tx % 30);
-        const ty = h * 0.7 - th;
-        ctx.fillStyle = '#4a3520';
-        ctx.fillRect(tx - 4, ty + th * 0.5, 8, th * 0.5);
-        ctx.fillStyle = '#1a5a1a';
-        ctx.fillRect(tx - 16, ty, 32, th * 0.35);
-        ctx.fillStyle = '#2a7a2a';
-        ctx.fillRect(tx - 12, ty + 5, 24, th * 0.25);
-      });
-      break;
-    }
-    case 'cave': {
-      ctx.fillStyle = '#2a2a3a';
-      for (let i = 0; i < 12; i++) {
-        const sx = (i * 61 + 10) % w;
-        const sh = 20 + (i * 17) % 40;
-        ctx.beginPath();
-        ctx.moveTo(sx - 8, 0);
-        ctx.lineTo(sx + 8, 0);
-        ctx.lineTo(sx, sh);
-        ctx.fill();
-      }
-      break;
-    }
-    case 'desert': {
-      ctx.fillStyle = '#b89030';
-      ctx.beginPath();
-      ctx.moveTo(0, h * 0.72);
-      for (let x = 0; x <= w; x += 2) {
-        ctx.lineTo(x, h * 0.72 + Math.sin(x * 0.02) * 15 + Math.sin(x * 0.005) * 20);
-      }
-      ctx.lineTo(w, h);
-      ctx.lineTo(0, h);
-      ctx.fill();
-      break;
-    }
-    case 'volcano': {
-      ctx.fillStyle = '#ff4400';
-      for (let i = 0; i < 6; i++) {
-        const lx = (i * 107 + 20) % w;
-        const ly = h * 0.8 + (i * 23) % 30;
-        ctx.fillRect(lx, ly, 30 + (i * 11) % 20, 6);
-      }
-      ctx.fillStyle = '#ff8800';
-      for (let i = 0; i < 4; i++) {
-        const lx = (i * 167 + 50) % w;
-        const ly = h * 0.82 + (i * 31) % 20;
-        ctx.fillRect(lx, ly, 20, 4);
-      }
-      break;
-    }
+    case 'street':
     case 'town': {
-      const buildings = [
-        { x: 50, w: 80, h: 90, color: '#3a2a1a' },
-        { x: 200, w: 60, h: 70, color: '#2a3a4a' },
-        { x: 400, w: 100, h: 100, color: '#3a3a2a' },
-        { x: 530, w: 70, h: 60, color: '#4a2a2a' },
-      ];
-      buildings.forEach(b => {
-        const by = h * 0.7 - b.h;
-        ctx.fillStyle = b.color;
-        ctx.fillRect(b.x, by, b.w, b.h);
-        ctx.fillStyle = '#5a3a2a';
-        ctx.beginPath();
-        ctx.moveTo(b.x - 5, by);
-        ctx.lineTo(b.x + b.w + 5, by);
-        ctx.lineTo(b.x + b.w / 2, by - 20);
-        ctx.fill();
-        ctx.fillStyle = '#ff9';
-        for (let wx = b.x + 10; wx < b.x + b.w - 10; wx += 20) {
-          ctx.fillRect(wx, by + 15, 8, 8);
-          ctx.fillRect(wx, by + 35, 8, 8);
+      const skylineHeights = [70, 110, 90, 120, 80, 130, 75];
+      skylineHeights.forEach((height, idx) => {
+        const width = 50 + (idx % 3) * 15;
+        const x = idx * 90 + 20;
+        const y = h * 0.6 - height;
+        ctx.fillStyle = '#1b1f2d';
+        ctx.fillRect(x, y, width, height);
+        ctx.fillStyle = '#2b314a';
+        for (let wy = y + 15; wy < y + height - 10; wy += 18) {
+          for (let wx = x + 6; wx < x + width - 6; wx += 12) {
+            ctx.fillRect(wx, wy, 4, 6);
+          }
         }
       });
+      ctx.fillStyle = '#101010';
+      ctx.fillRect(0, h * 0.8, w, h * 0.05);
+      ctx.fillStyle = '#c2b55c';
+      for (let i = 0; i < w; i += 60) {
+        ctx.fillRect(i + 10, h * 0.83, 35, 4);
+      }
       break;
     }
-    case 'swamp': {
-      for (let i = 0; i < 10; i++) {
-        const px = (i * 71 + 15) % w;
-        const py = h * 0.68 + (i * 19) % 40;
-        ctx.fillStyle = '#1a3a1a';
-        ctx.fillRect(px, py, 2, -20 - (i * 7) % 15);
-        ctx.fillStyle = '#2a4a2a';
-        ctx.fillRect(px - 3, py - 20 - (i * 7) % 15, 8, 6);
+    case 'alley': {
+      ctx.fillStyle = '#1f1f1f';
+      for (let i = 0; i < 8; i++) {
+        const x = (i * 70 + 30) % w;
+        const height = 60 + (i * 13) % 40;
+        ctx.fillRect(x, h * 0.7 - height, 20, height);
+        ctx.fillStyle = '#2a2a2a';
+        ctx.fillRect(x - 5, h * 0.7 - height + 10, 30, 6);
+        ctx.fillStyle = '#1f1f1f';
       }
-      ctx.fillStyle = 'rgba(30, 80, 50, 0.4)';
+      ctx.fillStyle = '#0f0f0f';
+      ctx.fillRect(0, h * 0.76, w, 6);
+      ctx.fillStyle = '#1b1b1b';
+      for (let i = 0; i < 20; i++) {
+        const bx = (i * 41 + 10) % w;
+        ctx.fillRect(bx, h * 0.79 + (i % 3), 8, 2);
+      }
+      ctx.fillStyle = '#3b612f';
+      ctx.fillRect(w * 0.65, h * 0.75, 20, 15);
+      break;
+    }
+    case 'station': {
+      ctx.fillStyle = '#1f2a35';
       for (let i = 0; i < 5; i++) {
-        const px = (i * 131 + 40) % w;
-        const py = h * 0.75 + (i * 23) % 30;
-        ctx.fillRect(px, py, 40 + (i * 17) % 30, 8);
+        const x = i * 120 + 40;
+        ctx.fillRect(x, h * 0.7 - 80, 20, 80);
+        ctx.fillStyle = '#0d1016';
+        ctx.fillRect(x - 10, h * 0.7 - 10, 40, 8);
+        ctx.fillStyle = '#1f2a35';
+      }
+      ctx.fillStyle = '#353535';
+      ctx.fillRect(0, h * 0.78, w, 4);
+      ctx.fillStyle = '#777';
+      for (let i = 0; i < w; i += 80) {
+        ctx.fillRect(i, h * 0.82, 50, 3);
       }
       break;
     }
-    case 'ruins': {
-      ctx.fillStyle = '#3a3a4a';
-      [80, 200, 350, 480, 560].forEach((px, i) => {
-        const ph = 40 + (i * 23) % 50;
-        ctx.fillRect(px, h * 0.7 - ph, 12, ph);
-        ctx.fillRect(px - 4, h * 0.7 - ph, 20, 6);
+    case 'rooftop': {
+      ctx.fillStyle = '#2c2f3e';
+      ctx.fillRect(0, h * 0.7 - 15, w, 15);
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, h * 0.7, w, 4);
+      ctx.fillStyle = '#444';
+      [80, 260, 420].forEach((x, idx) => {
+        const towerHeight = 50 + idx * 10;
+        ctx.fillRect(x, h * 0.7 - towerHeight, 30, towerHeight);
+        ctx.fillStyle = '#777';
+        ctx.fillRect(x + 5, h * 0.7 - towerHeight + 5, 20, towerHeight - 10);
+        ctx.fillStyle = '#444';
       });
+      break;
+    }
+    case 'industrial': {
+      ctx.fillStyle = '#2b251f';
+      for (let i = 0; i < 4; i++) {
+        const containerWidth = 90;
+        const x = i * 120 + 30;
+        ctx.fillRect(x, h * 0.7 - 40, containerWidth, 40);
+        ctx.fillStyle = '#3d332b';
+        ctx.fillRect(x, h * 0.7 - 20, containerWidth, 5);
+        ctx.fillStyle = '#2b251f';
+      }
+      ctx.fillStyle = '#914b2b';
+      ctx.fillRect(w * 0.8, h * 0.7 - 60, 18, 60);
+      ctx.fillStyle = '#222';
+      ctx.fillRect(0, h * 0.78, w, 3);
       break;
     }
   }

@@ -17,6 +17,11 @@ export default function BattleResultScreen({ result, onContinue }) {
                 Got: {result.droppedItem.name} [{result.droppedItem.rarity}]
               </div>
             )}
+            {!result.droppedItem && result.lostItemName && (
+              <div className="rarity-common">
+                Pack full: {result.lostItemName} slipped away.
+              </div>
+            )}
           </>
         ) : (
           <>
@@ -30,7 +35,7 @@ export default function BattleResultScreen({ result, onContinue }) {
         <div className="result-levelup">
           LEVEL UP! Lv.{result.newLevel}
           {result.levelUps.map((g, i) => (
-            <div key={i}>HP+{g.hpGain} ATK+{g.atkGain} DEF+{g.defGain}</div>
+            <div key={i}>HP+{g.hpGain} MP+{g.manaGain} ATK+{g.atkGain} DEF+{g.defGain}</div>
           ))}
         </div>
       )}

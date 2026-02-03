@@ -1,8 +1,13 @@
 import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
-  expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS,
+  expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS, generateItem,
 } from '../data/gameData';
 import { saveGame } from '../api';
+
+export const ENERGY_MAX = 100;
+export const ENERGY_COST_PER_TRIP = 10;
+const ENERGY_REGEN_PERCENT = 0.1;
+const ENERGY_REGEN_INTERVAL_MS = 15 * 60 * 1000;
 
 // ---- INITIAL STATE ----
 function createInitialPlayer() {
@@ -13,6 +18,8 @@ function createInitialPlayer() {
     expToLevel: expForLevel(1),
     maxHp: 50,
     hp: 50,
+    maxMana: 30,
+    mana: 30,
     baseAtk: 5,
     baseDef: 2,
     gold: 30,
@@ -22,16 +29,20 @@ function createInitialPlayer() {
   };
 }
 
-const INITIAL_STATE = {
-  screen: 'town',
-  player: createInitialPlayer(),
-  currentLocation: null,
-  battle: null,
-  battleLog: [],
-  battleResult: null,
-  exploreText: '',
-  message: null,
-};
+function createInitialState() {
+  return {
+    screen: 'town',
+    player: createInitialPlayer(),
+    currentLocation: null,
+    battle: null,
+    battleLog: [],
+    battleResult: null,
+    exploreText: '',
+    message: null,
+    energy: ENERGY_MAX,
+    lastEnergyUpdate: Date.now(),
+  };
+}
 
 // ---- HELPERS ----
 function getPlayerAtk(player, battle) {
@@ -60,13 +71,37 @@ function processLevelUps(player) {
     const hpGain = 8 + Math.floor(Math.random() * 5);
     const atkGain = 1 + Math.floor(Math.random() * 2);
     const defGain = 1 + Math.floor(Math.random() * 2);
+    const manaGain = 4 + Math.floor(Math.random() * 3);
     p.maxHp += hpGain;
     p.hp = p.maxHp;
+    p.maxMana += manaGain;
+    p.mana = p.maxMana;
     p.baseAtk += atkGain;
     p.baseDef += defGain;
-    gains.push({ hpGain, atkGain, defGain });
+    gains.push({ hpGain, atkGain, defGain, manaGain });
   }
   return { player: p, gains };
+}
+
+function regenEnergy(currentEnergy, lastEnergyUpdate, now = Date.now()) {
+  const sanitizedEnergy = Math.max(0, Math.min(currentEnergy ?? ENERGY_MAX, ENERGY_MAX));
+  const last = lastEnergyUpdate ?? now;
+  if (sanitizedEnergy >= ENERGY_MAX) {
+    return { energy: ENERGY_MAX, lastEnergyUpdate: now };
+  }
+  const elapsed = Math.max(0, now - last);
+  const ticks = Math.floor(elapsed / ENERGY_REGEN_INTERVAL_MS);
+  if (ticks <= 0) {
+    return { energy: sanitizedEnergy, lastEnergyUpdate: last };
+  }
+  const gainPerTick = Math.max(1, Math.round(ENERGY_MAX * ENERGY_REGEN_PERCENT));
+  const gained = gainPerTick * ticks;
+  const nextEnergy = Math.min(ENERGY_MAX, sanitizedEnergy + gained);
+  const consumed = ticks * ENERGY_REGEN_INTERVAL_MS;
+  if (nextEnergy >= ENERGY_MAX) {
+    return { energy: ENERGY_MAX, lastEnergyUpdate: now };
+  }
+  return { energy: nextEnergy, lastEnergyUpdate: last + consumed };
 }
 
 // Extract the saveable portion of state (no transient battle data)
@@ -74,6 +109,8 @@ function extractSaveData(state) {
   return {
     player: state.player,
     screen: (state.screen === 'battle' || state.screen === 'battle-result') ? 'town' : state.screen,
+    energy: state.energy,
+    lastEnergyUpdate: state.lastEnergyUpdate,
   };
 }
 
@@ -81,16 +118,23 @@ function extractSaveData(state) {
 function gameReducer(state, action) {
   switch (action.type) {
     case 'LOAD_SAVE': {
-      const { player, screen } = action.saveData;
+      const { player, screen, energy, lastEnergyUpdate } = action.saveData || {};
+      const base = createInitialState();
+      const regen = regenEnergy(
+        energy ?? base.energy,
+        lastEnergyUpdate ?? base.lastEnergyUpdate,
+      );
       return {
-        ...INITIAL_STATE,
+        ...base,
         screen: screen || 'town',
-        player: { ...createInitialPlayer(), ...player },
+        player: { ...base.player, ...player },
+        energy: regen.energy,
+        lastEnergyUpdate: regen.lastEnergyUpdate,
       };
     }
 
     case 'START_GAME':
-      return { ...INITIAL_STATE, screen: 'town', player: createInitialPlayer() };
+      return createInitialState();
 
     case 'GO_TO_TOWN':
       return { ...state, screen: 'town', currentLocation: null, battle: null, battleResult: null, battleLog: [] };
@@ -98,16 +142,31 @@ function gameReducer(state, action) {
     case 'SHOW_SCREEN':
       return { ...state, screen: action.screen };
 
-    case 'ENTER_LOCATION':
+    case 'ENTER_LOCATION': {
+      const now = Date.now();
+      const { energy, lastEnergyUpdate } = regenEnergy(state.energy, state.lastEnergyUpdate, now);
+      if (energy < ENERGY_COST_PER_TRIP) {
+        return {
+          ...state,
+          energy,
+          lastEnergyUpdate,
+          message: 'Too exhausted to travel. Wait for energy to recover.',
+        };
+      }
       return {
-        ...state, screen: 'explore', currentLocation: action.location,
+        ...state,
+        screen: 'explore',
+        currentLocation: action.location,
         exploreText: 'You enter ' + action.location.name + '...',
+        energy: energy - ENERGY_COST_PER_TRIP,
+        lastEnergyUpdate,
       };
+    }
 
     case 'EXPLORE_STEP': {
       const loc = state.currentLocation;
       if (!loc) return state;
-      const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.forest;
+      const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.street;
       const text = texts[Math.floor(Math.random() * texts.length)];
 
       if (Math.random() < loc.encounterRate) {
@@ -125,13 +184,27 @@ function gameReducer(state, action) {
         };
       }
 
-      // No encounter - chance to find gold
+      // No encounter - chance to find loot, gold, or nothing
+      const lootChance = loc.lootRate ?? 0.3;
       let newText = text;
       let newPlayer = state.player;
-      if (Math.random() < 0.2) {
-        const found = Math.floor(3 + Math.random() * state.player.level * 2);
+      const lootTable = ['potion', 'ring', 'boots', 'helmet', 'armor', 'sword', 'shield'];
+
+      if (Math.random() < lootChance) {
+        if (state.player.inventory.length < state.player.maxInventory) {
+          const dropType = lootTable[Math.floor(Math.random() * lootTable.length)];
+          const foundItem = generateItem(dropType, Math.max(loc.levelReq, state.player.level));
+          newPlayer = { ...state.player, inventory: [...state.player.inventory, foundItem] };
+          newText = text + `\n\nYou scavenge ${foundItem.name} from a busted crate.`;
+        } else {
+          newText = text + '\n\nYou find loot but your pack is full.';
+        }
+      } else if (Math.random() < 0.3) {
+        const found = Math.floor(3 + Math.random() * Math.max(2, state.player.level * 2));
         newPlayer = { ...state.player, gold: state.player.gold + found };
-        newText = text + `\n\nYou found ${found} gold!`;
+        newText = text + `\n\nYou find ${found} gold tucked under debris.`;
+      } else {
+        newText = text + '\n\nNothing but distant sirens... for now.';
       }
       return { ...state, exploreText: newText, player: newPlayer };
     }
@@ -267,7 +340,12 @@ function gameReducer(state, action) {
       if (state.player.gold < 10) return { ...state, message: 'Not enough gold! (10g needed)' };
       return {
         ...state, message: 'HP restored!',
-        player: { ...state.player, gold: state.player.gold - 10, hp: state.player.maxHp },
+        player: {
+          ...state.player,
+          gold: state.player.gold - 10,
+          hp: state.player.maxHp,
+          mana: state.player.maxMana,
+        },
       };
     }
 
@@ -320,6 +398,23 @@ function gameReducer(state, action) {
       return { ...state, player: p, message: `Sold for ${item.sellPrice}g!` };
     }
 
+    case 'REORDER_INVENTORY': {
+      const inventory = state.player.inventory || [];
+      if (inventory.length < 2) return state;
+      const fromIndex = Math.max(0, Math.min(action.fromIndex ?? 0, inventory.length - 1));
+      let toIndex = Math.max(0, Math.min(action.toIndex ?? fromIndex, inventory.length));
+      if (fromIndex === toIndex || fromIndex + 1 === toIndex) return state;
+      const newInventory = [...inventory];
+      const [moved] = newInventory.splice(fromIndex, 1);
+      if (!moved) return state;
+      if (fromIndex < toIndex) toIndex -= 1;
+      newInventory.splice(toIndex, 0, moved);
+      return {
+        ...state,
+        player: { ...state.player, inventory: newInventory },
+      };
+    }
+
     case 'BUY_ITEM': {
       const item = action.item;
       if (state.player.gold < item.buyPrice) return { ...state, message: 'Not enough gold!' };
@@ -337,6 +432,13 @@ function gameReducer(state, action) {
     case 'CLEAR_MESSAGE':
       return { ...state, message: null };
 
+    case 'ENERGY_TICK': {
+      const now = action.now ?? Date.now();
+      const { energy, lastEnergyUpdate } = regenEnergy(state.energy, state.lastEnergyUpdate, now);
+      if (energy === state.energy && lastEnergyUpdate === state.lastEnergyUpdate) return state;
+      return { ...state, energy, lastEnergyUpdate };
+    }
+
     default:
       return state;
   }
@@ -350,8 +452,15 @@ function handleVictory(state) {
   let p = { ...state.player, exp: state.player.exp + expGain, gold: state.player.gold + goldGain };
 
   const droppedItem = rollDrop(m.dropTable, m.level);
-  if (droppedItem && p.inventory.length < p.maxInventory) {
-    p.inventory = [...p.inventory, droppedItem];
+  let lootAdded = false;
+  let lostItemName = null;
+  if (droppedItem) {
+    if (p.inventory.length < p.maxInventory) {
+      p.inventory = [...p.inventory, droppedItem];
+      lootAdded = true;
+    } else {
+      lostItemName = droppedItem.name;
+    }
   }
 
   const { player: leveledPlayer, gains } = processLevelUps(p);
@@ -362,7 +471,8 @@ function handleVictory(state) {
     player: leveledPlayer,
     battleResult: {
       victory: true, expGain, goldGain,
-      droppedItem: droppedItem && p.inventory.length <= p.maxInventory ? droppedItem : null,
+      droppedItem: lootAdded ? droppedItem : null,
+      lostItemName,
       levelUps: gains,
       newLevel: leveledPlayer.level,
     },
@@ -375,6 +485,7 @@ function handleDefeat(state) {
     ...state.player,
     gold: state.player.gold - goldLost,
     hp: Math.floor(state.player.maxHp * 0.3),
+    mana: Math.floor(state.player.maxMana * 0.5),
   };
 
   return {
@@ -387,7 +498,7 @@ function handleDefeat(state) {
 
 // ---- HOOK ----
 export function useGameState(isLoggedIn) {
-  const [state, dispatch] = useReducer(gameReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(gameReducer, undefined, createInitialState);
   const saveTimerRef = useRef(null);
   const lastSaveRef = useRef(null);
 
@@ -419,7 +530,14 @@ export function useGameState(isLoggedIn) {
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
-  }, [state.player, state.screen, isLoggedIn]);
+  }, [state.player, state.screen, state.energy, state.lastEnergyUpdate, isLoggedIn]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch({ type: 'ENERGY_TICK', now: Date.now() });
+    }, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const actions = useMemo(() => ({
     startGame: () => dispatch({ type: 'START_GAME' }),
@@ -439,6 +557,7 @@ export function useGameState(isLoggedIn) {
     unequipItem: (slot) => dispatch({ type: 'UNEQUIP_ITEM', slot }),
     useItem: (item) => dispatch({ type: 'USE_ITEM', item }),
     sellItem: (item) => dispatch({ type: 'SELL_ITEM', item }),
+    reorderInventory: (fromIndex, toIndex) => dispatch({ type: 'REORDER_INVENTORY', fromIndex, toIndex }),
     buyItem: (item) => dispatch({ type: 'BUY_ITEM', item }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),

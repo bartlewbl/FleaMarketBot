@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useGameState } from './hooks/useGameState';
+import { useGameState, ENERGY_COST_PER_TRIP, ENERGY_MAX } from './hooks/useGameState';
 import { login, register, getMe, loadGame, hasSavedSession } from './api';
 import GameCanvas from './components/GameCanvas';
 import TopBar from './components/TopBar';
@@ -11,6 +11,9 @@ import BattleScreen from './components/screens/BattleScreen';
 import BattleResultScreen from './components/screens/BattleResultScreen';
 import InventoryScreen from './components/screens/InventoryScreen';
 import ShopScreen from './components/screens/ShopScreen';
+import ProfileScreen from './components/screens/ProfileScreen';
+import SkillsScreen from './components/screens/SkillsScreen';
+import SidePanel from './components/SidePanel';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -21,6 +24,7 @@ export default function App() {
   const isLoggedIn = !!user;
   const { state, actions, playerAtk, playerDef } = useGameState(isLoggedIn);
   const [animTick, setAnimTick] = useState(0);
+  const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
 
   // Check existing session on mount and go straight to game
   useEffect(() => {
@@ -131,6 +135,9 @@ export default function App() {
     );
   }
 
+  const navLocked = state.screen === 'battle' || state.screen === 'battle-result';
+  const canRest = !navLocked && (state.screen === 'town' || state.screen === 'locations');
+
   return (
     <div className="game-container">
       <GameCanvas
@@ -141,75 +148,117 @@ export default function App() {
       />
 
       <div className="ui-overlay">
-        <TopBar player={state.player} />
+        <TopBar player={state.player} energy={state.energy} energyMax={ENERGY_MAX} />
 
-        {state.screen === 'town' && (
-          <TownScreen
+        <div className="ui-main">
+          <SidePanel
+            collapsed={isMenuCollapsed}
+            onToggle={() => setIsMenuCollapsed(v => !v)}
+            screen={state.screen}
+            currentLocation={state.currentLocation}
+            energy={state.energy}
+            energyMax={ENERGY_MAX}
+            energyCost={ENERGY_COST_PER_TRIP}
+            hp={state.player.hp}
+            maxHp={state.player.maxHp}
+            mana={state.player.mana}
+            maxMana={state.player.maxMana}
+            playerName={state.player.name}
+            playerLevel={state.player.level}
+            onGoToTown={actions.goToTown}
             onExplore={() => actions.showScreen('locations')}
             onInventory={() => actions.showScreen('inventory')}
             onShop={() => actions.showScreen('shop')}
             onRest={actions.restAtInn}
+            navLocked={navLocked}
+            gold={state.player.gold}
+            onProfile={() => actions.showScreen('profile')}
+            onSkills={() => actions.showScreen('skills')}
+            canRest={canRest}
           />
-        )}
 
-        {state.screen === 'locations' && (
-          <LocationsScreen
-            playerLevel={state.player.level}
-            onSelect={actions.enterLocation}
-            onBack={actions.goToTown}
-          />
-        )}
+          <div className="screen-stage">
+            {state.screen === 'town' && (
+              <TownScreen player={state.player} />
+            )}
 
-        {state.screen === 'explore' && (
-          <ExploreScreen
-            location={state.currentLocation}
-            text={state.exploreText}
-            onContinue={actions.exploreStep}
-            onBack={actions.goToTown}
-          />
-        )}
+            {state.screen === 'locations' && (
+              <LocationsScreen
+                playerLevel={state.player.level}
+                energy={state.energy}
+                energyMax={ENERGY_MAX}
+                energyCost={ENERGY_COST_PER_TRIP}
+                onSelect={actions.enterLocation}
+                onBack={actions.goToTown}
+              />
+            )}
 
-        {state.screen === 'battle' && (
-          <BattleScreen
-            battle={state.battle}
-            battleLog={state.battleLog}
-            onAttack={actions.battleAttack}
-            onSkill={actions.battleSkill}
-            onDefend={actions.battleDefend}
-            onPotion={actions.battlePotion}
-            onRun={actions.battleRun}
-            onMonsterTurn={actions.monsterTurn}
-          />
-        )}
+            {state.screen === 'explore' && (
+              <ExploreScreen
+                location={state.currentLocation}
+                text={state.exploreText}
+                onContinue={actions.exploreStep}
+                onBack={actions.goToTown}
+              />
+            )}
 
-        {state.screen === 'battle-result' && (
-          <BattleResultScreen
-            result={state.battleResult}
-            onContinue={actions.continueAfterBattle}
-          />
-        )}
+            {state.screen === 'battle' && (
+              <BattleScreen
+                battle={state.battle}
+                battleLog={state.battleLog}
+                onAttack={actions.battleAttack}
+                onSkill={actions.battleSkill}
+                onDefend={actions.battleDefend}
+                onPotion={actions.battlePotion}
+                onRun={actions.battleRun}
+                onMonsterTurn={actions.monsterTurn}
+              />
+            )}
 
-        {state.screen === 'inventory' && (
-          <InventoryScreen
-            player={state.player}
-            playerAtk={playerAtk}
-            playerDef={playerDef}
-            onEquip={actions.equipItem}
-            onUnequip={actions.unequipItem}
-            onUse={actions.useItem}
-            onSell={actions.sellItem}
-            onBack={actions.goToTown}
-          />
-        )}
+            {state.screen === 'battle-result' && (
+              <BattleResultScreen
+                result={state.battleResult}
+                onContinue={actions.continueAfterBattle}
+              />
+            )}
 
-        {state.screen === 'shop' && (
-          <ShopScreen
-            playerLevel={state.player.level}
-            playerGold={state.player.gold}
-            onBuy={actions.buyItem}
-            onBack={actions.goToTown}
-          />
-        )}
+            {state.screen === 'inventory' && (
+              <InventoryScreen
+                player={state.player}
+                playerAtk={playerAtk}
+                playerDef={playerDef}
+                onEquip={actions.equipItem}
+                onUnequip={actions.unequipItem}
+                onUse={actions.useItem}
+                onSell={actions.sellItem}
+                onReorder={actions.reorderInventory}
+                onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'profile' && (
+              <ProfileScreen
+                player={state.player}
+                onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'skills' && (
+              <SkillsScreen
+                onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'shop' && (
+              <ShopScreen
+                player={state.player}
+                onBuy={actions.buyItem}
+                onSell={actions.sellItem}
+                onBack={actions.goToTown}
+              />
+            )}
+          </div>
+        </div>
 
         {state.message && (
           <div className="message-overlay">
