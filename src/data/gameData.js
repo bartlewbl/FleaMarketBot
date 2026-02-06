@@ -405,6 +405,81 @@ export function rollDrop(dropTable, monsterLevel) {
   return generateItem(drop.type, monsterLevel);
 }
 
+// Seeded RNG for deterministic daily results
+function seededRandom(seed) {
+  let s = seed;
+  return function () {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function seededPickWeighted(items, rng) {
+  const total = items.reduce((s, i) => s + i.weight, 0);
+  let roll = rng() * total;
+  for (const item of items) {
+    roll -= item.weight;
+    if (roll <= 0) return item;
+  }
+  return items[items.length - 1];
+}
+
+export function getDailyFeaturedItems(playerLevel) {
+  const today = new Date();
+  const daySeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  const rng = seededRandom(daySeed + playerLevel);
+
+  const extraordinaryRarities = RARITIES.filter(r => r.name === 'Rare' || r.name === 'Epic' || r.name === 'Legendary');
+  const gearTypes = ['sword', 'shield', 'helmet', 'armor', 'boots', 'ring'];
+  const featured = [];
+  const usedNames = new Set();
+
+  const count = 3;
+  for (let i = 0; i < count; i++) {
+    const typeIdx = Math.floor(rng() * gearTypes.length);
+    const type = gearTypes[typeIdx];
+    const pool = ITEM_LIBRARY[type];
+    if (!pool) continue;
+
+    const rarity = seededPickWeighted(extraordinaryRarities, rng);
+    const candidates = pool.filter(item => item.rarity === rarity.name && item.level <= Math.max(playerLevel + 3, 5));
+    if (candidates.length === 0) continue;
+
+    const template = candidates[Math.floor(rng() * candidates.length)];
+    if (usedNames.has(template.name)) continue;
+    usedNames.add(template.name);
+
+    const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
+    const baseLevelFactor = 1 + template.level * 0.05;
+    const atk = template.baseAtk > 0
+      ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * rarityData.multiplier))
+      : 0;
+    const def = template.baseDef > 0
+      ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * rarityData.multiplier))
+      : 0;
+
+    const buyPrice = Math.floor((atk + def) * 8 + template.level * 6 + rarityData.multiplier * 20);
+
+    featured.push({
+      id: uid(),
+      name: template.name,
+      type,
+      slot: template.slot,
+      level: template.level,
+      rarity: template.rarity,
+      rarityClass: rarityData.cssClass,
+      rarityColor: rarityData.color,
+      atk,
+      def,
+      icon: template.icon,
+      buyPrice,
+      sellPrice: Math.max(10, Math.floor((atk + def) * 4 + template.level * 3 + rarityData.multiplier * 10)),
+    });
+  }
+
+  return featured;
+}
+
 export function calcDamage(atk, def) {
   const base = Math.max(1, atk - def * 0.5);
   const variance = 0.85 + Math.random() * 0.3;
