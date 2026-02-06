@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 
-export default function BattleScreen({ battle, battleLog, onAttack, onSkill, onDefend, onPotion, onRun, onMonsterTurn }) {
+export default function BattleScreen({ battle, battleLog, onAttack, onSkill, onDefend, onPotion, onRun, onMonsterTurn, skillName }) {
   const logRef = useRef(null);
   const pendingTurnRef = useRef(false);
 
@@ -67,7 +67,7 @@ export default function BattleScreen({ battle, battleLog, onAttack, onSkill, onD
       <div className="battle-actions">
         <button className="btn" disabled={disabled} onClick={() => handlePlayerAction(onAttack)}>Attack</button>
         <button className="btn" disabled={disabled} onClick={handleDefend}>Defend</button>
-        <button className="btn" disabled={disabled} onClick={() => handlePlayerAction(onSkill)}>Skill</button>
+        <button className="btn" disabled={disabled} onClick={() => handlePlayerAction(onSkill)}>{skillName || 'Skill'}</button>
         <button className="btn" disabled={disabled} onClick={() => handlePlayerAction(onPotion)}>Potion</button>
         <button className="btn btn-back" disabled={disabled} onClick={handleRun}>{isBoss ? 'No Escape' : 'Run'}</button>
       </div>

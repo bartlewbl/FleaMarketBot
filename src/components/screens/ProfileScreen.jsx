@@ -1,6 +1,10 @@
+import { CHARACTER_CLASSES } from '../../data/gameData';
+
 export default function ProfileScreen({ player, onBack }) {
+  const cls = player.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
   const stats = [
     { label: 'Level', value: player.level },
+    { label: 'Class', value: cls?.name || 'None', color: cls?.color },
     { label: 'HP', value: `${player.hp}/${player.maxHp}` },
     { label: 'ATK', value: player.baseAtk },
     { label: 'DEF', value: player.baseDef },
@@ -23,11 +27,27 @@ export default function ProfileScreen({ player, onBack }) {
             {stats.map(stat => (
               <div key={stat.label} className="profile-stat">
                 <div className="profile-stat-label">{stat.label}</div>
-                <div className="profile-stat-value">{stat.value}</div>
+                <div className="profile-stat-value" style={stat.color ? { color: stat.color } : undefined}>{stat.value}</div>
               </div>
             ))}
           </div>
         </div>
+
+        {cls && (
+          <div className="profile-card">
+            <div className="profile-card-title" style={{ color: cls.color }}>{cls.name} Abilities</div>
+            <div className="profile-class-info">
+              <div className="profile-class-row">
+                <div className="profile-stat-label">Passive: {cls.passive}</div>
+                <div className="profile-stat-value">{cls.passiveDesc}</div>
+              </div>
+              <div className="profile-class-row">
+                <div className="profile-stat-label">Skill: {cls.skillName}</div>
+                <div className="profile-stat-value">{cls.skillDesc}</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="profile-card">
           <div className="profile-card-title">Equipment</div>

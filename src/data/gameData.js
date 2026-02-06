@@ -461,136 +461,249 @@ function createGearList(slot, icon, entries) {
 
 const ITEM_LIBRARY = {
   sword: createGearList('weapon', 'sword', [
-    { name: 'Rusty Shiv', rarity: 'Common', level: 1, baseAtk: 3 },
+    { name: 'Rusty Shiv', rarity: 'Uncommon', level: 1, baseAtk: 3 },
     { name: 'Copper Dagger', rarity: 'Common', level: 2, baseAtk: 4 },
-    { name: 'Scrap Axe', rarity: 'Common', level: 3, baseAtk: 5 },
+    { name: 'Scrap Axe', rarity: 'Rare', level: 3, baseAtk: 5 },
     { name: 'Rebar Club', rarity: 'Common', level: 4, baseAtk: 6, baseDef: 1 },
-    { name: 'Iron Shortsword', rarity: 'Common', level: 5, baseAtk: 7 },
-    { name: 'Tempered Rod', rarity: 'Uncommon', level: 6, baseAtk: 8 },
-    { name: 'Serrated Baton', rarity: 'Uncommon', level: 7, baseAtk: 9 },
-    { name: 'Carbon Spear', rarity: 'Uncommon', level: 8, baseAtk: 10, baseDef: 1 },
-    { name: 'Twin Cleavers', rarity: 'Rare', level: 9, baseAtk: 11 },
-    { name: 'Storm Falchion', rarity: 'Rare', level: 10, baseAtk: 12 },
-    { name: 'Chainbreaker Axe', rarity: 'Rare', level: 11, baseAtk: 13, baseDef: 1 },
-    { name: 'Volt Edge', rarity: 'Rare', level: 12, baseAtk: 14 },
-    { name: 'Neon Katana', rarity: 'Epic', level: 13, baseAtk: 15 },
-    { name: 'Solar Halberd', rarity: 'Epic', level: 14, baseAtk: 16, baseDef: 1 },
-    { name: 'Tempest Claymore', rarity: 'Epic', level: 15, baseAtk: 17 },
-    { name: 'Graviton Pike', rarity: 'Legendary', level: 16, baseAtk: 19, baseDef: 1 },
-    { name: 'Phantom Rapier', rarity: 'Legendary', level: 17, baseAtk: 20 },
-    { name: 'Apex Warstaff', rarity: 'Legendary', level: 18, baseAtk: 21 },
-    { name: 'Singularity Edge', rarity: 'Legendary', level: 19, baseAtk: 23 },
-    { name: 'Cosmic Guillotine', rarity: 'Legendary', level: 20, baseAtk: 25, baseDef: 2 },
+    { name: 'Iron Shortsword', rarity: 'Epic', level: 5, baseAtk: 7 },
+    { name: 'Tempered Rod', rarity: 'Common', level: 6, baseAtk: 8 },
+    { name: 'Serrated Baton', rarity: 'Legendary', level: 7, baseAtk: 9 },
+    { name: 'Carbon Spear', rarity: 'Rare', level: 8, baseAtk: 10, baseDef: 1 },
+    { name: 'Twin Cleavers', rarity: 'Common', level: 9, baseAtk: 11 },
+    { name: 'Storm Falchion', rarity: 'Uncommon', level: 10, baseAtk: 12 },
+    { name: 'Chainbreaker Axe', rarity: 'Epic', level: 11, baseAtk: 13, baseDef: 1 },
+    { name: 'Volt Edge', rarity: 'Common', level: 12, baseAtk: 14 },
+    { name: 'Neon Katana', rarity: 'Legendary', level: 13, baseAtk: 15 },
+    { name: 'Solar Halberd', rarity: 'Uncommon', level: 14, baseAtk: 16, baseDef: 1 },
+    { name: 'Tempest Claymore', rarity: 'Rare', level: 15, baseAtk: 17 },
+    { name: 'Graviton Pike', rarity: 'Common', level: 16, baseAtk: 19, baseDef: 1 },
+    { name: 'Phantom Rapier', rarity: 'Epic', level: 17, baseAtk: 20 },
+    { name: 'Apex Warstaff', rarity: 'Rare', level: 18, baseAtk: 21 },
+    { name: 'Singularity Edge', rarity: 'Uncommon', level: 19, baseAtk: 23 },
+    { name: 'Cosmic Guillotine', rarity: 'Epic', level: 20, baseAtk: 25, baseDef: 2 },
+    // Offensive strategy: glass-cannon weapons with high ATK, no DEF
+    { name: 'Plasma Cutter', rarity: 'Legendary', level: 2, baseAtk: 5 },
+    { name: 'Voltage Switchblade', rarity: 'Rare', level: 5, baseAtk: 9 },
+    { name: 'Overclocked Cleaver', rarity: 'Epic', level: 8, baseAtk: 13 },
+    { name: 'Berserker Maul', rarity: 'Common', level: 11, baseAtk: 15 },
+    { name: 'Crimson Buzzsaw', rarity: 'Uncommon', level: 14, baseAtk: 19 },
+    { name: 'Wrath of Neon', rarity: 'Rare', level: 16, baseAtk: 21 },
+    { name: 'Oblivion Reaver', rarity: 'Common', level: 18, baseAtk: 24 },
+    { name: 'Doomsday Splicer', rarity: 'Uncommon', level: 20, baseAtk: 28 },
+    // Rarity-decoupled: high-level commons, low-level legendaries, mixed combos
+    { name: 'Concrete Greatsword', rarity: 'Common', level: 15, baseAtk: 14 },
+    { name: 'Gridline Machete', rarity: 'Common', level: 18, baseAtk: 16 },
+    { name: 'Rusted Titan Blade', rarity: 'Common', level: 20, baseAtk: 18 },
+    { name: 'Neon Whisper', rarity: 'Legendary', level: 3, baseAtk: 4 },
+    { name: 'Chrono Fang', rarity: 'Legendary', level: 6, baseAtk: 6 },
+    { name: 'Spectral Tanto', rarity: 'Rare', level: 2, baseAtk: 3 },
+    { name: 'Glitch Knife', rarity: 'Epic', level: 4, baseAtk: 5 },
+    { name: 'Salvaged Vorpal Edge', rarity: 'Uncommon', level: 16, baseAtk: 15 },
   ]),
   shield: createGearList('shield', 'shield', [
-    { name: 'Splintered Plank', rarity: 'Common', level: 1, baseDef: 3 },
+    { name: 'Splintered Plank', rarity: 'Rare', level: 1, baseDef: 3 },
     { name: 'Tin Buckler', rarity: 'Common', level: 2, baseDef: 4 },
-    { name: 'Patchwork Guard', rarity: 'Common', level: 3, baseDef: 5 },
+    { name: 'Patchwork Guard', rarity: 'Epic', level: 3, baseDef: 5 },
     { name: 'Riveted Disc', rarity: 'Common', level: 4, baseDef: 6 },
-    { name: 'Bronze Kite Shield', rarity: 'Uncommon', level: 5, baseDef: 7 },
-    { name: 'Chainmail Barrier', rarity: 'Uncommon', level: 6, baseDef: 8 },
+    { name: 'Bronze Kite Shield', rarity: 'Legendary', level: 5, baseDef: 7 },
+    { name: 'Chainmail Barrier', rarity: 'Common', level: 6, baseDef: 8 },
     { name: 'Iron Tower Shield', rarity: 'Uncommon', level: 7, baseDef: 9 },
-    { name: 'Reinforced Pavise', rarity: 'Rare', level: 8, baseDef: 10 },
-    { name: 'Shock Bumper', rarity: 'Rare', level: 9, baseDef: 11, baseAtk: 1 },
+    { name: 'Reinforced Pavise', rarity: 'Common', level: 8, baseDef: 10 },
+    { name: 'Shock Bumper', rarity: 'Epic', level: 9, baseDef: 11, baseAtk: 1 },
     { name: 'Mirror Aegis', rarity: 'Rare', level: 10, baseDef: 12 },
-    { name: 'Bulwark of Cogs', rarity: 'Rare', level: 11, baseDef: 13 },
-    { name: 'Helios Ward', rarity: 'Epic', level: 12, baseDef: 14 },
-    { name: 'Stormbreaker Rampart', rarity: 'Epic', level: 13, baseDef: 15 },
-    { name: 'Dragon Spine Shield', rarity: 'Epic', level: 14, baseDef: 16 },
-    { name: 'Obsidian Bulwark', rarity: 'Legendary', level: 15, baseDef: 17 },
-    { name: 'Nova Barrier', rarity: 'Legendary', level: 16, baseDef: 18 },
-    { name: 'Eternity Wall', rarity: 'Legendary', level: 17, baseDef: 19 },
-    { name: 'Voidcarapace', rarity: 'Legendary', level: 18, baseDef: 20 },
-    { name: 'Celestial Rampart', rarity: 'Legendary', level: 19, baseDef: 21 },
+    { name: 'Bulwark of Cogs', rarity: 'Uncommon', level: 11, baseDef: 13 },
+    { name: 'Helios Ward', rarity: 'Legendary', level: 12, baseDef: 14 },
+    { name: 'Stormbreaker Rampart', rarity: 'Common', level: 13, baseDef: 15 },
+    { name: 'Dragon Spine Shield', rarity: 'Rare', level: 14, baseDef: 16 },
+    { name: 'Obsidian Bulwark', rarity: 'Uncommon', level: 15, baseDef: 17 },
+    { name: 'Nova Barrier', rarity: 'Epic', level: 16, baseDef: 18 },
+    { name: 'Eternity Wall', rarity: 'Common', level: 17, baseDef: 19 },
+    { name: 'Voidcarapace', rarity: 'Rare', level: 18, baseDef: 20 },
+    { name: 'Celestial Rampart', rarity: 'Uncommon', level: 19, baseDef: 21 },
     { name: 'Infinity Guard', rarity: 'Legendary', level: 20, baseDef: 23 },
+    // Defensive strategy: ultra-tank shields with boosted DEF
+    { name: 'Junkyard Barricade', rarity: 'Epic', level: 1, baseDef: 4 },
+    { name: 'Scrapwall Gate', rarity: 'Uncommon', level: 3, baseDef: 6 },
+    { name: 'Titanium Kiteshield', rarity: 'Legendary', level: 6, baseDef: 10 },
+    { name: 'Hardlight Projector', rarity: 'Common', level: 9, baseDef: 13 },
+    { name: 'Fortress Matrix', rarity: 'Uncommon', level: 12, baseDef: 16 },
+    { name: 'Impenetrable Ward', rarity: 'Common', level: 15, baseDef: 19 },
+    { name: 'Dimensional Barricade', rarity: 'Rare', level: 18, baseDef: 22 },
+    { name: 'Absolute Zero Wall', rarity: 'Epic', level: 20, baseDef: 25 },
+    // Rarity-decoupled shields
+    { name: 'Blast Door Fragment', rarity: 'Common', level: 16, baseDef: 14 },
+    { name: 'Manhole Cover Shield', rarity: 'Common', level: 19, baseDef: 16 },
+    { name: 'Scrap Titan Shield', rarity: 'Common', level: 20, baseDef: 17 },
+    { name: 'Pixelated Ward', rarity: 'Legendary', level: 2, baseDef: 3 },
+    { name: 'Data Lattice Buckler', rarity: 'Legendary', level: 5, baseDef: 5 },
+    { name: 'Hologram Deflector', rarity: 'Epic', level: 3, baseDef: 4 },
+    { name: 'Corroded Riot Shield', rarity: 'Uncommon', level: 17, baseDef: 14 },
   ]),
   helmet: createGearList('helmet', 'helmet', [
     { name: 'Frayed Bandana', rarity: 'Common', level: 1, baseDef: 2 },
-    { name: 'Cloth Cap', rarity: 'Common', level: 2, baseDef: 2 },
-    { name: 'Leather Hood', rarity: 'Common', level: 3, baseDef: 3 },
-    { name: 'Welded Visor', rarity: 'Common', level: 4, baseDef: 4 },
+    { name: 'Cloth Cap', rarity: 'Legendary', level: 2, baseDef: 2 },
+    { name: 'Leather Hood', rarity: 'Uncommon', level: 3, baseDef: 3 },
+    { name: 'Welded Visor', rarity: 'Rare', level: 4, baseDef: 4 },
     { name: 'Scrap Helm', rarity: 'Common', level: 5, baseDef: 4, baseAtk: 1 },
-    { name: 'Chainmail Cowl', rarity: 'Uncommon', level: 6, baseDef: 5 },
-    { name: 'Iron Dome', rarity: 'Uncommon', level: 7, baseDef: 6 },
-    { name: 'Carbon Mask', rarity: 'Uncommon', level: 8, baseDef: 6, baseAtk: 1 },
-    { name: 'Tactical Goggles', rarity: 'Rare', level: 9, baseDef: 7 },
-    { name: 'Hazard Rebreather', rarity: 'Rare', level: 10, baseDef: 8 },
+    { name: 'Chainmail Cowl', rarity: 'Epic', level: 6, baseDef: 5 },
+    { name: 'Iron Dome', rarity: 'Common', level: 7, baseDef: 6 },
+    { name: 'Carbon Mask', rarity: 'Legendary', level: 8, baseDef: 6, baseAtk: 1 },
+    { name: 'Tactical Goggles', rarity: 'Uncommon', level: 9, baseDef: 7 },
+    { name: 'Hazard Rebreather', rarity: 'Common', level: 10, baseDef: 8 },
     { name: 'Sentinel Helm', rarity: 'Rare', level: 11, baseDef: 9 },
-    { name: 'Aurora Crown', rarity: 'Rare', level: 12, baseDef: 9, baseAtk: 1 },
-    { name: 'Stormcall Circlet', rarity: 'Epic', level: 13, baseDef: 10 },
-    { name: 'Dragon Crest Helm', rarity: 'Epic', level: 14, baseDef: 11 },
-    { name: 'Vanguard Visage', rarity: 'Epic', level: 15, baseDef: 12 },
-    { name: 'Celestial Veil', rarity: 'Legendary', level: 16, baseDef: 13 },
-    { name: 'Phoenix Halo', rarity: 'Legendary', level: 17, baseDef: 14 },
-    { name: 'Void Prophet Hood', rarity: 'Legendary', level: 18, baseDef: 15 },
-    { name: 'Astral Mindguard', rarity: 'Legendary', level: 19, baseDef: 16 },
+    { name: 'Aurora Crown', rarity: 'Epic', level: 12, baseDef: 9, baseAtk: 1 },
+    { name: 'Stormcall Circlet', rarity: 'Common', level: 13, baseDef: 10 },
+    { name: 'Dragon Crest Helm', rarity: 'Uncommon', level: 14, baseDef: 11 },
+    { name: 'Vanguard Visage', rarity: 'Rare', level: 15, baseDef: 12 },
+    { name: 'Celestial Veil', rarity: 'Uncommon', level: 16, baseDef: 13 },
+    { name: 'Phoenix Halo', rarity: 'Epic', level: 17, baseDef: 14 },
+    { name: 'Void Prophet Hood', rarity: 'Common', level: 18, baseDef: 15 },
+    { name: 'Astral Mindguard', rarity: 'Rare', level: 19, baseDef: 16 },
     { name: 'Infinity Circlet', rarity: 'Legendary', level: 20, baseDef: 17, baseAtk: 2 },
+    // Offensive strategy: ATK-focused headgear for aggressive builds
+    { name: 'Targeting Visor', rarity: 'Rare', level: 2, baseAtk: 2, baseDef: 1 },
+    { name: 'Neural Amp Helm', rarity: 'Epic', level: 5, baseAtk: 3, baseDef: 2 },
+    { name: 'Fury Circuit Crown', rarity: 'Common', level: 9, baseAtk: 5, baseDef: 3 },
+    { name: 'Warhead Casing', rarity: 'Uncommon', level: 13, baseAtk: 7, baseDef: 4 },
+    { name: 'Berserker Faceplate', rarity: 'Common', level: 16, baseAtk: 9, baseDef: 4 },
+    { name: 'Annihilator Helm', rarity: 'Rare', level: 20, baseAtk: 11, baseDef: 5 },
+    // Rarity-decoupled helmets
+    { name: 'Welder\'s Full Mask', rarity: 'Common', level: 14, baseDef: 9 },
+    { name: 'Hardhat Mk-IX', rarity: 'Common', level: 18, baseDef: 12 },
+    { name: 'Concrete Cranium', rarity: 'Common', level: 20, baseDef: 13 },
+    { name: 'Glitchborn Tiara', rarity: 'Legendary', level: 2, baseDef: 2, baseAtk: 1 },
+    { name: 'Flickering Diadem', rarity: 'Legendary', level: 5, baseDef: 3, baseAtk: 2 },
+    { name: 'Cracked Oracle Visor', rarity: 'Epic', level: 4, baseDef: 3, baseAtk: 1 },
+    { name: 'Makeshift Cage Helm', rarity: 'Uncommon', level: 15, baseDef: 10 },
   ]),
   armor: createGearList('armor', 'armor', [
-    { name: 'Tattered Vest', rarity: 'Common', level: 1, baseDef: 4 },
+    { name: 'Tattered Vest', rarity: 'Uncommon', level: 1, baseDef: 4 },
     { name: 'Scrap Leathers', rarity: 'Common', level: 2, baseDef: 5 },
-    { name: 'Patchwork Coat', rarity: 'Common', level: 3, baseDef: 6 },
-    { name: 'Street Brigandine', rarity: 'Common', level: 4, baseDef: 7 },
+    { name: 'Patchwork Coat', rarity: 'Legendary', level: 3, baseDef: 6 },
+    { name: 'Street Brigandine', rarity: 'Rare', level: 4, baseDef: 7 },
     { name: 'Chainmail Vest', rarity: 'Common', level: 5, baseDef: 8 },
-    { name: 'Iron Carapace', rarity: 'Uncommon', level: 6, baseDef: 9 },
-    { name: 'Reinforced Jacket', rarity: 'Uncommon', level: 7, baseDef: 9, baseAtk: 1 },
+    { name: 'Iron Carapace', rarity: 'Epic', level: 6, baseDef: 9 },
+    { name: 'Reinforced Jacket', rarity: 'Common', level: 7, baseDef: 9, baseAtk: 1 },
     { name: 'Alloy Breastplate', rarity: 'Uncommon', level: 8, baseDef: 10 },
-    { name: 'Composite Harness', rarity: 'Rare', level: 9, baseDef: 11 },
-    { name: 'Dynamo Mail', rarity: 'Rare', level: 10, baseDef: 12 },
-    { name: 'Riot Gear Hauberk', rarity: 'Rare', level: 11, baseDef: 13 },
+    { name: 'Composite Harness', rarity: 'Legendary', level: 9, baseDef: 11 },
+    { name: 'Dynamo Mail', rarity: 'Common', level: 10, baseDef: 12 },
+    { name: 'Riot Gear Hauberk', rarity: 'Uncommon', level: 11, baseDef: 13 },
     { name: 'Arctic Exo-Shell', rarity: 'Rare', level: 12, baseDef: 14 },
-    { name: 'Solar Scale Armor', rarity: 'Epic', level: 13, baseDef: 15 },
-    { name: 'Thunderborn Plate', rarity: 'Epic', level: 14, baseDef: 16 },
-    { name: 'Obsidian Warplate', rarity: 'Epic', level: 15, baseDef: 17 },
-    { name: 'Voidwoven Raiment', rarity: 'Legendary', level: 16, baseDef: 18 },
-    { name: 'Phoenix Bodyguard', rarity: 'Legendary', level: 17, baseDef: 19 },
-    { name: 'Celestial Bulwark Suit', rarity: 'Legendary', level: 18, baseDef: 20 },
-    { name: 'Eternium Aegis Frame', rarity: 'Legendary', level: 19, baseDef: 21 },
+    { name: 'Solar Scale Armor', rarity: 'Common', level: 13, baseDef: 15 },
+    { name: 'Thunderborn Plate', rarity: 'Rare', level: 14, baseDef: 16 },
+    { name: 'Obsidian Warplate', rarity: 'Uncommon', level: 15, baseDef: 17 },
+    { name: 'Voidwoven Raiment', rarity: 'Epic', level: 16, baseDef: 18 },
+    { name: 'Phoenix Bodyguard', rarity: 'Rare', level: 17, baseDef: 19 },
+    { name: 'Celestial Bulwark Suit', rarity: 'Common', level: 18, baseDef: 20 },
+    { name: 'Eternium Aegis Frame', rarity: 'Epic', level: 19, baseDef: 21 },
     { name: 'Singularity Battlesuit', rarity: 'Legendary', level: 20, baseDef: 23, baseAtk: 1 },
+    // Defensive strategy: ultra-tank armor with boosted DEF
+    { name: 'Lead-Lined Poncho', rarity: 'Rare', level: 2, baseDef: 6 },
+    { name: 'Riot Suppression Suit', rarity: 'Legendary', level: 6, baseDef: 11 },
+    { name: 'Neutronium Plate', rarity: 'Common', level: 10, baseDef: 15 },
+    { name: 'Monolith Exoskeleton', rarity: 'Uncommon', level: 14, baseDef: 19 },
+    { name: 'Event Horizon Shell', rarity: 'Common', level: 18, baseDef: 23 },
+    { name: 'Omega Fortress Armor', rarity: 'Epic', level: 20, baseDef: 26 },
+    // Rarity-decoupled armor
+    { name: 'Industrial Coveralls', rarity: 'Common', level: 15, baseDef: 13 },
+    { name: 'Sewer Plate Carrier', rarity: 'Common', level: 19, baseDef: 16 },
+    { name: 'Forklift Exo-Rig', rarity: 'Common', level: 20, baseDef: 17 },
+    { name: 'Phantom Weave Vest', rarity: 'Legendary', level: 3, baseDef: 4 },
+    { name: 'Starthread Robe', rarity: 'Legendary', level: 6, baseDef: 6 },
+    { name: 'Wraithcloth Tunic', rarity: 'Epic', level: 4, baseDef: 5 },
+    { name: 'Surplus Combat Jacket', rarity: 'Uncommon', level: 17, baseDef: 15 },
   ]),
   boots: createGearList('boots', 'boots', [
-    { name: 'Cracked Sandals', rarity: 'Common', level: 1, baseDef: 1 },
+    { name: 'Cracked Sandals', rarity: 'Epic', level: 1, baseDef: 1 },
     { name: 'Street Sneakers', rarity: 'Common', level: 2, baseDef: 1 },
-    { name: 'Reinforced Work Boots', rarity: 'Common', level: 3, baseDef: 2 },
-    { name: 'Courier Striders', rarity: 'Common', level: 4, baseDef: 2, baseAtk: 1 },
+    { name: 'Reinforced Work Boots', rarity: 'Uncommon', level: 3, baseDef: 2 },
+    { name: 'Courier Striders', rarity: 'Legendary', level: 4, baseDef: 2, baseAtk: 1 },
     { name: 'Chain-Lashed Greaves', rarity: 'Common', level: 5, baseDef: 3 },
-    { name: 'Iron March Boots', rarity: 'Uncommon', level: 6, baseDef: 3, baseAtk: 1 },
-    { name: 'Shock Dampers', rarity: 'Uncommon', level: 7, baseDef: 4 },
-    { name: 'Carbon Skates', rarity: 'Uncommon', level: 8, baseDef: 4, baseAtk: 1 },
-    { name: 'Scout Talons', rarity: 'Rare', level: 9, baseDef: 5 },
-    { name: 'Dynamo Greaves', rarity: 'Rare', level: 10, baseDef: 5, baseAtk: 1 },
-    { name: 'Meteor Treads', rarity: 'Rare', level: 11, baseDef: 6 },
+    { name: 'Iron March Boots', rarity: 'Rare', level: 6, baseDef: 3, baseAtk: 1 },
+    { name: 'Shock Dampers', rarity: 'Common', level: 7, baseDef: 4 },
+    { name: 'Carbon Skates', rarity: 'Epic', level: 8, baseDef: 4, baseAtk: 1 },
+    { name: 'Scout Talons', rarity: 'Common', level: 9, baseDef: 5 },
+    { name: 'Dynamo Greaves', rarity: 'Legendary', level: 10, baseDef: 5, baseAtk: 1 },
+    { name: 'Meteor Treads', rarity: 'Uncommon', level: 11, baseDef: 6 },
     { name: 'Stormsurge Boots', rarity: 'Rare', level: 12, baseDef: 6, baseAtk: 1 },
-    { name: 'Phoenix Spurs', rarity: 'Epic', level: 13, baseDef: 7, baseAtk: 1 },
-    { name: 'Grav-null Boots', rarity: 'Epic', level: 14, baseDef: 7 },
-    { name: 'Tempest Striders', rarity: 'Epic', level: 15, baseDef: 8 },
-    { name: 'Voidstep Boots', rarity: 'Legendary', level: 16, baseDef: 8, baseAtk: 2 },
-    { name: 'Celestial Walkers', rarity: 'Legendary', level: 17, baseDef: 9 },
-    { name: 'Chrono Greaves', rarity: 'Legendary', level: 18, baseDef: 9, baseAtk: 1 },
-    { name: 'Rift Sabatons', rarity: 'Legendary', level: 19, baseDef: 10 },
+    { name: 'Phoenix Spurs', rarity: 'Common', level: 13, baseDef: 7, baseAtk: 1 },
+    { name: 'Grav-null Boots', rarity: 'Uncommon', level: 14, baseDef: 7 },
+    { name: 'Tempest Striders', rarity: 'Rare', level: 15, baseDef: 8 },
+    { name: 'Voidstep Boots', rarity: 'Common', level: 16, baseDef: 8, baseAtk: 2 },
+    { name: 'Celestial Walkers', rarity: 'Epic', level: 17, baseDef: 9 },
+    { name: 'Chrono Greaves', rarity: 'Uncommon', level: 18, baseDef: 9, baseAtk: 1 },
+    { name: 'Rift Sabatons', rarity: 'Rare', level: 19, baseDef: 10 },
     { name: 'Infinity Marchers', rarity: 'Legendary', level: 20, baseDef: 11, baseAtk: 2 },
+    // Offensive strategy: ATK-focused boots for rush/aggressive play
+    { name: 'Spike-Tipped Runners', rarity: 'Epic', level: 3, baseAtk: 2, baseDef: 1 },
+    { name: 'Blitz Stompers', rarity: 'Legendary', level: 7, baseAtk: 3, baseDef: 2 },
+    { name: 'Razor Striders', rarity: 'Common', level: 10, baseAtk: 4, baseDef: 3 },
+    { name: 'Assault Thrusters', rarity: 'Uncommon', level: 14, baseAtk: 5, baseDef: 4 },
+    { name: 'Havoc Tramples', rarity: 'Rare', level: 17, baseAtk: 6, baseDef: 5 },
+    { name: 'Annihilation Treads', rarity: 'Common', level: 20, baseAtk: 8, baseDef: 5 },
+    // Rarity-decoupled boots
+    { name: 'Steel-Toed Waders', rarity: 'Common', level: 14, baseDef: 6 },
+    { name: 'Foundry Stompers', rarity: 'Common', level: 18, baseDef: 8 },
+    { name: 'Concrete Crushers', rarity: 'Common', level: 20, baseDef: 9 },
+    { name: 'Phantom Step Wraps', rarity: 'Legendary', level: 2, baseDef: 1, baseAtk: 1 },
+    { name: 'Holo-Sprint Anklets', rarity: 'Legendary', level: 5, baseDef: 2, baseAtk: 2 },
+    { name: 'Flickerstep Sandals', rarity: 'Epic', level: 3, baseDef: 2, baseAtk: 1 },
+    { name: 'Patched Running Shoes', rarity: 'Uncommon', level: 16, baseDef: 7 },
   ]),
   ring: createGearList('accessory', 'ring', [
-    { name: 'Copper Ring', rarity: 'Common', level: 1, baseAtk: 1 },
-    { name: 'Wired Loop', rarity: 'Common', level: 2, baseAtk: 1, baseDef: 1 },
+    { name: 'Copper Ring', rarity: 'Legendary', level: 1, baseAtk: 1 },
+    { name: 'Wired Loop', rarity: 'Rare', level: 2, baseAtk: 1, baseDef: 1 },
     { name: 'Scrap Charm', rarity: 'Common', level: 3, baseAtk: 1, baseDef: 1 },
-    { name: 'Fiber Bracelet', rarity: 'Common', level: 4, baseAtk: 2, baseDef: 1 },
+    { name: 'Fiber Bracelet', rarity: 'Epic', level: 4, baseAtk: 2, baseDef: 1 },
     { name: 'Chainlink Pendant', rarity: 'Common', level: 5, baseAtk: 2, baseDef: 1 },
-    { name: 'Silver Band', rarity: 'Uncommon', level: 6, baseAtk: 2, baseDef: 2 },
-    { name: 'Static Anklet', rarity: 'Uncommon', level: 7, baseAtk: 3, baseDef: 1 },
-    { name: 'Neon Choker', rarity: 'Uncommon', level: 8, baseAtk: 3, baseDef: 2 },
-    { name: 'Dynamo Locket', rarity: 'Rare', level: 9, baseAtk: 4, baseDef: 2 },
-    { name: 'Quartz Signet', rarity: 'Rare', level: 10, baseAtk: 4, baseDef: 3 },
-    { name: 'Reactor Torque', rarity: 'Rare', level: 11, baseAtk: 5, baseDef: 2 },
-    { name: 'Stormcall Ring', rarity: 'Rare', level: 12, baseAtk: 5, baseDef: 3 },
-    { name: 'Phoenix Emblem', rarity: 'Epic', level: 13, baseAtk: 6, baseDef: 3 },
-    { name: 'Void Harmonizer', rarity: 'Epic', level: 14, baseAtk: 6, baseDef: 4 },
-    { name: 'Celestial Prism', rarity: 'Epic', level: 15, baseAtk: 7, baseDef: 4 },
-    { name: 'Chrono Loop', rarity: 'Legendary', level: 16, baseAtk: 8, baseDef: 4 },
-    { name: 'Nova Signet', rarity: 'Legendary', level: 17, baseAtk: 8, baseDef: 5 },
-    { name: 'Infinity Anklet', rarity: 'Legendary', level: 18, baseAtk: 9, baseDef: 5 },
-    { name: 'Singularity Charm', rarity: 'Legendary', level: 19, baseAtk: 10, baseDef: 5 },
+    { name: 'Silver Band', rarity: 'Common', level: 6, baseAtk: 2, baseDef: 2 },
+    { name: 'Static Anklet', rarity: 'Rare', level: 7, baseAtk: 3, baseDef: 1 },
+    { name: 'Neon Choker', rarity: 'Legendary', level: 8, baseAtk: 3, baseDef: 2 },
+    { name: 'Dynamo Locket', rarity: 'Common', level: 9, baseAtk: 4, baseDef: 2 },
+    { name: 'Quartz Signet', rarity: 'Uncommon', level: 10, baseAtk: 4, baseDef: 3 },
+    { name: 'Reactor Torque', rarity: 'Epic', level: 11, baseAtk: 5, baseDef: 2 },
+    { name: 'Stormcall Ring', rarity: 'Common', level: 12, baseAtk: 5, baseDef: 3 },
+    { name: 'Phoenix Emblem', rarity: 'Uncommon', level: 13, baseAtk: 6, baseDef: 3 },
+    { name: 'Void Harmonizer', rarity: 'Rare', level: 14, baseAtk: 6, baseDef: 4 },
+    { name: 'Celestial Prism', rarity: 'Common', level: 15, baseAtk: 7, baseDef: 4 },
+    { name: 'Chrono Loop', rarity: 'Rare', level: 16, baseAtk: 8, baseDef: 4 },
+    { name: 'Nova Signet', rarity: 'Uncommon', level: 17, baseAtk: 8, baseDef: 5 },
+    { name: 'Infinity Anklet', rarity: 'Epic', level: 18, baseAtk: 9, baseDef: 5 },
+    { name: 'Singularity Charm', rarity: 'Uncommon', level: 19, baseAtk: 10, baseDef: 5 },
     { name: 'Paradox Halo', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 6 },
+    // Offensive strategy: ATK-heavy accessories for glass cannon builds
+    { name: 'Jagged Tooth Necklace', rarity: 'Rare', level: 1, baseAtk: 2 },
+    { name: 'Voltage Coil', rarity: 'Epic', level: 3, baseAtk: 3 },
+    { name: 'Razorwire Bracelet', rarity: 'Legendary', level: 6, baseAtk: 4, baseDef: 1 },
+    { name: 'Plasma Core Pendant', rarity: 'Common', level: 9, baseAtk: 6, baseDef: 1 },
+    { name: 'Warcry Amplifier', rarity: 'Uncommon', level: 12, baseAtk: 7, baseDef: 2 },
+    { name: 'Berserker Torque', rarity: 'Common', level: 15, baseAtk: 9, baseDef: 2 },
+    { name: 'Destruction Matrix', rarity: 'Uncommon', level: 18, baseAtk: 11, baseDef: 3 },
+    { name: 'Apocalypse Sigil', rarity: 'Rare', level: 20, baseAtk: 13, baseDef: 3 },
+    // Defensive strategy: DEF-heavy accessories for tank builds
+    { name: 'Iron Wristguard', rarity: 'Epic', level: 2, baseDef: 2, baseAtk: 1 },
+    { name: 'Hardened Amulet', rarity: 'Legendary', level: 4, baseDef: 3 },
+    { name: 'Dampening Coil', rarity: 'Common', level: 7, baseDef: 4, baseAtk: 1 },
+    { name: 'Shield Emitter Band', rarity: 'Uncommon', level: 10, baseDef: 5, baseAtk: 2 },
+    { name: 'Aegis Frequency Ring', rarity: 'Common', level: 12, baseDef: 6, baseAtk: 2 },
+    { name: 'Bastion Core', rarity: 'Rare', level: 15, baseDef: 7, baseAtk: 3 },
+    { name: 'Immortal Shell Locket', rarity: 'Common', level: 18, baseDef: 9, baseAtk: 3 },
+    { name: 'Eternity Ward Halo', rarity: 'Uncommon', level: 20, baseDef: 10, baseAtk: 4 },
+    // Rarity-decoupled accessories
+    { name: 'Bent Nail Pendant', rarity: 'Common', level: 13, baseAtk: 4, baseDef: 3 },
+    { name: 'Duct Tape Bracelet', rarity: 'Common', level: 16, baseAtk: 5, baseDef: 4 },
+    { name: 'Rebar Knuckle Ring', rarity: 'Common', level: 19, baseAtk: 6, baseDef: 5 },
+    { name: 'Junkyard Dog Tags', rarity: 'Common', level: 20, baseAtk: 7, baseDef: 5 },
+    { name: 'Glitch Prism', rarity: 'Legendary', level: 1, baseAtk: 1, baseDef: 1 },
+    { name: 'Neon Ghost Locket', rarity: 'Legendary', level: 4, baseAtk: 2, baseDef: 1 },
+    { name: 'Starfall Shard', rarity: 'Legendary', level: 7, baseAtk: 3, baseDef: 2 },
+    { name: 'Wraithbone Charm', rarity: 'Epic', level: 2, baseAtk: 1, baseDef: 1 },
+    { name: 'Pixelated Amulet', rarity: 'Epic', level: 5, baseAtk: 2, baseDef: 2 },
+    { name: 'Cursed Lucky Penny', rarity: 'Epic', level: 8, baseAtk: 3, baseDef: 2 },
+    { name: 'Faded Heirloom Ring', rarity: 'Rare', level: 1, baseAtk: 1 },
+    { name: 'Recycled Coil Band', rarity: 'Rare', level: 16, baseAtk: 6, baseDef: 3 },
+    { name: 'Jury-Rigged Scope', rarity: 'Uncommon', level: 15, baseAtk: 5, baseDef: 3 },
+    { name: 'Cracked Data Chip', rarity: 'Uncommon', level: 18, baseAtk: 6, baseDef: 4 },
   ]),
 };
 
@@ -760,11 +873,160 @@ export function rollDrop(dropTable, monsterLevel) {
   return generateItem(drop.type, monsterLevel);
 }
 
+// Seeded RNG for deterministic daily results
+function seededRandom(seed) {
+  let s = seed;
+  return function () {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function seededPickWeighted(items, rng) {
+  const total = items.reduce((s, i) => s + i.weight, 0);
+  let roll = rng() * total;
+  for (const item of items) {
+    roll -= item.weight;
+    if (roll <= 0) return item;
+  }
+  return items[items.length - 1];
+}
+
+export function getDailyFeaturedItems(playerLevel) {
+  const today = new Date();
+  const daySeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  const rng = seededRandom(daySeed + playerLevel);
+
+  const extraordinaryRarities = RARITIES.filter(r => r.name === 'Rare' || r.name === 'Epic' || r.name === 'Legendary');
+  const gearTypes = ['sword', 'shield', 'helmet', 'armor', 'boots', 'ring'];
+  const featured = [];
+  const usedNames = new Set();
+
+  const count = 3;
+  for (let i = 0; i < count; i++) {
+    const typeIdx = Math.floor(rng() * gearTypes.length);
+    const type = gearTypes[typeIdx];
+    const pool = ITEM_LIBRARY[type];
+    if (!pool) continue;
+
+    const rarity = seededPickWeighted(extraordinaryRarities, rng);
+    const candidates = pool.filter(item => item.rarity === rarity.name && item.level <= Math.max(playerLevel + 3, 5));
+    if (candidates.length === 0) continue;
+
+    const template = candidates[Math.floor(rng() * candidates.length)];
+    if (usedNames.has(template.name)) continue;
+    usedNames.add(template.name);
+
+    const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
+    const baseLevelFactor = 1 + template.level * 0.05;
+    const atk = template.baseAtk > 0
+      ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * rarityData.multiplier))
+      : 0;
+    const def = template.baseDef > 0
+      ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * rarityData.multiplier))
+      : 0;
+
+    const buyPrice = Math.floor((atk + def) * 8 + template.level * 6 + rarityData.multiplier * 20);
+
+    featured.push({
+      id: uid(),
+      name: template.name,
+      type,
+      slot: template.slot,
+      level: template.level,
+      rarity: template.rarity,
+      rarityClass: rarityData.cssClass,
+      rarityColor: rarityData.color,
+      atk,
+      def,
+      icon: template.icon,
+      buyPrice,
+      sellPrice: Math.max(10, Math.floor((atk + def) * 4 + template.level * 3 + rarityData.multiplier * 10)),
+    });
+  }
+
+  return featured;
+}
+
 export function calcDamage(atk, def) {
   const base = Math.max(1, atk - def * 0.5);
   const variance = 0.85 + Math.random() * 0.3;
   return Math.max(1, Math.floor(base * variance));
 }
+
+// ---- CHARACTER CLASSES ----
+export const CHARACTER_CLASSES = {
+  berserker: {
+    id: 'berserker',
+    name: 'Berserker',
+    description: 'A reckless brawler who trades defense for overwhelming aggression. Grows stronger as HP drops.',
+    color: '#ff4444',
+    baseStats: { maxHp: 55, maxMana: 15, baseAtk: 8, baseDef: 1 },
+    growth: { hp: 10, hpRand: 6, atk: 2, atkRand: 2, def: 1, defRand: 1, mana: 2, manaRand: 2 },
+    passive: 'Rage',
+    passiveDesc: '+30% ATK when below 40% HP',
+    skillName: 'Frenzy',
+    skillDesc: '2.0x ATK damage, take 10% max HP recoil',
+    skillMultiplier: 2.0,
+    skillEffect: 'recoil',
+  },
+  warrior: {
+    id: 'warrior',
+    name: 'Warrior',
+    description: 'A disciplined fighter with balanced offense and strong defense. Hard to kill.',
+    color: '#4488ff',
+    baseStats: { maxHp: 65, maxMana: 25, baseAtk: 5, baseDef: 4 },
+    growth: { hp: 10, hpRand: 4, atk: 1, atkRand: 2, def: 2, defRand: 2, mana: 3, manaRand: 2 },
+    passive: 'Fortify',
+    passiveDesc: 'Defend blocks 70% damage instead of 50%',
+    skillName: 'Shield Bash',
+    skillDesc: '1.4x ATK damage, reduces enemy ATK by 15% for the fight',
+    skillMultiplier: 1.4,
+    skillEffect: 'weaken',
+  },
+  thief: {
+    id: 'thief',
+    name: 'Thief',
+    description: 'A cunning rogue who strikes fast and steals more. Higher escape chance and bonus gold.',
+    color: '#44dd44',
+    baseStats: { maxHp: 42, maxMana: 25, baseAtk: 7, baseDef: 2 },
+    growth: { hp: 7, hpRand: 4, atk: 2, atkRand: 2, def: 1, defRand: 1, mana: 3, manaRand: 3 },
+    passive: 'Greed',
+    passiveDesc: '+25% gold from battles, 75% escape chance',
+    skillName: 'Backstab',
+    skillDesc: '2.2x ATK damage, ignores 50% of enemy DEF',
+    skillMultiplier: 2.2,
+    skillEffect: 'pierce',
+  },
+  mage: {
+    id: 'mage',
+    name: 'Mage',
+    description: 'A scholar of arcane arts who channels devastating spells. High mana, fragile body.',
+    color: '#bb66ff',
+    baseStats: { maxHp: 38, maxMana: 50, baseAtk: 6, baseDef: 1 },
+    growth: { hp: 6, hpRand: 3, atk: 2, atkRand: 1, def: 1, defRand: 1, mana: 6, manaRand: 4 },
+    passive: 'Arcane Mind',
+    passiveDesc: 'Skill attacks deal +40% damage',
+    skillName: 'Arcane Blast',
+    skillDesc: '1.8x ATK damage, ignores all enemy DEF',
+    skillMultiplier: 1.8,
+    skillEffect: 'true_damage',
+  },
+  necromancer: {
+    id: 'necromancer',
+    name: 'Necromancer',
+    description: 'A dark caster who siphons life from enemies. Sustains through draining attacks.',
+    color: '#cc44cc',
+    baseStats: { maxHp: 45, maxMana: 40, baseAtk: 6, baseDef: 2 },
+    growth: { hp: 7, hpRand: 4, atk: 1, atkRand: 2, def: 1, defRand: 2, mana: 5, manaRand: 3 },
+    passive: 'Lifetap',
+    passiveDesc: 'Normal attacks heal 15% of damage dealt',
+    skillName: 'Drain Life',
+    skillDesc: '1.5x ATK damage, heal 40% of damage dealt',
+    skillMultiplier: 1.5,
+    skillEffect: 'drain',
+  },
+};
 
 export const EXPLORE_TEXTS = {
   street: [

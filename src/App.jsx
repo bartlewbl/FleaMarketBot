@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useGameState, ENERGY_COST_PER_TRIP, ENERGY_MAX } from './hooks/useGameState';
+import { CHARACTER_CLASSES } from './data/gameData';
 import { login, register, getMe, loadGame, hasSavedSession } from './api';
 import GameCanvas from './components/GameCanvas';
 import TopBar from './components/TopBar';
@@ -13,6 +14,7 @@ import InventoryScreen from './components/screens/InventoryScreen';
 import ShopScreen from './components/screens/ShopScreen';
 import ProfileScreen from './components/screens/ProfileScreen';
 import SkillsScreen from './components/screens/SkillsScreen';
+import ClassSelectScreen from './components/screens/ClassSelectScreen';
 import BossConfirmScreen from './components/screens/BossConfirmScreen';
 import SidePanel from './components/SidePanel';
 
@@ -136,6 +138,18 @@ export default function App() {
     );
   }
 
+  // Class selection screen (full-screen, no side panel)
+  if (state.screen === 'class-select') {
+    return (
+      <div className="game-container">
+        <GameCanvas screen="town" location={null} battle={null} animTick={animTick} />
+        <div className="ui-overlay">
+          <ClassSelectScreen onSelectClass={actions.selectClass} />
+        </div>
+      </div>
+    );
+  }
+
   const navLocked = state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm';
   const canRest = !navLocked && (state.screen === 'town' || state.screen === 'locations');
 
@@ -180,7 +194,15 @@ export default function App() {
 
           <div className="screen-stage">
             {state.screen === 'town' && (
-              <TownScreen player={state.player} />
+              <TownScreen
+                player={state.player}
+                energy={state.energy}
+                energyCost={ENERGY_COST_PER_TRIP}
+                onRest={actions.restAtInn}
+                onEnterLocation={actions.enterLocation}
+                onBuy={actions.buyItem}
+                canRest={canRest}
+              />
             )}
 
             {state.screen === 'locations' && (
@@ -221,6 +243,7 @@ export default function App() {
                 onPotion={actions.battlePotion}
                 onRun={actions.battleRun}
                 onMonsterTurn={actions.monsterTurn}
+                skillName={state.player.characterClass ? CHARACTER_CLASSES[state.player.characterClass]?.skillName : 'Skill'}
               />
             )}
 
@@ -255,6 +278,7 @@ export default function App() {
             {state.screen === 'skills' && (
               <SkillsScreen
                 onBack={actions.goToTown}
+                characterClass={state.player.characterClass}
               />
             )}
 
