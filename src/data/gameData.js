@@ -148,6 +148,15 @@ const ITEM_LIBRARY = {
     { name: 'Apex Warstaff', rarity: 'Legendary', level: 18, baseAtk: 21 },
     { name: 'Singularity Edge', rarity: 'Legendary', level: 19, baseAtk: 23 },
     { name: 'Cosmic Guillotine', rarity: 'Legendary', level: 20, baseAtk: 25, baseDef: 2 },
+    // Offensive strategy: glass-cannon weapons with high ATK, no DEF
+    { name: 'Plasma Cutter', rarity: 'Common', level: 2, baseAtk: 5 },
+    { name: 'Voltage Switchblade', rarity: 'Uncommon', level: 5, baseAtk: 9 },
+    { name: 'Overclocked Cleaver', rarity: 'Rare', level: 8, baseAtk: 13 },
+    { name: 'Berserker Maul', rarity: 'Rare', level: 11, baseAtk: 15 },
+    { name: 'Crimson Buzzsaw', rarity: 'Epic', level: 14, baseAtk: 19 },
+    { name: 'Wrath of Neon', rarity: 'Epic', level: 16, baseAtk: 21 },
+    { name: 'Oblivion Reaver', rarity: 'Legendary', level: 18, baseAtk: 24 },
+    { name: 'Doomsday Splicer', rarity: 'Legendary', level: 20, baseAtk: 28 },
   ]),
   shield: createGearList('shield', 'shield', [
     { name: 'Splintered Plank', rarity: 'Common', level: 1, baseDef: 3 },
@@ -170,6 +179,15 @@ const ITEM_LIBRARY = {
     { name: 'Voidcarapace', rarity: 'Legendary', level: 18, baseDef: 20 },
     { name: 'Celestial Rampart', rarity: 'Legendary', level: 19, baseDef: 21 },
     { name: 'Infinity Guard', rarity: 'Legendary', level: 20, baseDef: 23 },
+    // Defensive strategy: ultra-tank shields with boosted DEF
+    { name: 'Junkyard Barricade', rarity: 'Common', level: 1, baseDef: 4 },
+    { name: 'Scrapwall Gate', rarity: 'Common', level: 3, baseDef: 6 },
+    { name: 'Titanium Kiteshield', rarity: 'Uncommon', level: 6, baseDef: 10 },
+    { name: 'Hardlight Projector', rarity: 'Rare', level: 9, baseDef: 13 },
+    { name: 'Fortress Matrix', rarity: 'Rare', level: 12, baseDef: 16 },
+    { name: 'Impenetrable Ward', rarity: 'Epic', level: 15, baseDef: 19 },
+    { name: 'Dimensional Barricade', rarity: 'Legendary', level: 18, baseDef: 22 },
+    { name: 'Absolute Zero Wall', rarity: 'Legendary', level: 20, baseDef: 25 },
   ]),
   helmet: createGearList('helmet', 'helmet', [
     { name: 'Frayed Bandana', rarity: 'Common', level: 1, baseDef: 2 },
@@ -192,6 +210,13 @@ const ITEM_LIBRARY = {
     { name: 'Void Prophet Hood', rarity: 'Legendary', level: 18, baseDef: 15 },
     { name: 'Astral Mindguard', rarity: 'Legendary', level: 19, baseDef: 16 },
     { name: 'Infinity Circlet', rarity: 'Legendary', level: 20, baseDef: 17, baseAtk: 2 },
+    // Offensive strategy: ATK-focused headgear for aggressive builds
+    { name: 'Targeting Visor', rarity: 'Common', level: 2, baseAtk: 2, baseDef: 1 },
+    { name: 'Neural Amp Helm', rarity: 'Uncommon', level: 5, baseAtk: 3, baseDef: 2 },
+    { name: 'Fury Circuit Crown', rarity: 'Rare', level: 9, baseAtk: 5, baseDef: 3 },
+    { name: 'Warhead Casing', rarity: 'Epic', level: 13, baseAtk: 7, baseDef: 4 },
+    { name: 'Berserker Faceplate', rarity: 'Epic', level: 16, baseAtk: 9, baseDef: 4 },
+    { name: 'Annihilator Helm', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 5 },
   ]),
   armor: createGearList('armor', 'armor', [
     { name: 'Tattered Vest', rarity: 'Common', level: 1, baseDef: 4 },
@@ -214,6 +239,13 @@ const ITEM_LIBRARY = {
     { name: 'Celestial Bulwark Suit', rarity: 'Legendary', level: 18, baseDef: 20 },
     { name: 'Eternium Aegis Frame', rarity: 'Legendary', level: 19, baseDef: 21 },
     { name: 'Singularity Battlesuit', rarity: 'Legendary', level: 20, baseDef: 23, baseAtk: 1 },
+    // Defensive strategy: ultra-tank armor with boosted DEF
+    { name: 'Lead-Lined Poncho', rarity: 'Common', level: 2, baseDef: 6 },
+    { name: 'Riot Suppression Suit', rarity: 'Uncommon', level: 6, baseDef: 11 },
+    { name: 'Neutronium Plate', rarity: 'Rare', level: 10, baseDef: 15 },
+    { name: 'Monolith Exoskeleton', rarity: 'Epic', level: 14, baseDef: 19 },
+    { name: 'Event Horizon Shell', rarity: 'Legendary', level: 18, baseDef: 23 },
+    { name: 'Omega Fortress Armor', rarity: 'Legendary', level: 20, baseDef: 26 },
   ]),
   boots: createGearList('boots', 'boots', [
     { name: 'Cracked Sandals', rarity: 'Common', level: 1, baseDef: 1 },
@@ -236,6 +268,13 @@ const ITEM_LIBRARY = {
     { name: 'Chrono Greaves', rarity: 'Legendary', level: 18, baseDef: 9, baseAtk: 1 },
     { name: 'Rift Sabatons', rarity: 'Legendary', level: 19, baseDef: 10 },
     { name: 'Infinity Marchers', rarity: 'Legendary', level: 20, baseDef: 11, baseAtk: 2 },
+    // Offensive strategy: ATK-focused boots for rush/aggressive play
+    { name: 'Spike-Tipped Runners', rarity: 'Common', level: 3, baseAtk: 2, baseDef: 1 },
+    { name: 'Blitz Stompers', rarity: 'Uncommon', level: 7, baseAtk: 3, baseDef: 2 },
+    { name: 'Razor Striders', rarity: 'Rare', level: 10, baseAtk: 4, baseDef: 3 },
+    { name: 'Assault Thrusters', rarity: 'Epic', level: 14, baseAtk: 5, baseDef: 4 },
+    { name: 'Havoc Tramples', rarity: 'Legendary', level: 17, baseAtk: 6, baseDef: 5 },
+    { name: 'Annihilation Treads', rarity: 'Legendary', level: 20, baseAtk: 8, baseDef: 5 },
   ]),
   ring: createGearList('accessory', 'ring', [
     { name: 'Copper Ring', rarity: 'Common', level: 1, baseAtk: 1 },
@@ -258,6 +297,24 @@ const ITEM_LIBRARY = {
     { name: 'Infinity Anklet', rarity: 'Legendary', level: 18, baseAtk: 9, baseDef: 5 },
     { name: 'Singularity Charm', rarity: 'Legendary', level: 19, baseAtk: 10, baseDef: 5 },
     { name: 'Paradox Halo', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 6 },
+    // Offensive strategy: ATK-heavy accessories for glass cannon builds
+    { name: 'Jagged Tooth Necklace', rarity: 'Common', level: 1, baseAtk: 2 },
+    { name: 'Voltage Coil', rarity: 'Common', level: 3, baseAtk: 3 },
+    { name: 'Razorwire Bracelet', rarity: 'Uncommon', level: 6, baseAtk: 4, baseDef: 1 },
+    { name: 'Plasma Core Pendant', rarity: 'Rare', level: 9, baseAtk: 6, baseDef: 1 },
+    { name: 'Warcry Amplifier', rarity: 'Rare', level: 12, baseAtk: 7, baseDef: 2 },
+    { name: 'Berserker Torque', rarity: 'Epic', level: 15, baseAtk: 9, baseDef: 2 },
+    { name: 'Destruction Matrix', rarity: 'Legendary', level: 18, baseAtk: 11, baseDef: 3 },
+    { name: 'Apocalypse Sigil', rarity: 'Legendary', level: 20, baseAtk: 13, baseDef: 3 },
+    // Defensive strategy: DEF-heavy accessories for tank builds
+    { name: 'Iron Wristguard', rarity: 'Common', level: 2, baseDef: 2, baseAtk: 1 },
+    { name: 'Hardened Amulet', rarity: 'Common', level: 4, baseDef: 3 },
+    { name: 'Dampening Coil', rarity: 'Uncommon', level: 7, baseDef: 4, baseAtk: 1 },
+    { name: 'Shield Emitter Band', rarity: 'Rare', level: 10, baseDef: 5, baseAtk: 2 },
+    { name: 'Aegis Frequency Ring', rarity: 'Rare', level: 12, baseDef: 6, baseAtk: 2 },
+    { name: 'Bastion Core', rarity: 'Epic', level: 15, baseDef: 7, baseAtk: 3 },
+    { name: 'Immortal Shell Locket', rarity: 'Legendary', level: 18, baseDef: 9, baseAtk: 3 },
+    { name: 'Eternity Ward Halo', rarity: 'Legendary', level: 20, baseDef: 10, baseAtk: 4 },
   ]),
 };
 
