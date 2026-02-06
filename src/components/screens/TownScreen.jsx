@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { CHARACTER_CLASSES, LOCATIONS } from '../../data/gameData';
+import { CHARACTER_CLASSES, REGIONS } from '../../data/gameData';
 import { getDailyFeaturedItems } from '../../engine/loot';
 const townNotices = [
   'Daily hunt: Defeat 5 forest goblins for 50 bonus XP.',
@@ -50,7 +50,8 @@ export default function TownScreen({ player, energy, energyCost, onRest, onEnter
   const events = useMemo(() => getRotatingEvents(), []);
 
   const latestLocation = useMemo(() => {
-    const unlocked = LOCATIONS.filter(loc => (player?.level ?? 1) >= loc.levelReq);
+    const allLocations = REGIONS.flatMap(r => r.locations);
+    const unlocked = allLocations.filter(loc => (player?.level ?? 1) >= loc.levelReq);
     return unlocked.length > 0 ? unlocked[unlocked.length - 1] : null;
   }, [player?.level]);
 
