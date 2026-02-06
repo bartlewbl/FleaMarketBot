@@ -1,6 +1,7 @@
 import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS, generateItem,
+  CHARACTER_CLASSES,
 } from '../data/gameData';
 import { saveGame } from '../api';
 
@@ -13,6 +14,7 @@ const ENERGY_REGEN_INTERVAL_MS = 15 * 60 * 1000;
 function createInitialPlayer() {
   return {
     name: 'Hero',
+    characterClass: null,
     level: 1,
     exp: 0,
     expToLevel: expForLevel(1),
@@ -31,7 +33,7 @@ function createInitialPlayer() {
 
 function createInitialState() {
   return {
-    screen: 'town',
+    screen: 'class-select',
     player: createInitialPlayer(),
     currentLocation: null,
     battle: null,
@@ -44,11 +46,20 @@ function createInitialState() {
   };
 }
 
+function getClassData(player) {
+  return player.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
+}
+
 // ---- HELPERS ----
 function getPlayerAtk(player, battle) {
   let atk = player.baseAtk;
   for (const item of Object.values(player.equipment)) {
     if (item) atk += (item.atk || 0);
+  }
+  // Berserker Rage: +30% ATK when below 40% HP
+  const cls = getClassData(player);
+  if (cls?.passive === 'Rage' && player.hp < player.maxHp * 0.4) {
+    atk = Math.floor(atk * 1.3);
   }
   return Math.max(1, atk - (battle?.atkDebuff || 0));
 }
@@ -64,14 +75,16 @@ function getPlayerDef(player, battle) {
 function processLevelUps(player) {
   const p = { ...player };
   const gains = [];
+  const cls = getClassData(p);
+  const growth = cls?.growth;
   while (p.exp >= p.expToLevel) {
     p.exp -= p.expToLevel;
     p.level++;
     p.expToLevel = expForLevel(p.level);
-    const hpGain = 8 + Math.floor(Math.random() * 5);
-    const atkGain = 1 + Math.floor(Math.random() * 2);
-    const defGain = 1 + Math.floor(Math.random() * 2);
-    const manaGain = 4 + Math.floor(Math.random() * 3);
+    const hpGain = (growth?.hp ?? 8) + Math.floor(Math.random() * (growth?.hpRand ?? 5));
+    const atkGain = (growth?.atk ?? 1) + Math.floor(Math.random() * (growth?.atkRand ?? 2));
+    const defGain = (growth?.def ?? 1) + Math.floor(Math.random() * (growth?.defRand ?? 2));
+    const manaGain = (growth?.mana ?? 4) + Math.floor(Math.random() * (growth?.manaRand ?? 3));
     p.maxHp += hpGain;
     p.hp = p.maxHp;
     p.maxMana += manaGain;
@@ -106,9 +119,13 @@ function regenEnergy(currentEnergy, lastEnergyUpdate, now = Date.now()) {
 
 // Extract the saveable portion of state (no transient battle data)
 function extractSaveData(state) {
+  let screen = state.screen;
+  if (screen === 'battle' || screen === 'battle-result') screen = 'town';
+  // Don't save class-select; if no class is chosen yet, they'll see it on load
+  if (screen === 'class-select') screen = 'class-select';
   return {
     player: state.player,
-    screen: (state.screen === 'battle' || state.screen === 'battle-result') ? 'town' : state.screen,
+    screen,
     energy: state.energy,
     lastEnergyUpdate: state.lastEnergyUpdate,
   };
@@ -124,10 +141,13 @@ function gameReducer(state, action) {
         energy ?? base.energy,
         lastEnergyUpdate ?? base.lastEnergyUpdate,
       );
+      const mergedPlayer = { ...base.player, ...player };
+      // If the player has no class, send them to class select
+      const resolvedScreen = !mergedPlayer.characterClass ? 'class-select' : (screen || 'town');
       return {
         ...base,
-        screen: screen || 'town',
-        player: { ...base.player, ...player },
+        screen: resolvedScreen,
+        player: mergedPlayer,
         energy: regen.energy,
         lastEnergyUpdate: regen.lastEnergyUpdate,
       };
@@ -135,6 +155,22 @@ function gameReducer(state, action) {
 
     case 'START_GAME':
       return createInitialState();
+
+    case 'SELECT_CLASS': {
+      const cls = CHARACTER_CLASSES[action.classId];
+      if (!cls) return state;
+      const p = {
+        ...state.player,
+        characterClass: cls.id,
+        maxHp: cls.baseStats.maxHp,
+        hp: cls.baseStats.maxHp,
+        maxMana: cls.baseStats.maxMana,
+        mana: cls.baseStats.maxMana,
+        baseAtk: cls.baseStats.baseAtk,
+        baseDef: cls.baseStats.baseDef,
+      };
+      return { ...state, screen: 'town', player: p };
+    }
 
     case 'GO_TO_TOWN':
       return { ...state, screen: 'town', currentLocation: null, battle: null, battleResult: null, battleLog: [] };
@@ -212,31 +248,79 @@ function gameReducer(state, action) {
     case 'BATTLE_PLAYER_ATTACK': {
       const b = { ...state.battle };
       const m = { ...b.monster };
-      const dmg = calcDamage(getPlayerAtk(state.player, b), m.def);
+      let p = { ...state.player };
+      const dmg = calcDamage(getPlayerAtk(p, b), m.def);
       m.hp = Math.max(0, m.hp - dmg);
       b.monster = m;
       b.defending = false;
       const log = [...state.battleLog, { text: `You attack for ${dmg} damage!`, type: 'dmg-monster' }];
 
-      if (m.hp <= 0) {
-        return handleVictory({ ...state, battle: b, battleLog: log });
+      // Necromancer Lifetap: heal 15% of damage dealt on normal attacks
+      const cls = getClassData(p);
+      if (cls?.passive === 'Lifetap') {
+        const healAmt = Math.floor(dmg * 0.15);
+        if (healAmt > 0 && p.hp < p.maxHp) {
+          p = { ...p, hp: Math.min(p.maxHp, p.hp + healAmt) };
+          log.push({ text: `Lifetap heals ${healAmt} HP!`, type: 'heal' });
+        }
       }
-      return { ...state, battle: b, battleLog: log };
+
+      if (m.hp <= 0) {
+        return handleVictory({ ...state, player: p, battle: b, battleLog: log });
+      }
+      return { ...state, player: p, battle: b, battleLog: log };
     }
 
     case 'BATTLE_PLAYER_SKILL': {
       const b = { ...state.battle };
       const m = { ...b.monster };
-      const dmg = calcDamage(Math.floor(getPlayerAtk(state.player, b) * 1.5), m.def);
+      let p = { ...state.player };
+      const cls = getClassData(p);
+      const skillName = cls?.skillName || 'Power Strike';
+      const skillMult = cls?.skillMultiplier || 1.5;
+      const skillEffect = cls?.skillEffect || null;
+
+      // Mage passive: +40% skill damage
+      const passiveBonus = (cls?.passive === 'Arcane Mind') ? 1.4 : 1.0;
+      const atkValue = Math.floor(getPlayerAtk(p, b) * skillMult * passiveBonus);
+
+      // Thief pierce: ignore 50% DEF
+      const effectiveDef = (skillEffect === 'pierce') ? Math.floor(m.def * 0.5)
+        : (skillEffect === 'true_damage') ? 0
+        : m.def;
+
+      const dmg = calcDamage(atkValue, effectiveDef);
       m.hp = Math.max(0, m.hp - dmg);
       b.monster = m;
       b.defending = false;
-      const log = [...state.battleLog, { text: `Power Strike for ${dmg} damage!`, type: 'dmg-monster' }];
+      const log = [...state.battleLog, { text: `${skillName} for ${dmg} damage!`, type: 'dmg-monster' }];
+
+      // Berserker recoil: take 10% max HP
+      if (skillEffect === 'recoil') {
+        const recoil = Math.floor(p.maxHp * 0.1);
+        p = { ...p, hp: Math.max(1, p.hp - recoil) };
+        log.push({ text: `Recoil deals ${recoil} damage to you!`, type: 'dmg-player' });
+      }
+
+      // Warrior weaken: reduce monster ATK by 15%
+      if (skillEffect === 'weaken') {
+        const reduction = Math.max(1, Math.floor(m.atk * 0.15));
+        m.atk = Math.max(1, m.atk - reduction);
+        b.monster = m;
+        log.push({ text: `Enemy ATK reduced by ${reduction}!`, type: 'info' });
+      }
+
+      // Necromancer drain: heal 40% of damage dealt
+      if (skillEffect === 'drain') {
+        const healAmt = Math.floor(dmg * 0.4);
+        p = { ...p, hp: Math.min(p.maxHp, p.hp + healAmt) };
+        log.push({ text: `Drained ${healAmt} HP!`, type: 'heal' });
+      }
 
       if (m.hp <= 0) {
-        return handleVictory({ ...state, battle: b, battleLog: log });
+        return handleVictory({ ...state, player: p, battle: b, battleLog: log });
       }
-      return { ...state, battle: b, battleLog: log };
+      return { ...state, player: p, battle: b, battleLog: log };
     }
 
     case 'BATTLE_DEFEND': {
@@ -259,7 +343,9 @@ function gameReducer(state, action) {
     }
 
     case 'BATTLE_RUN': {
-      if (Math.random() < 0.5) {
+      const cls = getClassData(state.player);
+      const escapeChance = (cls?.passive === 'Greed') ? 0.75 : 0.5;
+      if (Math.random() < escapeChance) {
         return {
           ...state, screen: 'explore', battle: null, battleLog: [],
           exploreText: 'You escaped the battle...',
@@ -283,7 +369,11 @@ function gameReducer(state, action) {
       if (skill) {
         const rawAtk = Math.floor(m.atk * skill.multiplier);
         let dmg = calcDamage(rawAtk, getPlayerDef(p, b));
-        if (b.defending) dmg = Math.floor(dmg * 0.5);
+        if (b.defending) {
+          const cls = getClassData(p);
+          const blockMult = (cls?.passive === 'Fortify') ? 0.3 : 0.5;
+          dmg = Math.floor(dmg * blockMult);
+        }
         p.hp = Math.max(0, p.hp - dmg);
         log.push({ text: `${m.name} uses ${skill.name} for ${dmg} damage!`, type: 'dmg-player' });
 
@@ -303,7 +393,11 @@ function gameReducer(state, action) {
         }
       } else {
         let dmg = calcDamage(m.atk, getPlayerDef(p, b));
-        if (b.defending) dmg = Math.floor(dmg * 0.5);
+        if (b.defending) {
+          const cls = getClassData(p);
+          const blockMult = (cls?.passive === 'Fortify') ? 0.3 : 0.5;
+          dmg = Math.floor(dmg * blockMult);
+        }
         p.hp = Math.max(0, p.hp - dmg);
         log.push({ text: `${m.name} attacks for ${dmg} damage!`, type: 'dmg-player' });
       }
@@ -447,7 +541,10 @@ function gameReducer(state, action) {
 function handleVictory(state) {
   const m = state.battle.monster;
   const expGain = m.exp;
-  const goldGain = m.gold;
+  const cls = getClassData(state.player);
+  const goldGain = (cls?.passive === 'Greed')
+    ? Math.floor(m.gold * 1.25)
+    : m.gold;
 
   let p = { ...state.player, exp: state.player.exp + expGain, gold: state.player.gold + goldGain };
 
@@ -541,6 +638,7 @@ export function useGameState(isLoggedIn) {
 
   const actions = useMemo(() => ({
     startGame: () => dispatch({ type: 'START_GAME' }),
+    selectClass: (classId) => dispatch({ type: 'SELECT_CLASS', classId }),
     goToTown: () => dispatch({ type: 'GO_TO_TOWN' }),
     showScreen: (screen) => dispatch({ type: 'SHOW_SCREEN', screen }),
     enterLocation: (loc) => dispatch({ type: 'ENTER_LOCATION', location: loc }),

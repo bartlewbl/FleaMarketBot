@@ -1026,6 +1026,165 @@ body {
   color: #ffb38a;
 }
 
+.skills-class-section {
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 4px;
+}
+
+.skill-card-class {
+  border-width: 2px;
+}
+
+/* ---- CLASS SELECT SCREEN ---- */
+.screen-class-select {
+  justify-content: flex-start;
+  padding: 30px 20px 20px;
+  gap: 12px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.class-select-header {
+  font-size: 16px;
+  color: #ffd700;
+  text-shadow: 2px 2px 0 #b8860b;
+  letter-spacing: 2px;
+}
+
+.class-select-subtitle {
+  font-size: 8px;
+  color: #a0a0d4;
+  margin-bottom: 8px;
+}
+
+.class-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 860px;
+}
+
+.class-card {
+  position: relative;
+  background: rgba(15, 15, 35, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  text-align: left;
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.class-card:hover {
+  border-color: var(--class-color, #ffd700);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.class-card-selected {
+  border-color: var(--class-color, #ffd700);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.25), inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+.class-card-name {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.class-card-desc {
+  font-size: 7px;
+  color: #b5b5d4;
+  line-height: 1.6;
+}
+
+.class-detail-panel {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(10, 10, 28, 0.95);
+  border: 2px solid var(--class-color, #ffd700);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+}
+
+.class-detail-name {
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.class-detail-section {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(20, 20, 50, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.class-detail-label {
+  font-size: 8px;
+  color: #9c9cd1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.class-detail-value {
+  font-size: 8px;
+  color: #d7d7ff;
+  line-height: 1.6;
+}
+
+.class-detail-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 9px;
+  color: #f5f5ff;
+}
+
+.class-confirm-btn {
+  margin-top: 6px;
+}
+
+.btn-confirm-pulse {
+  animation: confirmPulse 0.6s infinite alternate;
+}
+
+@keyframes confirmPulse {
+  from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
+  to { box-shadow: 0 0 18px rgba(255, 215, 0, 0.5); }
+}
+
+/* ---- TOWN HERO CLASS ---- */
+.town-hero-class {
+  font-size: 9px;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+/* ---- PROFILE CLASS INFO ---- */
+.profile-class-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-class-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 /* ---- EXPLORE SCREEN ---- */
 .screen-explore {
   justify-content: center;

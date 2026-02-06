@@ -1,3 +1,5 @@
+import { CHARACTER_CLASSES } from '../../data/gameData';
+
 const townNotices = [
   'Daily hunt: Defeat 5 forest goblins for 50 bonus XP.',
   'Blacksmith sale: Shields 15% off until midnight.',
@@ -20,6 +22,7 @@ export default function TownScreen({ player }) {
   const equipment = player?.equipment || {};
   const atkBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.atk || 0), 0);
   const defBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.def || 0), 0);
+  const cls = player?.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
 
   const heroStats = [
     { label: 'HP', value: `${player?.hp ?? 0}/${player?.maxHp ?? 0}` },
@@ -33,6 +36,9 @@ export default function TownScreen({ player }) {
       <div className="town-layout">
         <section className="town-hero-card">
           <div className="town-hero-title">Welcome back, {player?.name || 'Hero'}.</div>
+          {cls && (
+            <div className="town-hero-class" style={{ color: cls.color }}>{cls.name} — {cls.passive}</div>
+          )}
           <div className="town-hero-subtitle">The town is abuzz with new opportunities.</div>
           <div className="town-hero-stats">
             {heroStats.map(stat => (
