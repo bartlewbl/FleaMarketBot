@@ -1,8 +1,11 @@
 import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
-import {
-  expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS, generateItem,
-  CHARACTER_CLASSES,scaleBoss,
-} from '../data/gameData';
+import { expForLevel, SKILLS, EXPLORE_TEXTS, CHARACTER_CLASSES } from '../data/gameData';
+import { SKILL_TREES, getTreeSkill } from '../data/skillTrees';
+import { calcDamage, getClassData, playerHasSkill, getEffectiveManaCost, getPlayerAtk, getPlayerDef, getPlayerDodgeChance, getBattleMaxHp, getSkillPassiveBonus, rollSpellEcho, getEffectiveDef, getExecuteMultiplier } from '../engine/combat';
+import { applySkillEffect } from '../engine/skillEffects';
+import { applyAttackPassives, applySkillPassives, applyLifeTap, tryBladeDance, tryLuckyStrike, applyTurnStartPassives, applyDamageReduction, applyManaShield, checkDodge, applySurvivalPassives, applyCursedBlood } from '../engine/passives';
+import { scaleMonster, scaleBoss } from '../engine/scaling';
+import { rollDrop, generateItem } from '../engine/loot';
 import { saveGame } from '../api';
 
 export const ENERGY_MAX = 100;
@@ -28,6 +31,7 @@ function createInitialPlayer() {
     equipment: { weapon: null, shield: null, helmet: null, armor: null, boots: null, accessory: null },
     inventory: [],
     maxInventory: 20,
+    skillTree: [],
   };
 }
 
@@ -47,32 +51,7 @@ function createInitialState() {
   };
 }
 
-function getClassData(player) {
-  return player.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
-}
-
 // ---- HELPERS ----
-function getPlayerAtk(player, battle) {
-  let atk = player.baseAtk;
-  for (const item of Object.values(player.equipment)) {
-    if (item) atk += (item.atk || 0);
-  }
-  // Berserker Rage: +30% ATK when below 40% HP
-  const cls = getClassData(player);
-  if (cls?.passive === 'Rage' && player.hp < player.maxHp * 0.4) {
-    atk = Math.floor(atk * 1.3);
-  }
-  return Math.max(1, atk - (battle?.atkDebuff || 0));
-}
-
-function getPlayerDef(player, battle) {
-  let def = player.baseDef;
-  for (const item of Object.values(player.equipment)) {
-    if (item) def += (item.def || 0);
-  }
-  return Math.max(0, def - (battle?.defDebuff || 0));
-}
-
 function processLevelUps(player) {
   const p = { ...player };
   const gains = [];
@@ -227,6 +206,11 @@ function gameReducer(state, action) {
           battle: {
             monster, isPlayerTurn: true, defending: false,
             poisonTurns: 0, atkDebuff: 0, defDebuff: 0, animating: false,
+            monsterPoisonTurns: 0, monsterDoomTurns: 0,
+            undyingWillUsed: false, deathsEmbraceUsed: false,
+            defendedLastTurn: false, dodgeNextTurn: false, dodgeCharges: 0,
+            showSkillMenu: false, spellweaverActive: false,
+            avatarTurns: 0, armorBreakTurns: 0, cursedBloodPoison: 0,
           },
           battleLog: [{ text: `A ${monster.name} appears!`, type: 'info' }],
           battleResult: null,
@@ -259,23 +243,36 @@ function gameReducer(state, action) {
     }
 
     case 'BATTLE_PLAYER_ATTACK': {
-      const b = { ...state.battle };
-      const m = { ...b.monster };
+      let b = { ...state.battle };
+      let m = { ...b.monster };
       let p = { ...state.player };
-      const dmg = calcDamage(getPlayerAtk(p, b), m.def);
+      const cls = getClassData(p);
+      let dmg = calcDamage(getPlayerAtk(p, b), m.def);
+
+      const lucky = tryLuckyStrike(p, dmg);
+      dmg = lucky.dmg;
+
       m.hp = Math.max(0, m.hp - dmg);
       b.monster = m;
       b.defending = false;
-      const log = [...state.battleLog, { text: `You attack for ${dmg} damage!`, type: 'dmg-monster' }];
+      b.defendedLastTurn = false;
+      b.showSkillMenu = false;
+      let log = [...state.battleLog];
+      if (lucky.procced) {
+        log.push({ text: `Lucky Strike! Double damage for ${dmg}!`, type: 'dmg-monster' });
+      } else {
+        log.push({ text: `You attack for ${dmg} damage!`, type: 'dmg-monster' });
+      }
 
-      // Necromancer Lifetap: heal 15% of damage dealt on normal attacks
-      const cls = getClassData(p);
-      if (cls?.passive === 'Lifetap') {
-        const healAmt = Math.floor(dmg * 0.15);
-        if (healAmt > 0 && p.hp < p.maxHp) {
-          p = { ...p, hp: Math.min(p.maxHp, p.hp + healAmt) };
-          log.push({ text: `Lifetap heals ${healAmt} HP!`, type: 'heal' });
-        }
+      // Post-attack passives (lifetap, vampiric aura, soul siphon, bloodlust, etc.)
+      ({ player: p, monster: m, battle: b, log } = applyAttackPassives({ player: p, monster: m, battle: b, log, dmg, cls }));
+
+      // Blade Dance: 10% chance to attack twice
+      const blade = tryBladeDance(p, b, calcDamage, getPlayerAtk);
+      if (blade.attacked) {
+        m = { ...m, hp: Math.max(0, m.hp - blade.dmg) };
+        b = { ...b, monster: m };
+        log.push({ text: `Blade Dance! Extra attack for ${blade.dmg}!`, type: 'dmg-monster' });
       }
 
       if (m.hp <= 0) {
@@ -285,50 +282,54 @@ function gameReducer(state, action) {
     }
 
     case 'BATTLE_PLAYER_SKILL': {
-      const b = { ...state.battle };
-      const m = { ...b.monster };
+      let b = { ...state.battle };
+      let m = { ...b.monster };
       let p = { ...state.player };
       const cls = getClassData(p);
       const skillName = cls?.skillName || 'Power Strike';
       const skillMult = cls?.skillMultiplier || 1.5;
       const skillEffect = cls?.skillEffect || null;
+      const manaCost = getEffectiveManaCost(p, cls?.skillManaCost || 0);
 
-      // Mage passive: +40% skill damage
-      const passiveBonus = (cls?.passive === 'Arcane Mind') ? 1.4 : 1.0;
+      if (manaCost > 0 && p.mana < manaCost) {
+        return { ...state, message: `Not enough mana! (${manaCost} needed)` };
+      }
+      p = { ...p, mana: p.mana - manaCost };
+
+      let passiveBonus = getSkillPassiveBonus(p);
+      const echoProc = rollSpellEcho(p);
+      if (echoProc) passiveBonus *= 2;
       const atkValue = Math.floor(getPlayerAtk(p, b) * skillMult * passiveBonus);
 
-      // Thief pierce: ignore 50% DEF
-      const effectiveDef = (skillEffect === 'pierce') ? Math.floor(m.def * 0.5)
-        : (skillEffect === 'true_damage') ? 0
-        : m.def;
+      p = applyLifeTap(p, manaCost);
 
+      const effectiveDef = getEffectiveDef(m.def, skillEffect);
       const dmg = calcDamage(atkValue, effectiveDef);
       m.hp = Math.max(0, m.hp - dmg);
       b.monster = m;
       b.defending = false;
-      const log = [...state.battleLog, { text: `${skillName} for ${dmg} damage!`, type: 'dmg-monster' }];
-
-      // Berserker recoil: take 10% max HP
-      if (skillEffect === 'recoil') {
-        const recoil = Math.floor(p.maxHp * 0.1);
-        p = { ...p, hp: Math.max(1, p.hp - recoil) };
-        log.push({ text: `Recoil deals ${recoil} damage to you!`, type: 'dmg-player' });
+      b.defendedLastTurn = false;
+      b.showSkillMenu = false;
+      let log = [...state.battleLog];
+      if (echoProc) {
+        log.push({ text: `Spell Echo! ${skillName} for ${dmg} damage!`, type: 'dmg-monster' });
+      } else {
+        log.push({ text: `${skillName} for ${dmg} damage!`, type: 'dmg-monster' });
       }
 
-      // Warrior weaken: reduce monster ATK by 15%
-      if (skillEffect === 'weaken') {
-        const reduction = Math.max(1, Math.floor(m.atk * 0.15));
-        m.atk = Math.max(1, m.atk - reduction);
-        b.monster = m;
-        log.push({ text: `Enemy ATK reduced by ${reduction}!`, type: 'info' });
+      // Apply class skill effect (recoil, weaken, drain, etc.)
+      if (skillEffect) {
+        const battleMaxHp = getBattleMaxHp(p);
+        const fx = applySkillEffect(skillEffect, { dmg, player: p, monster: m, battle: b, battleMaxHp, log, manaCost });
+        p = fx.player || p;
+        m = fx.monster || m;
+        b = fx.battle || b;
+        log = fx.log || log;
+        if (fx.monster) b = { ...b, monster: m };
       }
 
-      // Necromancer drain: heal 40% of damage dealt
-      if (skillEffect === 'drain') {
-        const healAmt = Math.floor(dmg * 0.4);
-        p = { ...p, hp: Math.min(p.maxHp, p.hp + healAmt) };
-        log.push({ text: `Drained ${healAmt} HP!`, type: 'heal' });
-      }
+      // Post-skill passives (vampiric aura, bloodlust, soul siphon)
+      ({ player: p, log } = applySkillPassives({ player: p, log, dmg }));
 
       if (m.hp <= 0) {
         return handleVictory({ ...state, player: p, battle: b, battleLog: log });
@@ -336,21 +337,133 @@ function gameReducer(state, action) {
       return { ...state, player: p, battle: b, battleLog: log };
     }
 
+    case 'BATTLE_USE_TREE_SKILL': {
+      let b = { ...state.battle };
+      let m = { ...b.monster };
+      let p = { ...state.player };
+      const skill = getTreeSkill(action.skillId);
+      if (!skill || skill.type !== 'active') return state;
+      const manaCost = getEffectiveManaCost(p, skill.manaCost || 0);
+      if (manaCost > 0 && p.mana < manaCost) {
+        return { ...state, message: `Not enough mana! (${manaCost} needed)` };
+      }
+      p = { ...p, mana: p.mana - manaCost };
+
+      let passiveBonus = getSkillPassiveBonus(p);
+      const echoProc = rollSpellEcho(p);
+      if (echoProc) passiveBonus *= 2;
+      const atkValue = Math.floor(getPlayerAtk(p, b) * skill.multiplier * passiveBonus);
+      const battleMaxHp = getBattleMaxHp(p);
+
+      p = applyLifeTap(p, manaCost);
+
+      const effectiveDef = getEffectiveDef(m.def, skill.effect);
+      let finalMult = getExecuteMultiplier(skill.effect, m.hp, m.maxHp);
+      if (skill.effect === 'counter' && b.defendedLastTurn) finalMult = 1.25;
+
+      const dmg = calcDamage(Math.floor(atkValue * finalMult), effectiveDef);
+      m.hp = Math.max(0, m.hp - dmg);
+      b.monster = m;
+      b.defending = false;
+      b.defendedLastTurn = false;
+      b.showSkillMenu = false;
+      let log = [...state.battleLog];
+      if (echoProc) {
+        log.push({ text: `Spell Echo! ${skill.name} for ${dmg} damage!`, type: 'dmg-monster' });
+      } else {
+        log.push({ text: `${skill.name} for ${dmg} damage!`, type: 'dmg-monster' });
+      }
+
+      // Apply skill effect via data-driven registry
+      if (skill.effect) {
+        const fx = applySkillEffect(skill.effect, { dmg, player: p, monster: m, battle: b, battleMaxHp, log, manaCost });
+        p = fx.player || p;
+        m = fx.monster || m;
+        b = fx.battle || b;
+        log = fx.log || log;
+        if (fx.monster) b = { ...b, monster: m };
+      }
+
+      // Spellweaver: after using a skill, next normal attack +50%
+      if (playerHasSkill(p, 'mag_t8a')) {
+        b = { ...b, spellweaverActive: true };
+      }
+
+      // Post-skill passives (vampiric aura, bloodlust, soul siphon)
+      ({ player: p, log } = applySkillPassives({ player: p, log, dmg }));
+
+      if (m.hp <= 0) {
+        return handleVictory({ ...state, player: p, battle: b, battleLog: log });
+      }
+      return { ...state, player: p, battle: b, battleLog: log };
+    }
+
+    case 'TOGGLE_SKILL_MENU': {
+      if (!state.battle) return state;
+      return { ...state, battle: { ...state.battle, showSkillMenu: !state.battle.showSkillMenu } };
+    }
+
+    case 'UNLOCK_SKILL': {
+      const { skillId } = action;
+      const p = { ...state.player };
+      const tree = p.skillTree || [];
+      // Prevent duplicates
+      if (tree.includes(skillId)) return state;
+      // Verify the skill exists and the player meets requirements
+      const classTree = SKILL_TREES[p.characterClass];
+      if (!classTree) return state;
+      let valid = false;
+      for (const tier of classTree.tiers) {
+        if (p.level < tier.level) break;
+        // Check if this tier already has a choice
+        const tierChoiceIds = tier.choices.map(c => c.id);
+        const alreadyChosen = tree.some(id => tierChoiceIds.includes(id));
+        if (alreadyChosen) continue;
+        if (tierChoiceIds.includes(skillId)) {
+          // Check that all previous tiers have been filled
+          const tierIdx = classTree.tiers.indexOf(tier);
+          let prevFilled = true;
+          for (let i = 0; i < tierIdx; i++) {
+            const prevIds = classTree.tiers[i].choices.map(c => c.id);
+            if (!tree.some(id => prevIds.includes(id))) {
+              prevFilled = false;
+              break;
+            }
+          }
+          if (prevFilled) valid = true;
+          break;
+        }
+      }
+      if (!valid) return state;
+      p.skillTree = [...tree, skillId];
+      return { ...state, player: p };
+    }
+
     case 'BATTLE_DEFEND': {
-      const b = { ...state.battle, defending: true };
+      const b = { ...state.battle, defending: true, defendedLastTurn: true, showSkillMenu: false };
+      let p = { ...state.player };
       const log = [...state.battleLog, { text: 'You brace for impact!', type: 'info' }];
-      return { ...state, battle: b, battleLog: log };
+      // Arcane Barrier: defend restores 10 mana
+      if (playerHasSkill(p, 'mag_t7a')) {
+        p = { ...p, mana: Math.min(p.maxMana, p.mana + 10) };
+        log.push({ text: 'Arcane Barrier restores 10 mana!', type: 'heal' });
+      }
+      return { ...state, player: p, battle: b, battleLog: log };
     }
 
     case 'BATTLE_USE_POTION': {
       const potionIdx = state.player.inventory.findIndex(i => i.type === 'potion');
       if (potionIdx === -1) return { ...state, message: 'No potions!' };
       const potion = state.player.inventory[potionIdx];
-      const healed = Math.min(potion.healAmount, state.player.maxHp - state.player.hp);
+      const bMaxHp = getBattleMaxHp(state.player);
+      let potionHeal = potion.healAmount;
+      if (playerHasSkill(state.player, 'thf_t5a')) potionHeal = Math.floor(potionHeal * 1.3);
+      if (playerHasSkill(state.player, 'nec_t10a')) potionHeal = potionHeal * 2; // Lich Form
+      const healed = Math.min(potionHeal, bMaxHp - state.player.hp);
       if (healed === 0) return { ...state, message: 'HP is already full!' };
       const newInv = state.player.inventory.filter((_, i) => i !== potionIdx);
       const p = { ...state.player, hp: state.player.hp + healed, inventory: newInv };
-      const b = { ...state.battle, defending: false };
+      const b = { ...state.battle, defending: false, showSkillMenu: false };
       const log = [...state.battleLog, { text: `Used ${potion.name}, healed ${healed} HP!`, type: 'heal' }];
       return { ...state, player: p, battle: b, battleLog: log };
     }
@@ -364,6 +477,11 @@ function gameReducer(state, action) {
         battle: {
           monster: boss, isPlayerTurn: true, defending: false,
           poisonTurns: 0, atkDebuff: 0, defDebuff: 0, animating: false,
+          monsterPoisonTurns: 0, monsterDoomTurns: 0,
+          undyingWillUsed: false, deathsEmbraceUsed: false,
+          defendedLastTurn: false, dodgeNextTurn: false, dodgeCharges: 0,
+          showSkillMenu: false, spellweaverActive: false,
+          avatarTurns: 0, armorBreakTurns: 0, cursedBloodPoison: 0,
         },
         battleLog: [
           { text: `BOSS BATTLE!`, type: 'info' },
@@ -382,7 +500,8 @@ function gameReducer(state, action) {
 
     case 'BATTLE_RUN': {
       const cls = getClassData(state.player);
-      const escapeChance = (cls?.passive === 'Greed') ? 0.75 : 0.5;
+      let escapeChance = (cls?.passive === 'Greed') ? 0.75 : 0.5;
+      if (playerHasSkill(state.player, 'thf_t7a')) escapeChance = 1.0;
       if (Math.random() < escapeChance) {
         return {
           ...state, screen: 'explore', battle: null, battleLog: [],
@@ -395,63 +514,125 @@ function gameReducer(state, action) {
     }
 
     case 'MONSTER_TURN': {
-      const b = { ...state.battle };
-      const m = b.monster;
+      let b = { ...state.battle };
+      let m = { ...b.monster };
       let log = [...state.battleLog];
       let p = { ...state.player };
+      const cls = getClassData(p);
 
-      const useSkill = m.skills.length > 0 && Math.random() < 0.3;
-      const skillId = useSkill ? m.skills[Math.floor(Math.random() * m.skills.length)] : null;
-      const skill = skillId ? SKILLS[skillId] : null;
-
-      if (skill) {
-        const rawAtk = Math.floor(m.atk * skill.multiplier);
-        let dmg = calcDamage(rawAtk, getPlayerDef(p, b));
-        if (b.defending) {
-          const cls = getClassData(p);
-          const blockMult = (cls?.passive === 'Fortify') ? 0.3 : 0.5;
-          dmg = Math.floor(dmg * blockMult);
+      // Monster poison tick
+      if (b.monsterPoisonTurns > 0) {
+        const poisonDmg = Math.floor(m.maxHp * 0.06);
+        m.hp = Math.max(0, m.hp - poisonDmg);
+        b.monsterPoisonTurns--;
+        log.push({ text: `Poison deals ${poisonDmg} to ${m.name}!`, type: 'dmg-monster' });
+        if (m.hp <= 0) {
+          b.monster = m;
+          return handleVictory({ ...state, player: p, battle: b, battleLog: log });
         }
-        p.hp = Math.max(0, p.hp - dmg);
-        log.push({ text: `${m.name} uses ${skill.name} for ${dmg} damage!`, type: 'dmg-player' });
-
-        if (skill.effect === 'poison') {
-          b.poisonTurns = 3;
-          log.push({ text: 'You are poisoned!', type: 'dmg-player' });
-        } else if (skill.effect === 'lower_def') {
-          b.defDebuff = (b.defDebuff || 0) + 2;
-          log.push({ text: 'Your defense dropped!', type: 'dmg-player' });
-        } else if (skill.effect === 'lower_atk') {
-          b.atkDebuff = (b.atkDebuff || 0) + 2;
-          log.push({ text: 'Your attack dropped!', type: 'dmg-player' });
-        } else if (skill.effect === 'steal_gold') {
-          const stolen = Math.floor(Math.random() * 10 + 1);
-          p.gold = Math.max(0, p.gold - stolen);
-          log.push({ text: `Stole ${stolen} gold!`, type: 'dmg-player' });
-        } else if (skill.effect === 'drain_hp') {
-          const healed = Math.floor(dmg * 0.5);
-          b.monster = { ...m, hp: Math.min(m.maxHp, m.hp + healed) };
-          log.push({ text: `${m.name} drained ${healed} HP!`, type: 'dmg-player' });
+      }
+      // Monster doom tick
+      if (b.monsterDoomTurns > 0) {
+        const doomDmg = Math.floor(m.maxHp * 0.08);
+        m.hp = Math.max(0, m.hp - doomDmg);
+        b.monsterDoomTurns--;
+        log.push({ text: `Doom deals ${doomDmg} to ${m.name}!`, type: 'dmg-monster' });
+        if (m.hp <= 0) {
+          b.monster = m;
+          return handleVictory({ ...state, player: p, battle: b, battleLog: log });
         }
-      } else {
-        let dmg = calcDamage(m.atk, getPlayerDef(p, b));
-        if (b.defending) {
-          const cls = getClassData(p);
-          const blockMult = (cls?.passive === 'Fortify') ? 0.3 : 0.5;
-          dmg = Math.floor(dmg * blockMult);
-        }
-        p.hp = Math.max(0, p.hp - dmg);
-        log.push({ text: `${m.name} attacks for ${dmg} damage!`, type: 'dmg-player' });
       }
 
-      // Poison tick
+      // Tick down buffs
+      if (b.avatarTurns > 0) b.avatarTurns--;
+      if (b.armorBreakTurns > 0) b.armorBreakTurns--;
+
+      // Turn-start passives (regeneration, meditation, mana regen, dark pact)
+      ({ player: p, log } = applyTurnStartPassives({ player: p, battle: b, log }));
+
+      // Check dodge (shadow step, evasion mastery, shadow dance, aegis)
+      let dodged;
+      ({ dodged, battle: b, log } = checkDodge(p, b, log));
+
+      if (!dodged) {
+        const useSkill = m.skills.length > 0 && Math.random() < 0.3;
+        const mSkillId = useSkill ? m.skills[Math.floor(Math.random() * m.skills.length)] : null;
+        const mSkill = mSkillId ? SKILLS[mSkillId] : null;
+
+        let dmg;
+        if (mSkill) {
+          const rawAtk = Math.floor(m.atk * mSkill.multiplier);
+          dmg = calcDamage(rawAtk, getPlayerDef(p, b));
+        } else {
+          dmg = calcDamage(m.atk, getPlayerDef(p, b));
+        }
+
+        // Damage reduction passives (defend, iron skin, thick skin, fortress)
+        dmg = applyDamageReduction(dmg, p, b, cls);
+
+        // Mana Shield absorption
+        const shield = applyManaShield(dmg, p);
+        dmg = shield.dmg;
+        if (shield.manaUsed > 0) {
+          p = { ...p, mana: p.mana - shield.manaUsed };
+          log.push({ text: `Mana Shield absorbs ${shield.manaUsed} damage!`, type: 'info' });
+        }
+
+        dmg = Math.max(1, dmg);
+        p = { ...p, hp: Math.max(0, p.hp - dmg) };
+
+        if (mSkill) {
+          log.push({ text: `${m.name} uses ${mSkill.name} for ${dmg} damage!`, type: 'dmg-player' });
+          if (mSkill.effect === 'poison') {
+            if (playerHasSkill(p, 'nec_t10a')) {
+              log.push({ text: 'Lich Form: immune to poison!', type: 'info' });
+            } else {
+              let dur = 3;
+              if (playerHasSkill(p, 'brs_t7a')) dur = Math.max(1, dur - 1);
+              b.poisonTurns = dur;
+            }
+            log.push({ text: 'You are poisoned!', type: 'dmg-player' });
+          } else if (mSkill.effect === 'lower_def') {
+            b.defDebuff = (b.defDebuff || 0) + 2;
+            log.push({ text: 'Your defense dropped!', type: 'dmg-player' });
+          } else if (mSkill.effect === 'lower_atk') {
+            b.atkDebuff = (b.atkDebuff || 0) + 2;
+            log.push({ text: 'Your attack dropped!', type: 'dmg-player' });
+          } else if (mSkill.effect === 'steal_gold') {
+            const stolen = Math.floor(Math.random() * 10 + 1);
+            p = { ...p, gold: Math.max(0, p.gold - stolen) };
+            log.push({ text: `Stole ${stolen} gold!`, type: 'dmg-player' });
+          } else if (mSkill.effect === 'drain_hp') {
+            const healed = Math.floor(dmg * 0.5);
+            m = { ...m, hp: Math.min(m.maxHp, m.hp + healed) };
+            log.push({ text: `${m.name} drained ${healed} HP!`, type: 'dmg-player' });
+          }
+        } else {
+          log.push({ text: `${m.name} attacks for ${dmg} damage!`, type: 'dmg-player' });
+        }
+      }
+
+      // Player poison tick
       if (b.poisonTurns > 0) {
         const poisonDmg = Math.floor(p.maxHp * 0.05);
-        p.hp = Math.max(0, p.hp - poisonDmg);
+        if (playerHasSkill(p, 'war_t9a')) {
+          p = { ...p, hp: Math.max(1, p.hp - poisonDmg) };
+        } else {
+          p = { ...p, hp: Math.max(0, p.hp - poisonDmg) };
+        }
         b.poisonTurns--;
         log.push({ text: `Poison deals ${poisonDmg} damage!`, type: 'dmg-player' });
       }
 
+      // Cursed Blood: chance to poison attacker when hit
+      if (!dodged) {
+        ({ battle: b, log } = applyCursedBlood(p, b, log));
+      }
+
+      // Survival passives (undying will, death's embrace)
+      ({ player: p, battle: b, log } = applySurvivalPassives({ player: p, battle: b, log }));
+
+      b.monster = m;
       b.isPlayerTurn = true;
       b.defending = false;
 
@@ -584,9 +765,10 @@ function handleVictory(state) {
   const m = state.battle.monster;
   const expGain = m.exp;
   const cls = getClassData(state.player);
-  const goldGain = (cls?.passive === 'Greed')
-    ? Math.floor(m.gold * 1.25)
-    : m.gold;
+  let goldMult = 1.0;
+  if (cls?.passive === 'Greed') goldMult *= 1.25;
+  if (playerHasSkill(state.player, 'thf_t2a')) goldMult *= 1.50;
+  const goldGain = Math.floor(m.gold * goldMult);
 
   let p = { ...state.player, exp: state.player.exp + expGain, gold: state.player.gold + goldGain };
 
@@ -694,9 +876,12 @@ export function useGameState(isLoggedIn) {
     exploreStep: () => dispatch({ type: 'EXPLORE_STEP' }),
     battleAttack: () => dispatch({ type: 'BATTLE_PLAYER_ATTACK' }),
     battleSkill: () => dispatch({ type: 'BATTLE_PLAYER_SKILL' }),
+    battleTreeSkill: (skillId) => dispatch({ type: 'BATTLE_USE_TREE_SKILL', skillId }),
     battleDefend: () => dispatch({ type: 'BATTLE_DEFEND' }),
     battlePotion: () => dispatch({ type: 'BATTLE_USE_POTION' }),
     battleRun: () => dispatch({ type: 'BATTLE_RUN' }),
+    toggleSkillMenu: () => dispatch({ type: 'TOGGLE_SKILL_MENU' }),
+    unlockSkill: (skillId) => dispatch({ type: 'UNLOCK_SKILL', skillId }),
     bossAccept: () => dispatch({ type: 'BOSS_ACCEPT' }),
     bossDecline: () => dispatch({ type: 'BOSS_DECLINE' }),
     monsterTurn: () => dispatch({ type: 'MONSTER_TURN' }),

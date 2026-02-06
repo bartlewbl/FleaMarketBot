@@ -2129,6 +2129,394 @@ body {
 }
 
 
+/* ---- SKILL TREE SCREEN ---- */
+.screen-skills {
+  padding-top: 55px;
+  justify-content: flex-start;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.skill-tree-container {
+  width: 100%;
+  max-width: 720px;
+  overflow-y: auto;
+  flex: 1;
+  padding: 0 8px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.skill-tree-innate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.skill-tree-connector {
+  text-align: center;
+  color: #555;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.skill-tree-tier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.skill-tree-tier-label {
+  font-size: 9px;
+  color: #ffd700;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.skill-tree-tier-label.locked {
+  color: #555;
+}
+
+.skill-tree-tier-req {
+  color: #f76c6c;
+  font-size: 7px;
+}
+
+.skill-tree-choices {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.skill-tree-node {
+  flex: 0 1 320px;
+  padding: 10px;
+  border-radius: 6px;
+  background: rgba(14, 22, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.skill-tree-node-innate {
+  width: 100%;
+  max-width: 400px;
+  border-width: 2px;
+}
+
+.skill-tree-node-available {
+  border-color: rgba(255, 215, 0, 0.5);
+  cursor: pointer;
+}
+
+.skill-tree-node-available:hover {
+  border-color: #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.skill-tree-node-selected {
+  border-width: 2px;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+  background: rgba(20, 40, 20, 0.9);
+}
+
+.skill-tree-node-rejected {
+  opacity: 0.3;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.skill-tree-node-locked {
+  opacity: 0.4;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.skill-tree-node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.skill-tree-node-type {
+  font-size: 6px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.skill-tree-node-type.passive {
+  background: rgba(76, 175, 80, 0.2);
+  color: #7cfc00;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.skill-tree-node-type.active {
+  background: rgba(33, 150, 243, 0.2);
+  color: #4fc3f7;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.skill-tree-node-name {
+  font-size: 9px;
+  color: #f5f5ff;
+}
+
+.skill-tree-node-desc {
+  font-size: 7px;
+  color: #b5c9ff;
+  line-height: 1.6;
+}
+
+.skill-tree-node-mana {
+  font-size: 7px;
+  color: #4fc3f7;
+  margin-top: 3px;
+}
+
+.skill-tree-node-badge {
+  font-size: 7px;
+  color: #7cfc00;
+  text-align: right;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.skill-tree-node-badge.rejected {
+  color: #666;
+}
+
+/* Skill passives summary */
+.skill-passives-summary {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(10, 10, 24, 0.6);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 4px;
+}
+
+.skill-passives-label {
+  font-size: 7px;
+  color: #7cfc00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.skill-passives-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.skill-passive-tag {
+  font-size: 7px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #b5ffb5;
+}
+
+/* Skill confirm dialog */
+.skill-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.skill-confirm-dialog {
+  background: rgba(10, 10, 28, 0.98);
+  border: 2px solid #ffd700;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 380px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+
+.skill-confirm-title {
+  font-size: 12px;
+  color: #ffd700;
+}
+
+.skill-confirm-type {
+  font-size: 8px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: rgba(33, 150, 243, 0.2);
+  color: #4fc3f7;
+}
+
+.skill-confirm-desc {
+  font-size: 8px;
+  color: #b5c9ff;
+  line-height: 1.8;
+}
+
+.skill-confirm-cost {
+  font-size: 8px;
+  color: #4fc3f7;
+}
+
+.skill-confirm-warning {
+  font-size: 8px;
+  color: #f76c6c;
+  background: rgba(120, 26, 38, 0.2);
+  border: 1px solid rgba(247, 108, 108, 0.3);
+  padding: 8px 12px;
+  border-radius: 4px;
+  line-height: 1.6;
+}
+
+.skill-confirm-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+/* ---- BATTLE PASSIVES & DEBUFFS ---- */
+.battle-passives {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  width: 90%;
+  max-width: 350px;
+  margin-top: 4px;
+}
+
+.battle-passives-label {
+  font-size: 6px;
+  color: #7cfc00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.battle-passive-tag {
+  font-size: 6px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  color: #b5ffb5;
+}
+
+.battle-debuffs-monster,
+.battle-debuffs-player {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px 0;
+  width: 90%;
+  max-width: 350px;
+}
+
+.battle-debuff {
+  font-size: 6px;
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+.battle-debuff.poison {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #7cfc00;
+}
+
+.battle-debuff.doom {
+  background: rgba(171, 71, 188, 0.15);
+  border: 1px solid rgba(171, 71, 188, 0.3);
+  color: #e040fb;
+}
+
+.battle-debuff.debuff {
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #ff6666;
+}
+
+.battle-debuff.buff {
+  background: rgba(33, 150, 243, 0.15);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  color: #4fc3f7;
+}
+
+/* Battle skill menu */
+.battle-skill-menu {
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.btn-skill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 10px;
+  font-size: 7px;
+  background: rgba(20, 40, 80, 0.9);
+  border-color: rgba(79, 195, 247, 0.4);
+}
+
+.btn-skill:hover:not(:disabled) {
+  border-color: #4fc3f7;
+  background: rgba(30, 60, 120, 0.9);
+}
+
+.skill-btn-name {
+  font-size: 7px;
+  color: #f5f5ff;
+}
+
+.skill-btn-cost {
+  font-size: 6px;
+  color: #4fc3f7;
+}
+
+.btn-skills-toggle {
+  background: rgba(20, 40, 80, 0.9);
+  border-color: rgba(79, 195, 247, 0.4);
+  color: #4fc3f7;
+}
+
+.btn-skills-toggle:hover:not(:disabled) {
+  border-color: #4fc3f7;
+  background: rgba(30, 60, 120, 0.9);
+}
+
+/* Battle mana display */
+.battle-mana-display {
+  position: absolute;
+  top: 55px;
+  right: 12px;
+  font-size: 8px;
+  color: #4fc3f7;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(79, 195, 247, 0.2);
+}
+
 /* Safe area for notched phones */
 @supports (padding: env(safe-area-inset-top)) {
   .top-bar {

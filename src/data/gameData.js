@@ -1,19 +1,7 @@
-// All game data: locations, monsters, items, skills
-
-let _uid = 0;
-function uid() {
-  return 'item_' + (++_uid) + '_' + Date.now();
-}
-
-function pickWeighted(items) {
-  const total = items.reduce((s, i) => s + i.weight, 0);
-  let roll = Math.random() * total;
-  for (const item of items) {
-    roll -= item.weight;
-    if (roll <= 0) return item;
-  }
-  return items[items.length - 1];
-}
+// ============================================================
+// PURE GAME DATA - Constants and definitions only.
+// All game logic lives in src/engine/*.js modules.
+// ============================================================
 
 // ---- LOCATIONS ----
 export const LOCATIONS = [
@@ -68,7 +56,7 @@ export const LOCATIONS = [
 ];
 
 // ---- MONSTERS ----
-const MONSTERS = {
+export const MONSTERS = {
   rat: {
     name: 'Gutter Rat', sprite: 'rat', baseHp: 22, baseAtk: 5, baseDef: 1,
     baseExp: 12, baseGold: 6, skills: ['bite'],
@@ -99,8 +87,6 @@ const MONSTERS = {
     baseExp: 48, baseGold: 28, skills: ['slash', 'steal'],
     dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }],
   },
-
-  // ---- NEON MILE ENEMIES (Lv.1 area) ----
   'sewer-roach': {
     name: 'Sewer Roach', sprite: 'rat', baseHp: 18, baseAtk: 4, baseDef: 1,
     baseExp: 10, baseGold: 4, skills: ['sting'],
@@ -141,8 +127,6 @@ const MONSTERS = {
     baseExp: 7, baseGold: 3, skills: [],
     dropTable: [{ type: 'potion', weight: 50 }],
   },
-
-  // ---- SHADOW ALLEY ENEMIES (Lv.3 area) ----
   'shadow-bat': {
     name: 'Shadow Bat', sprite: 'bat', baseHp: 24, baseAtk: 8, baseDef: 2,
     baseExp: 18, baseGold: 9, skills: ['screech', 'bite'],
@@ -183,8 +167,6 @@ const MONSTERS = {
     baseExp: 17, baseGold: 9, skills: ['shock', 'bite'],
     dropTable: [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 6 }],
   },
-
-  // ---- METRO UNDERPASS ENEMIES (Lv.6 area) ----
   'tunnel-bat': {
     name: 'Tunnel Bat', sprite: 'bat', baseHp: 32, baseAtk: 13, baseDef: 4,
     baseExp: 28, baseGold: 15, skills: ['screech', 'drain'],
@@ -225,8 +207,6 @@ const MONSTERS = {
     baseExp: 31, baseGold: 16, skills: ['shock', 'curse'],
     dropTable: [{ type: 'ring', weight: 8 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 25 }],
   },
-
-  // ---- SKYLINE ROOFTOPS ENEMIES (Lv.10 area) ----
   'sky-hawk': {
     name: 'Sky Hawk', sprite: 'bat', baseHp: 44, baseAtk: 20, baseDef: 6,
     baseExp: 42, baseGold: 22, skills: ['slash', 'screech'],
@@ -272,8 +252,6 @@ const MONSTERS = {
     baseExp: 43, baseGold: 23, skills: ['venom', 'charge'],
     dropTable: [{ type: 'ring', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 25 }],
   },
-
-  // ---- IRONWORKS YARD ENEMIES (Lv.14 area) ----
   'forge-elemental': {
     name: 'Forge Elemental', sprite: 'slime', baseHp: 62, baseAtk: 24, baseDef: 8,
     baseExp: 55, baseGold: 30, skills: ['firebreath', 'slam'],
@@ -319,8 +297,6 @@ const MONSTERS = {
     baseExp: 55, baseGold: 29, skills: ['slash', 'bash', 'curse'],
     dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 9 }, { type: 'potion', weight: 18 }],
   },
-
-  // ---- MIDNIGHT TERMINAL ENEMIES (Lv.18 area) ----
   'terminal-enforcer': {
     name: 'Terminal Enforcer', sprite: 'vagrant', baseHp: 72, baseAtk: 28, baseDef: 10,
     baseExp: 65, baseGold: 35, skills: ['slash', 'bash', 'charge'],
@@ -403,7 +379,7 @@ export const BOSSES = {
   },
 };
 
-// ---- SKILLS ----
+// ---- MONSTER/BOSS SKILLS ----
 export const SKILLS = {
   bite:       { name: 'Bite',        multiplier: 1.3 },
   slash:      { name: 'Slash',       multiplier: 1.4 },
@@ -413,7 +389,6 @@ export const SKILLS = {
   curse:      { name: 'Curse',       multiplier: 0.7, effect: 'lower_atk' },
   slam:       { name: 'Slam',        multiplier: 1.6 },
   firebreath: { name: 'Fire Breath', multiplier: 1.8 },
-  // New skills for expanded enemy roster
   sting:      { name: 'Sting',       multiplier: 1.2 },
   scratch:    { name: 'Scratch',     multiplier: 1.1 },
   web:        { name: 'Web',         multiplier: 0.5, effect: 'lower_def' },
@@ -435,7 +410,7 @@ export const SKILLS = {
 };
 
 // ---- RARITIES ----
-const RARITIES = [
+export const RARITIES = [
   { name: 'Common',    cssClass: 'rarity-common',    color: '#ccc',    multiplier: 1.0, weight: 60 },
   { name: 'Uncommon',  cssClass: 'rarity-uncommon',  color: '#4fc3f7', multiplier: 1.3, weight: 25 },
   { name: 'Rare',      cssClass: 'rarity-rare',      color: '#ab47bc', multiplier: 1.7, weight: 10 },
@@ -443,11 +418,21 @@ const RARITIES = [
   { name: 'Legendary', cssClass: 'rarity-legendary', color: '#ffd700', multiplier: 3.0, weight: 1 },
 ];
 
-const RARITY_LOOKUP = RARITIES.reduce((acc, rarity) => {
+export const RARITY_LOOKUP = RARITIES.reduce((acc, rarity) => {
   acc[rarity.name] = rarity;
   return acc;
 }, {});
 
+// ---- POTION TIERS ----
+export const POTION_TIERS = [
+  { name: 'Small Medkit', baseHeal: 35 },
+  { name: 'Field Syringe', baseHeal: 55 },
+  { name: 'Combat Stims', baseHeal: 75 },
+  { name: 'Mega Infusion', baseHeal: 100 },
+  { name: 'Phoenix Serum', baseHeal: 130 },
+];
+
+// ---- ITEM LIBRARY ----
 function createGearList(slot, icon, entries) {
   return entries.map(entry => ({
     ...entry,
@@ -459,7 +444,7 @@ function createGearList(slot, icon, entries) {
   }));
 }
 
-const ITEM_LIBRARY = {
+export const ITEM_LIBRARY = {
   sword: createGearList('weapon', 'sword', [
     { name: 'Rusty Shiv', rarity: 'Uncommon', level: 1, baseAtk: 3 },
     { name: 'Copper Dagger', rarity: 'Common', level: 2, baseAtk: 4 },
@@ -481,7 +466,6 @@ const ITEM_LIBRARY = {
     { name: 'Apex Warstaff', rarity: 'Rare', level: 18, baseAtk: 21 },
     { name: 'Singularity Edge', rarity: 'Uncommon', level: 19, baseAtk: 23 },
     { name: 'Cosmic Guillotine', rarity: 'Epic', level: 20, baseAtk: 25, baseDef: 2 },
-    // Offensive strategy: glass-cannon weapons with high ATK, no DEF
     { name: 'Plasma Cutter', rarity: 'Legendary', level: 2, baseAtk: 5 },
     { name: 'Voltage Switchblade', rarity: 'Rare', level: 5, baseAtk: 9 },
     { name: 'Overclocked Cleaver', rarity: 'Epic', level: 8, baseAtk: 13 },
@@ -490,7 +474,6 @@ const ITEM_LIBRARY = {
     { name: 'Wrath of Neon', rarity: 'Rare', level: 16, baseAtk: 21 },
     { name: 'Oblivion Reaver', rarity: 'Common', level: 18, baseAtk: 24 },
     { name: 'Doomsday Splicer', rarity: 'Uncommon', level: 20, baseAtk: 28 },
-    // Rarity-decoupled: high-level commons, low-level legendaries, mixed combos
     { name: 'Concrete Greatsword', rarity: 'Common', level: 15, baseAtk: 14 },
     { name: 'Gridline Machete', rarity: 'Common', level: 18, baseAtk: 16 },
     { name: 'Rusted Titan Blade', rarity: 'Common', level: 20, baseAtk: 18 },
@@ -521,7 +504,6 @@ const ITEM_LIBRARY = {
     { name: 'Voidcarapace', rarity: 'Rare', level: 18, baseDef: 20 },
     { name: 'Celestial Rampart', rarity: 'Uncommon', level: 19, baseDef: 21 },
     { name: 'Infinity Guard', rarity: 'Legendary', level: 20, baseDef: 23 },
-    // Defensive strategy: ultra-tank shields with boosted DEF
     { name: 'Junkyard Barricade', rarity: 'Epic', level: 1, baseDef: 4 },
     { name: 'Scrapwall Gate', rarity: 'Uncommon', level: 3, baseDef: 6 },
     { name: 'Titanium Kiteshield', rarity: 'Legendary', level: 6, baseDef: 10 },
@@ -530,7 +512,6 @@ const ITEM_LIBRARY = {
     { name: 'Impenetrable Ward', rarity: 'Common', level: 15, baseDef: 19 },
     { name: 'Dimensional Barricade', rarity: 'Rare', level: 18, baseDef: 22 },
     { name: 'Absolute Zero Wall', rarity: 'Epic', level: 20, baseDef: 25 },
-    // Rarity-decoupled shields
     { name: 'Blast Door Fragment', rarity: 'Common', level: 16, baseDef: 14 },
     { name: 'Manhole Cover Shield', rarity: 'Common', level: 19, baseDef: 16 },
     { name: 'Scrap Titan Shield', rarity: 'Common', level: 20, baseDef: 17 },
@@ -560,14 +541,12 @@ const ITEM_LIBRARY = {
     { name: 'Void Prophet Hood', rarity: 'Common', level: 18, baseDef: 15 },
     { name: 'Astral Mindguard', rarity: 'Rare', level: 19, baseDef: 16 },
     { name: 'Infinity Circlet', rarity: 'Legendary', level: 20, baseDef: 17, baseAtk: 2 },
-    // Offensive strategy: ATK-focused headgear for aggressive builds
     { name: 'Targeting Visor', rarity: 'Rare', level: 2, baseAtk: 2, baseDef: 1 },
     { name: 'Neural Amp Helm', rarity: 'Epic', level: 5, baseAtk: 3, baseDef: 2 },
     { name: 'Fury Circuit Crown', rarity: 'Common', level: 9, baseAtk: 5, baseDef: 3 },
     { name: 'Warhead Casing', rarity: 'Uncommon', level: 13, baseAtk: 7, baseDef: 4 },
     { name: 'Berserker Faceplate', rarity: 'Common', level: 16, baseAtk: 9, baseDef: 4 },
     { name: 'Annihilator Helm', rarity: 'Rare', level: 20, baseAtk: 11, baseDef: 5 },
-    // Rarity-decoupled helmets
     { name: 'Welder\'s Full Mask', rarity: 'Common', level: 14, baseDef: 9 },
     { name: 'Hardhat Mk-IX', rarity: 'Common', level: 18, baseDef: 12 },
     { name: 'Concrete Cranium', rarity: 'Common', level: 20, baseDef: 13 },
@@ -597,14 +576,12 @@ const ITEM_LIBRARY = {
     { name: 'Celestial Bulwark Suit', rarity: 'Common', level: 18, baseDef: 20 },
     { name: 'Eternium Aegis Frame', rarity: 'Epic', level: 19, baseDef: 21 },
     { name: 'Singularity Battlesuit', rarity: 'Legendary', level: 20, baseDef: 23, baseAtk: 1 },
-    // Defensive strategy: ultra-tank armor with boosted DEF
     { name: 'Lead-Lined Poncho', rarity: 'Rare', level: 2, baseDef: 6 },
     { name: 'Riot Suppression Suit', rarity: 'Legendary', level: 6, baseDef: 11 },
     { name: 'Neutronium Plate', rarity: 'Common', level: 10, baseDef: 15 },
     { name: 'Monolith Exoskeleton', rarity: 'Uncommon', level: 14, baseDef: 19 },
     { name: 'Event Horizon Shell', rarity: 'Common', level: 18, baseDef: 23 },
     { name: 'Omega Fortress Armor', rarity: 'Epic', level: 20, baseDef: 26 },
-    // Rarity-decoupled armor
     { name: 'Industrial Coveralls', rarity: 'Common', level: 15, baseDef: 13 },
     { name: 'Sewer Plate Carrier', rarity: 'Common', level: 19, baseDef: 16 },
     { name: 'Forklift Exo-Rig', rarity: 'Common', level: 20, baseDef: 17 },
@@ -634,14 +611,12 @@ const ITEM_LIBRARY = {
     { name: 'Chrono Greaves', rarity: 'Uncommon', level: 18, baseDef: 9, baseAtk: 1 },
     { name: 'Rift Sabatons', rarity: 'Rare', level: 19, baseDef: 10 },
     { name: 'Infinity Marchers', rarity: 'Legendary', level: 20, baseDef: 11, baseAtk: 2 },
-    // Offensive strategy: ATK-focused boots for rush/aggressive play
     { name: 'Spike-Tipped Runners', rarity: 'Epic', level: 3, baseAtk: 2, baseDef: 1 },
     { name: 'Blitz Stompers', rarity: 'Legendary', level: 7, baseAtk: 3, baseDef: 2 },
     { name: 'Razor Striders', rarity: 'Common', level: 10, baseAtk: 4, baseDef: 3 },
     { name: 'Assault Thrusters', rarity: 'Uncommon', level: 14, baseAtk: 5, baseDef: 4 },
     { name: 'Havoc Tramples', rarity: 'Rare', level: 17, baseAtk: 6, baseDef: 5 },
     { name: 'Annihilation Treads', rarity: 'Common', level: 20, baseAtk: 8, baseDef: 5 },
-    // Rarity-decoupled boots
     { name: 'Steel-Toed Waders', rarity: 'Common', level: 14, baseDef: 6 },
     { name: 'Foundry Stompers', rarity: 'Common', level: 18, baseDef: 8 },
     { name: 'Concrete Crushers', rarity: 'Common', level: 20, baseDef: 9 },
@@ -671,7 +646,6 @@ const ITEM_LIBRARY = {
     { name: 'Infinity Anklet', rarity: 'Epic', level: 18, baseAtk: 9, baseDef: 5 },
     { name: 'Singularity Charm', rarity: 'Uncommon', level: 19, baseAtk: 10, baseDef: 5 },
     { name: 'Paradox Halo', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 6 },
-    // Offensive strategy: ATK-heavy accessories for glass cannon builds
     { name: 'Jagged Tooth Necklace', rarity: 'Rare', level: 1, baseAtk: 2 },
     { name: 'Voltage Coil', rarity: 'Epic', level: 3, baseAtk: 3 },
     { name: 'Razorwire Bracelet', rarity: 'Legendary', level: 6, baseAtk: 4, baseDef: 1 },
@@ -680,7 +654,6 @@ const ITEM_LIBRARY = {
     { name: 'Berserker Torque', rarity: 'Common', level: 15, baseAtk: 9, baseDef: 2 },
     { name: 'Destruction Matrix', rarity: 'Uncommon', level: 18, baseAtk: 11, baseDef: 3 },
     { name: 'Apocalypse Sigil', rarity: 'Rare', level: 20, baseAtk: 13, baseDef: 3 },
-    // Defensive strategy: DEF-heavy accessories for tank builds
     { name: 'Iron Wristguard', rarity: 'Epic', level: 2, baseDef: 2, baseAtk: 1 },
     { name: 'Hardened Amulet', rarity: 'Legendary', level: 4, baseDef: 3 },
     { name: 'Dampening Coil', rarity: 'Common', level: 7, baseDef: 4, baseAtk: 1 },
@@ -689,7 +662,6 @@ const ITEM_LIBRARY = {
     { name: 'Bastion Core', rarity: 'Rare', level: 15, baseDef: 7, baseAtk: 3 },
     { name: 'Immortal Shell Locket', rarity: 'Common', level: 18, baseDef: 9, baseAtk: 3 },
     { name: 'Eternity Ward Halo', rarity: 'Uncommon', level: 20, baseDef: 10, baseAtk: 4 },
-    // Rarity-decoupled accessories
     { name: 'Bent Nail Pendant', rarity: 'Common', level: 13, baseAtk: 4, baseDef: 3 },
     { name: 'Duct Tape Bracelet', rarity: 'Common', level: 16, baseAtk: 5, baseDef: 4 },
     { name: 'Rebar Knuckle Ring', rarity: 'Common', level: 19, baseAtk: 6, baseDef: 5 },
@@ -707,253 +679,6 @@ const ITEM_LIBRARY = {
   ]),
 };
 
-// ---- PUBLIC FUNCTIONS ----
-
-export function expForLevel(level) {
-  return Math.floor(50 * Math.pow(level, 1.5));
-}
-
-export function scaleMonster(monsterId, areaLevel) {
-  const base = MONSTERS[monsterId];
-  if (!base) return null;
-  const scale = 1 + (areaLevel - 1) * 0.2;
-  return {
-    id: monsterId,
-    name: base.name,
-    sprite: base.sprite,
-    maxHp: Math.floor(base.baseHp * scale),
-    hp: Math.floor(base.baseHp * scale),
-    atk: Math.floor(base.baseAtk * scale),
-    def: Math.floor(base.baseDef * scale),
-    exp: Math.floor(base.baseExp * scale),
-    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 5),
-    skills: base.skills,
-    dropTable: base.dropTable,
-    level: areaLevel,
-  };
-}
-
-export function scaleBoss(bossId, areaLevel) {
-  const base = BOSSES[bossId];
-  if (!base) return null;
-  const scale = 1 + (areaLevel - 1) * 0.25;
-  return {
-    id: bossId,
-    name: base.name,
-    sprite: base.sprite,
-    isBoss: true,
-    title: base.title,
-    maxHp: Math.floor(base.baseHp * scale),
-    hp: Math.floor(base.baseHp * scale),
-    atk: Math.floor(base.baseAtk * scale),
-    def: Math.floor(base.baseDef * scale),
-    exp: Math.floor(base.baseExp * scale),
-    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 15),
-    skills: base.skills,
-    dropTable: base.dropTable,
-    level: areaLevel,
-  };
-}
-
-const POTION_TIERS = [
-  { name: 'Small Medkit', baseHeal: 35 },
-  { name: 'Field Syringe', baseHeal: 55 },
-  { name: 'Combat Stims', baseHeal: 75 },
-  { name: 'Mega Infusion', baseHeal: 100 },
-  { name: 'Phoenix Serum', baseHeal: 130 },
-];
-
-function pickFromLibrary(pool, targetLevel) {
-  if (!pool || pool.length === 0) return null;
-  const weighted = pool.map(item => {
-    const levelDiff = Math.abs(item.level - targetLevel);
-    const levelWeight = Math.max(1, 18 - levelDiff * 2);
-    return { item, weight: (item.weight || 1) * levelWeight };
-  });
-  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
-  let roll = Math.random() * total;
-  for (const entry of weighted) {
-    roll -= entry.weight;
-    if (roll <= 0) return entry.item;
-  }
-  return weighted[weighted.length - 1].item;
-}
-
-function buildGearDrop(template, monsterLevel, dropType) {
-  const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
-  const baseLevelFactor = 1 + template.level * 0.05;
-  const adaptFactor = 1 + Math.max(0, monsterLevel - template.level) * 0.04;
-  const atk = template.baseAtk > 0
-    ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * adaptFactor * rarityData.multiplier))
-    : 0;
-  const def = template.baseDef > 0
-    ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * adaptFactor * rarityData.multiplier))
-    : 0;
-  const effectiveLevel = Math.max(template.level, monsterLevel);
-
-  return {
-    id: uid(),
-    name: template.name,
-    type: dropType,
-    slot: template.slot,
-    level: effectiveLevel,
-    rarity: template.rarity,
-    rarityClass: rarityData.cssClass,
-    rarityColor: rarityData.color,
-    atk,
-    def,
-    icon: template.icon,
-    sellPrice: Math.max(10, Math.floor((atk + def) * 4 + effectiveLevel * 3 + rarityData.multiplier * 10)),
-  };
-}
-
-export function generateItem(dropType, monsterLevel) {
-  if (dropType === 'potion') {
-    const rarity = pickWeighted(RARITIES);
-    const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(monsterLevel / 4));
-    const tier = POTION_TIERS[tierIndex];
-    const healAmount = Math.floor(tier.baseHeal + monsterLevel * 4 * rarity.multiplier);
-    return {
-      id: uid(),
-      name: tier.name,
-      type: 'potion',
-      slot: null,
-      level: Math.max(1, monsterLevel),
-      rarity: rarity.name,
-      rarityClass: rarity.cssClass,
-      rarityColor: rarity.color,
-      healAmount,
-      icon: 'potion',
-      sellPrice: Math.floor(healAmount * 0.6),
-    };
-  }
-
-  const pool = ITEM_LIBRARY[dropType];
-  if (!pool) return null;
-  const template = pickFromLibrary(pool, monsterLevel);
-  if (!template) return null;
-
-  return buildGearDrop(template, monsterLevel, dropType);
-}
-
-export function getShopItems(playerLevel) {
-  const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(playerLevel / 4));
-  const start = Math.max(0, tierIndex - 1);
-  const end = Math.min(POTION_TIERS.length - 1, start + 2);
-  const normalizedStart = Math.max(0, end - 2);
-  const tiers = POTION_TIERS.slice(normalizedStart, end + 1);
-
-  return tiers.map((tier, offset) => {
-    const absoluteIdx = normalizedStart + offset;
-    const rarity = RARITIES[Math.min(RARITIES.length - 1, absoluteIdx)];
-    const effectiveLevel = Math.max(1, absoluteIdx * 4 + 1);
-    const healAmount = Math.floor(tier.baseHeal + playerLevel * 3 + absoluteIdx * 10);
-    const buyPrice = Math.floor(healAmount * 1.4 + effectiveLevel * 5);
-
-    return {
-      id: uid(),
-      name: tier.name,
-      type: 'potion',
-      slot: null,
-      level: effectiveLevel,
-      rarity: rarity.name,
-      rarityClass: rarity.cssClass,
-      rarityColor: rarity.color,
-      healAmount,
-      icon: 'potion',
-      buyPrice,
-      sellPrice: Math.floor(healAmount * 0.6),
-    };
-  });
-}
-
-export function rollDrop(dropTable, monsterLevel) {
-  if (!dropTable || dropTable.length === 0) return null;
-  const drop = pickWeighted(dropTable);
-  return generateItem(drop.type, monsterLevel);
-}
-
-// Seeded RNG for deterministic daily results
-function seededRandom(seed) {
-  let s = seed;
-  return function () {
-    s = (s * 16807 + 0) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
-}
-
-function seededPickWeighted(items, rng) {
-  const total = items.reduce((s, i) => s + i.weight, 0);
-  let roll = rng() * total;
-  for (const item of items) {
-    roll -= item.weight;
-    if (roll <= 0) return item;
-  }
-  return items[items.length - 1];
-}
-
-export function getDailyFeaturedItems(playerLevel) {
-  const today = new Date();
-  const daySeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-  const rng = seededRandom(daySeed + playerLevel);
-
-  const extraordinaryRarities = RARITIES.filter(r => r.name === 'Rare' || r.name === 'Epic' || r.name === 'Legendary');
-  const gearTypes = ['sword', 'shield', 'helmet', 'armor', 'boots', 'ring'];
-  const featured = [];
-  const usedNames = new Set();
-
-  const count = 3;
-  for (let i = 0; i < count; i++) {
-    const typeIdx = Math.floor(rng() * gearTypes.length);
-    const type = gearTypes[typeIdx];
-    const pool = ITEM_LIBRARY[type];
-    if (!pool) continue;
-
-    const rarity = seededPickWeighted(extraordinaryRarities, rng);
-    const candidates = pool.filter(item => item.rarity === rarity.name && item.level <= Math.max(playerLevel + 3, 5));
-    if (candidates.length === 0) continue;
-
-    const template = candidates[Math.floor(rng() * candidates.length)];
-    if (usedNames.has(template.name)) continue;
-    usedNames.add(template.name);
-
-    const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
-    const baseLevelFactor = 1 + template.level * 0.05;
-    const atk = template.baseAtk > 0
-      ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * rarityData.multiplier))
-      : 0;
-    const def = template.baseDef > 0
-      ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * rarityData.multiplier))
-      : 0;
-
-    const buyPrice = Math.floor((atk + def) * 8 + template.level * 6 + rarityData.multiplier * 20);
-
-    featured.push({
-      id: uid(),
-      name: template.name,
-      type,
-      slot: template.slot,
-      level: template.level,
-      rarity: template.rarity,
-      rarityClass: rarityData.cssClass,
-      rarityColor: rarityData.color,
-      atk,
-      def,
-      icon: template.icon,
-      buyPrice,
-      sellPrice: Math.max(10, Math.floor((atk + def) * 4 + template.level * 3 + rarityData.multiplier * 10)),
-    });
-  }
-
-  return featured;
-}
-
-export function calcDamage(atk, def) {
-  const base = Math.max(1, atk - def * 0.5);
-  const variance = 0.85 + Math.random() * 0.3;
-  return Math.max(1, Math.floor(base * variance));
-}
-
 // ---- CHARACTER CLASSES ----
 export const CHARACTER_CLASSES = {
   berserker: {
@@ -969,6 +694,7 @@ export const CHARACTER_CLASSES = {
     skillDesc: '2.0x ATK damage, take 10% max HP recoil',
     skillMultiplier: 2.0,
     skillEffect: 'recoil',
+    skillManaCost: 10,
   },
   warrior: {
     id: 'warrior',
@@ -983,6 +709,7 @@ export const CHARACTER_CLASSES = {
     skillDesc: '1.4x ATK damage, reduces enemy ATK by 15% for the fight',
     skillMultiplier: 1.4,
     skillEffect: 'weaken',
+    skillManaCost: 8,
   },
   thief: {
     id: 'thief',
@@ -997,6 +724,7 @@ export const CHARACTER_CLASSES = {
     skillDesc: '2.2x ATK damage, ignores 50% of enemy DEF',
     skillMultiplier: 2.2,
     skillEffect: 'pierce',
+    skillManaCost: 10,
   },
   mage: {
     id: 'mage',
@@ -1011,6 +739,7 @@ export const CHARACTER_CLASSES = {
     skillDesc: '1.8x ATK damage, ignores all enemy DEF',
     skillMultiplier: 1.8,
     skillEffect: 'true_damage',
+    skillManaCost: 12,
   },
   necromancer: {
     id: 'necromancer',
@@ -1025,9 +754,16 @@ export const CHARACTER_CLASSES = {
     skillDesc: '1.5x ATK damage, heal 40% of damage dealt',
     skillMultiplier: 1.5,
     skillEffect: 'drain',
+    skillManaCost: 10,
   },
 };
 
+// ---- XP FORMULA ----
+export function expForLevel(level) {
+  return Math.floor(50 * Math.pow(level, 1.5));
+}
+
+// ---- EXPLORE TEXTS ----
 export const EXPLORE_TEXTS = {
   street: [
     'Neon signs buzz overhead as you weave between rusted cars...',

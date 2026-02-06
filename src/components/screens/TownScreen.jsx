@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { CHARACTER_CLASSES } from '../../data/gameData';
-import { LOCATIONS, getDailyFeaturedItems } from '../../data/gameData';
+import { CHARACTER_CLASSES, LOCATIONS } from '../../data/gameData';
+import { getDailyFeaturedItems } from '../../engine/loot';
 const townNotices = [
   'Daily hunt: Defeat 5 forest goblins for 50 bonus XP.',
   'Blacksmith sale: Shields 15% off until midnight.',

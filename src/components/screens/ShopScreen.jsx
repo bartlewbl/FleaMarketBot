@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { getShopItems } from '../../data/gameData';
+import { getShopItems } from '../../engine/loot';
 
 const SLOT_LABELS = {
   weapon: 'Weapon',
