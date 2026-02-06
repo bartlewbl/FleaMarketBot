@@ -58,6 +58,7 @@ body {
 }
 
 .ui-main {
+  position: relative;
   flex: 1;
   display: flex;
   min-height: 0;
@@ -1965,7 +1966,9 @@ body {
   padding-top: 55px;
   gap: 0;
   max-width: 560px;
-  width: 100%;
+  width: auto;
+  left: 0;
+  right: 0;
   margin: 0 auto;
 }
 
@@ -2780,30 +2783,36 @@ body {
 
 /* ---- RIGHT PANEL (FRIENDS / INVITES) ---- */
 .right-panel {
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  right: 0;
   width: 260px;
-  flex-shrink: 0;
-  padding: 48px 14px 14px;
+  max-height: 50vh;
+  padding: 40px 14px 14px;
   background: rgba(4, 4, 18, 0.96);
   border-left: 2px solid #111129;
+  border-top: 2px solid #111129;
   box-shadow: -6px 0 20px rgba(0, 0, 0, 0.55);
-  transition: width 0.3s ease, padding 0.3s ease;
+  transition: width 0.3s ease, max-height 0.3s ease, padding 0.3s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 5;
+  border-top-left-radius: 8px;
 }
 
 .right-panel.collapsed {
-  width: 60px;
-  padding: 48px 8px 14px;
+  width: 48px;
+  max-height: 48px;
+  padding: 8px;
 }
 
 .right-panel-toggle {
   position: absolute;
-  top: 10px;
-  left: -14px;
-  width: 30px;
-  height: 30px;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid #2e2e4a;
   background: #141432;

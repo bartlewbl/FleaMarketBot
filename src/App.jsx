@@ -29,7 +29,7 @@ export default function App() {
   const { state, actions, playerAtk, playerDef } = useGameState(isLoggedIn);
   const [animTick, setAnimTick] = useState(0);
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
-  const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(false);
+  const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(true);
   const [battleAnim, setBattleAnim] = useState(null);
 
   // Check existing session on mount and go straight to game
