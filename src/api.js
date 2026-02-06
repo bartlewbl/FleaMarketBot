@@ -81,3 +81,23 @@ export function getSavedUsername() {
 export function hasSavedSession() {
   return !!getSessionId();
 }
+
+// Invites API
+export async function sendInvite(username) {
+  return apiFetch('/invites/send', {
+    method: 'POST',
+    body: JSON.stringify({ username }),
+  });
+}
+
+export async function getInvites() {
+  return apiFetch('/invites');
+}
+
+export async function acceptInvite(inviteId) {
+  return apiFetch(`/invites/${inviteId}/accept`, { method: 'POST' });
+}
+
+export async function declineInvite(inviteId) {
+  return apiFetch(`/invites/${inviteId}/decline`, { method: 'POST' });
+}
