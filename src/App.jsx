@@ -193,7 +193,15 @@ export default function App() {
 
           <div className="screen-stage">
             {state.screen === 'town' && (
-              <TownScreen player={state.player} />
+              <TownScreen
+                player={state.player}
+                energy={state.energy}
+                energyCost={ENERGY_COST_PER_TRIP}
+                onRest={actions.restAtInn}
+                onEnterLocation={actions.enterLocation}
+                onBuy={actions.buyItem}
+                canRest={canRest}
+              />
             )}
 
             {state.screen === 'locations' && (
