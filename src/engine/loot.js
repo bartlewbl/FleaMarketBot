@@ -1,7 +1,7 @@
 // Item generation, loot tables, and shop logic
 // All item creation logic extracted from gameData.js
 
-import { RARITIES, RARITY_LOOKUP, ITEM_LIBRARY, POTION_TIERS } from '../data/gameData';
+import { RARITIES, RARITY_LOOKUP, ITEM_LIBRARY, POTION_TIERS, ENERGY_DRINK_TIERS } from '../data/gameData';
 import { uid, pickWeighted, seededRandom, seededPickWeighted } from './utils';
 
 function pickFromLibrary(pool, targetLevel) {
@@ -69,6 +69,26 @@ export function generateItem(dropType, monsterLevel) {
     };
   }
 
+  if (dropType === 'energy-drink') {
+    const rarity = pickWeighted(RARITIES);
+    const tierIndex = Math.min(ENERGY_DRINK_TIERS.length - 1, Math.floor(monsterLevel / 4));
+    const tier = ENERGY_DRINK_TIERS[tierIndex];
+    const energyAmount = Math.floor(tier.baseEnergy * rarity.multiplier);
+    return {
+      id: uid(),
+      name: tier.name,
+      type: 'energy-drink',
+      slot: null,
+      level: Math.max(1, monsterLevel),
+      rarity: rarity.name,
+      rarityClass: rarity.cssClass,
+      rarityColor: rarity.color,
+      energyAmount,
+      icon: 'energy-drink',
+      sellPrice: Math.floor(energyAmount * 0.8),
+    };
+  }
+
   const pool = ITEM_LIBRARY[dropType];
   if (!pool) return null;
   const template = pickFromLibrary(pool, monsterLevel);
@@ -110,6 +130,36 @@ export function getShopItems(playerLevel) {
       icon: 'potion',
       buyPrice,
       sellPrice: Math.floor(healAmount * 0.6),
+    };
+  });
+}
+
+export function getShopEnergyDrinks(playerLevel) {
+  const tierIndex = Math.min(ENERGY_DRINK_TIERS.length - 1, Math.floor(playerLevel / 4));
+  const start = Math.max(0, tierIndex - 1);
+  const end = Math.min(ENERGY_DRINK_TIERS.length - 1, start + 2);
+  const normalizedStart = Math.max(0, end - 2);
+  const tiers = ENERGY_DRINK_TIERS.slice(normalizedStart, end + 1);
+
+  return tiers.map((tier, offset) => {
+    const absoluteIdx = normalizedStart + offset;
+    const rarity = RARITIES[Math.min(RARITIES.length - 1, absoluteIdx)];
+    const energyAmount = Math.floor(tier.baseEnergy * rarity.multiplier);
+    const buyPrice = Math.floor(energyAmount * 2 + (absoluteIdx + 1) * 8);
+
+    return {
+      id: uid(),
+      name: tier.name,
+      type: 'energy-drink',
+      slot: null,
+      level: Math.max(1, absoluteIdx * 4 + 1),
+      rarity: rarity.name,
+      rarityClass: rarity.cssClass,
+      rarityColor: rarity.color,
+      energyAmount,
+      icon: 'energy-drink',
+      buyPrice,
+      sellPrice: Math.floor(energyAmount * 0.8),
     };
   });
 }

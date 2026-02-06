@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { getShopItems } from '../../engine/loot';
+import { getShopItems, getShopEnergyDrinks } from '../../engine/loot';
 
 const SLOT_LABELS = {
   weapon: 'Weapon',
@@ -18,18 +18,20 @@ const statLine = (item) => {
     if (item.def) stats.push('DEF+' + item.def);
     return stats.length ? stats.join('  ') : 'No bonuses';
   }
+  if (item.type === 'energy-drink') return `Energy +${item.energyAmount}`;
   return `Heal ${item.healAmount} HP`;
 };
 
 const typeLabel = (item) => {
   if (!item) return '';
   if (item.type === 'potion') return 'Potion';
+  if (item.type === 'energy-drink') return 'Energy Drink';
   return SLOT_LABELS[item.slot] || item.type;
 };
 
 export default function ShopScreen({ player, onBuy, onSell, onBack }) {
   const [tab, setTab] = useState('buy');
-  const stock = useMemo(() => getShopItems(player.level), [player.level]);
+  const stock = useMemo(() => [...getShopItems(player.level), ...getShopEnergyDrinks(player.level)], [player.level]);
 
   return (
     <div className="screen screen-shop">
