@@ -1,5 +1,11 @@
 import { useMemo } from 'react';
+import { CHARACTER_CLASSES } from '../../data/gameData';
 import { LOCATIONS, getDailyFeaturedItems } from '../../data/gameData';
+const townNotices = [
+  'Daily hunt: Defeat 5 forest goblins for 50 bonus XP.',
+  'Blacksmith sale: Shields 15% off until midnight.',
+  'Rumor: A dragon was spotted near the Obsidian Ridge.',
+];
 
 const TOWN_EVENTS = [
   { title: 'Sewer Surge', desc: 'Slime activity spiking in Metro Underpass. Extra loot reported.', type: 'active' },
@@ -34,6 +40,7 @@ export default function TownScreen({ player, energy, energyCost, onRest, onEnter
   const equipment = player?.equipment || {};
   const atkBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.atk || 0), 0);
   const defBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.def || 0), 0);
+  const cls = player?.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
 
   const exp = player?.exp ?? 0;
   const expToLevel = player?.expToLevel ?? 1;

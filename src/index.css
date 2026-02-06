@@ -1245,6 +1245,165 @@ body {
   color: #ffb38a;
 }
 
+.skills-class-section {
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 4px;
+}
+
+.skill-card-class {
+  border-width: 2px;
+}
+
+/* ---- CLASS SELECT SCREEN ---- */
+.screen-class-select {
+  justify-content: flex-start;
+  padding: 30px 20px 20px;
+  gap: 12px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.class-select-header {
+  font-size: 16px;
+  color: #ffd700;
+  text-shadow: 2px 2px 0 #b8860b;
+  letter-spacing: 2px;
+}
+
+.class-select-subtitle {
+  font-size: 8px;
+  color: #a0a0d4;
+  margin-bottom: 8px;
+}
+
+.class-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 860px;
+}
+
+.class-card {
+  position: relative;
+  background: rgba(15, 15, 35, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  text-align: left;
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.class-card:hover {
+  border-color: var(--class-color, #ffd700);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.class-card-selected {
+  border-color: var(--class-color, #ffd700);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.25), inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+.class-card-name {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.class-card-desc {
+  font-size: 7px;
+  color: #b5b5d4;
+  line-height: 1.6;
+}
+
+.class-detail-panel {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(10, 10, 28, 0.95);
+  border: 2px solid var(--class-color, #ffd700);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+}
+
+.class-detail-name {
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.class-detail-section {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(20, 20, 50, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.class-detail-label {
+  font-size: 8px;
+  color: #9c9cd1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.class-detail-value {
+  font-size: 8px;
+  color: #d7d7ff;
+  line-height: 1.6;
+}
+
+.class-detail-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 9px;
+  color: #f5f5ff;
+}
+
+.class-confirm-btn {
+  margin-top: 6px;
+}
+
+.btn-confirm-pulse {
+  animation: confirmPulse 0.6s infinite alternate;
+}
+
+@keyframes confirmPulse {
+  from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
+  to { box-shadow: 0 0 18px rgba(255, 215, 0, 0.5); }
+}
+
+/* ---- TOWN HERO CLASS ---- */
+.town-hero-class {
+  font-size: 9px;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+/* ---- PROFILE CLASS INFO ---- */
+.profile-class-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-class-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 /* ---- EXPLORE SCREEN ---- */
 .screen-explore {
   justify-content: center;
@@ -1511,65 +1670,266 @@ body {
 .screen-shop {
   justify-content: flex-start;
   padding-top: 55px;
-}
-
-.shop-panels {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  gap: 0;
+  max-width: 560px;
   width: 100%;
-  flex: 1;
+  margin: 0 auto;
 }
 
-.shop-panel {
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 4px 10px;
+}
+
+.shop-title {
+  font-size: 14px;
+  color: #ffd700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+}
+
+.shop-wallet {
   display: flex;
   flex-direction: column;
-  background: rgba(8, 8, 18, 0.85);
-  border: 1px solid #333;
-  padding: 10px;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.shop-wallet-gold {
+  font-size: 11px;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.25);
+}
+
+.shop-wallet-inv {
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+/* Tabs */
+.shop-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid #2a2a4a;
+  margin-bottom: 10px;
+}
+
+.shop-tab {
+  flex: 1;
+  padding: 10px 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6e6e9a;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -2px;
+}
+
+.shop-tab:hover {
+  color: #b0b0d0;
+}
+
+.shop-tab.active {
+  color: #ffd700;
+  border-bottom-color: #ffd700;
+}
+
+/* Content area */
+.shop-content {
+  flex: 1;
+  width: 100%;
   min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 2px;
 }
 
 .shop-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
-.shop-item {
+/* Item cards */
+.shop-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(30, 30, 60, 0.9);
-  border: 1px solid #444;
-  padding: 12px;
-  font-size: 8px;
+  background: rgba(14, 14, 32, 0.9);
+  border: 1px solid #2a2a4a;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  gap: 10px;
+  transition: border-color 0.15s, background 0.15s, opacity 0.15s;
 }
 
-.shop-item-info {
+.shop-card:hover {
+  background: rgba(22, 22, 48, 0.95);
+}
+
+.shop-card.unaffordable {
+  opacity: 0.5;
+}
+
+/* Rarity left-border colors */
+.shop-card.rarity-common { border-left-color: #888; }
+.shop-card.rarity-uncommon { border-left-color: #4fc3f7; }
+.shop-card.rarity-rare { border-left-color: #ab47bc; }
+.shop-card.rarity-epic { border-left-color: #ffa726; }
+.shop-card.rarity-legendary {
+  border-left-color: #ffd700;
+  box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.06);
+}
+
+.shop-card-left {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  min-width: 0;
 }
 
-.shop-item-name { color: #fff; font-size: 9px; }
-.shop-item-desc { color: #aaa; font-size: 7px; }
+.shop-card-type {
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #5e5e8a;
+}
 
+.shop-card-name {
+  font-size: 9px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.shop-rarity-badge {
+  font-size: 6px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shop-rarity-badge.rarity-uncommon { border-color: rgba(79, 195, 247, 0.3); }
+.shop-rarity-badge.rarity-rare { border-color: rgba(171, 71, 188, 0.3); }
+.shop-rarity-badge.rarity-epic { border-color: rgba(255, 167, 38, 0.3); }
+.shop-rarity-badge.rarity-legendary {
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.shop-card-stats {
+  font-size: 7px;
+  color: #7cfc7c;
+}
+
+/* Buy / Sell buttons */
+.shop-buy-btn,
+.shop-sell-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-family: 'Press Start 2P', monospace;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.shop-buy-btn {
+  background: rgba(26, 90, 26, 0.7);
+  border-color: rgba(76, 175, 80, 0.5);
+  color: #7fff7f;
+}
+
+.shop-buy-btn:hover:not(:disabled) {
+  background: rgba(36, 120, 36, 0.85);
+  border-color: #4caf50;
+}
+
+.shop-buy-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.shop-buy-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.shop-sell-btn {
+  background: rgba(90, 50, 26, 0.7);
+  border-color: rgba(255, 167, 38, 0.4);
+  color: #ffc876;
+}
+
+.shop-sell-btn:hover {
+  background: rgba(120, 65, 30, 0.85);
+  border-color: #ffa726;
+}
+
+.shop-sell-btn:active {
+  transform: scale(0.95);
+}
+
+.shop-btn-price {
+  font-size: 9px;
+}
+
+.shop-btn-label {
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+/* Empty state */
+.shop-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 8px;
+}
+
+.shop-empty-text {
+  font-size: 9px;
+  color: #6e6e9a;
+}
+
+.shop-empty-hint {
+  font-size: 7px;
+  color: #4a4a6a;
+}
+
+/* Footer */
 .shop-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
   width: 100%;
   padding-top: 12px;
-  font-size: 8px;
-}
-
-.shop-gold {
-  color: #ffd700;
 }
 
 /* ---- RARITY COLORS ---- */
