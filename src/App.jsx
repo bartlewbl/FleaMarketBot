@@ -30,6 +30,7 @@ export default function App() {
   const [animTick, setAnimTick] = useState(0);
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
   const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(false);
+  const [battleAnim, setBattleAnim] = useState(null);
 
   // Check existing session on mount and go straight to game
   useEffect(() => {
@@ -174,6 +175,7 @@ export default function App() {
         location={state.currentLocation}
         battle={state.battle}
         animTick={animTick}
+        battleAnim={battleAnim}
       />
 
       <div className="ui-overlay">
@@ -260,6 +262,8 @@ export default function App() {
                 onMonsterTurn={actions.monsterTurn}
                 onTreeSkill={actions.battleTreeSkill}
                 onToggleSkillMenu={actions.toggleSkillMenu}
+                setBattleAnim={setBattleAnim}
+                animTick={animTick}
               />
             )}
 

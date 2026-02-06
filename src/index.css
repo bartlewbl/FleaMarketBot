@@ -1438,7 +1438,119 @@ body {
 /* ---- BATTLE SCREEN ---- */
 .screen-battle {
   justify-content: flex-start;
-  padding-top: 55px;
+  padding-top: 50px;
+  gap: 4px;
+}
+
+/* Turn indicator */
+.turn-indicator {
+  font-size: 7px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.turn-indicator.your-turn {
+  color: #7cfc00;
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  animation: turnPulse 0.8s ease-in-out infinite alternate;
+}
+
+.turn-indicator.enemy-turn {
+  color: #ff6666;
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+@keyframes turnPulse {
+  from { box-shadow: 0 0 4px rgba(76, 175, 80, 0.1); }
+  to { box-shadow: 0 0 12px rgba(76, 175, 80, 0.3); }
+}
+
+/* Battle combatants layout */
+.battle-combatants {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 95%;
+  max-width: 500px;
+  padding: 6px 0;
+}
+
+.battle-combatant {
+  flex: 1;
+  min-width: 0;
+}
+
+.battle-player-side {
+  text-align: left;
+}
+
+.battle-monster-side {
+  text-align: right;
+}
+
+.battle-monster-side .stat-bar {
+  flex-direction: row-reverse;
+}
+
+.battle-monster-side .bar-label {
+  text-align: right;
+}
+
+.battle-monster-side .bar-text {
+  text-align: left;
+}
+
+.combatant-name {
+  font-size: 8px;
+  display: block;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-name-tag {
+  color: #7cfc00;
+}
+
+.monster-name-tag {
+  color: #ff6666;
+}
+
+.monster-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.battle-vs {
+  font-size: 10px;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  flex-shrink: 0;
+  padding: 0 4px;
+  animation: vsPulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes vsPulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* Status effects row */
+.battle-status-row {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  max-width: 500px;
+  gap: 8px;
 }
 
 .monster-info {
@@ -1463,10 +1575,12 @@ body {
   font-size: 8px;
   line-height: 1.8;
   color: #ccc;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.8);
   padding: 8px;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
   -webkit-overflow-scrolling: touch;
+  backdrop-filter: blur(4px);
 }
 
 .log-dmg-player { color: #ff6666; }
@@ -1490,6 +1604,95 @@ body {
   font-size: 8px;
   padding: 10px 14px;
   flex: 0 0 auto;
+  transition: all 0.15s ease;
+}
+
+/* Distinct button styles for each action */
+.btn-battle-attack {
+  background: linear-gradient(180deg, #4a2a2a, #3a1a1a);
+  border-color: #cc4444;
+  color: #ff8888;
+}
+
+.btn-battle-attack:hover:not(:disabled) {
+  background: linear-gradient(180deg, #6a3a3a, #5a2a2a);
+  border-color: #ff6666;
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+}
+
+.btn-battle-defend {
+  background: linear-gradient(180deg, #1a2a4a, #0a1a3a);
+  border-color: #4488cc;
+  color: #88bbff;
+}
+
+.btn-battle-defend:hover:not(:disabled) {
+  background: linear-gradient(180deg, #2a3a5a, #1a2a4a);
+  border-color: #66aaff;
+  box-shadow: 0 0 10px rgba(68, 136, 255, 0.3);
+}
+
+.btn-battle-heal {
+  background: linear-gradient(180deg, #1a3a2a, #0a2a1a);
+  border-color: #44aa66;
+  color: #88ff99;
+}
+
+.btn-battle-heal:hover:not(:disabled) {
+  background: linear-gradient(180deg, #2a4a3a, #1a3a2a);
+  border-color: #66cc88;
+  box-shadow: 0 0 10px rgba(68, 170, 102, 0.3);
+}
+
+/* Floating damage numbers */
+.floating-damage {
+  position: absolute;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 50;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  animation: floatDamage 1s ease-out forwards;
+  transform: translateX(-50%);
+}
+
+.floating-dmg-player {
+  color: #ff4444;
+  font-size: 16px;
+}
+
+.floating-dmg-monster {
+  color: #44ff44;
+  font-size: 16px;
+}
+
+.floating-heal {
+  color: #44ccff;
+  font-size: 13px;
+}
+
+.floating-absorb {
+  color: #aa88ff;
+  font-size: 12px;
+}
+
+@keyframes floatDamage {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(0.8);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-8px) scale(1.3);
+  }
+  40% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-20px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50px) scale(0.7);
+  }
 }
 
 /* ---- BOSS CONFIRM SCREEN ---- */
@@ -2082,6 +2285,13 @@ body {
   .equipment-grid { grid-template-columns: repeat(2, 1fr); }
   .location-item { padding: 8px; }
   .location-name { font-size: 8px; }
+  .battle-combatants { flex-direction: column; gap: 4px; }
+  .battle-vs { display: none; }
+  .battle-monster-side .stat-bar { flex-direction: row; }
+  .battle-monster-side .bar-text { text-align: right; }
+  .floating-damage { font-size: 11px; }
+  .turn-indicator { font-size: 6px; }
+  .combatant-name { font-size: 7px; }
 }
 
 @media (max-width: 640px) {
@@ -2112,6 +2322,9 @@ body {
   .inventory-list { max-height: 100px; }
   .result-title { font-size: 14px; margin-bottom: 10px; }
   .result-rewards { font-size: 8px; }
+  .battle-combatants { gap: 4px; }
+  .turn-indicator { font-size: 6px; padding: 2px 8px; }
+  .floating-damage { font-size: 10px; }
 }
 
 /* Tablets and desktops */
