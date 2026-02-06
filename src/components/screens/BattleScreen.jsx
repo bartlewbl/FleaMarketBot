@@ -41,14 +41,17 @@ export default function BattleScreen({ battle, battleLog, onAttack, onSkill, onD
   const m = battle.monster;
   const mHpPct = (m.hp / m.maxHp) * 100;
   const disabled = !battle.isPlayerTurn;
+  const isBoss = !!m.isBoss;
 
   return (
     <div className="screen screen-battle">
       <div className="monster-info">
-        <span className="monster-name">{m.name} (Lv.{m.level})</span>
+        {isBoss && <span className="boss-badge">BOSS</span>}
+        <span className={`monster-name ${isBoss ? 'boss-name' : ''}`}>{m.name} (Lv.{m.level})</span>
+        {isBoss && m.title && <div className="boss-subtitle">{m.title}</div>}
         <div className="stat-bar">
           <span className="bar-label">HP</span>
-          <div className="bar hp-bar monster">
+          <div className={`bar hp-bar monster ${isBoss ? 'boss-hp' : ''}`}>
             <div className="bar-fill" style={{ width: mHpPct + '%' }} />
           </div>
           <span className="bar-text">{m.hp}/{m.maxHp}</span>
@@ -66,7 +69,7 @@ export default function BattleScreen({ battle, battleLog, onAttack, onSkill, onD
         <button className="btn" disabled={disabled} onClick={handleDefend}>Defend</button>
         <button className="btn" disabled={disabled} onClick={() => handlePlayerAction(onSkill)}>{skillName || 'Skill'}</button>
         <button className="btn" disabled={disabled} onClick={() => handlePlayerAction(onPotion)}>Potion</button>
-        <button className="btn btn-back" disabled={disabled} onClick={handleRun}>Run</button>
+        <button className="btn btn-back" disabled={disabled} onClick={handleRun}>{isBoss ? 'No Escape' : 'Run'}</button>
       </div>
     </div>
   );

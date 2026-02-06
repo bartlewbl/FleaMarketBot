@@ -20,38 +20,50 @@ export const LOCATIONS = [
   {
     id: 'neon-mile', name: 'Neon Mile',
     description: 'Flickering billboards and cracked asphalt full of gutter pests.',
-    levelReq: 1, monsters: ['rat', 'slime'],
+    levelReq: 1,
+    monsters: ['rat', 'slime', 'sewer-roach', 'stray-cat', 'neon-beetle', 'alley-mutt', 'junk-spider', 'rust-moth', 'grime-crawler', 'pixel-pest'],
     encounterRate: 0.5, lootRate: 0.2, bgKey: 'street',
+    boss: 'boss-king-rat', bossRate: 0.005,
   },
   {
     id: 'shadow-alley', name: 'Shadow Alley',
     description: 'Tight passages where feral vagrants lurk between dumpsters.',
-    levelReq: 3, monsters: ['rat', 'vagrant', 'slime'],
+    levelReq: 3,
+    monsters: ['rat', 'vagrant', 'slime', 'shadow-bat', 'dumpster-snake', 'gutter-goblin', 'alley-wolf', 'trash-golem', 'sewer-lurker', 'neon-phantom', 'wire-rat'],
     encounterRate: 0.55, lootRate: 0.2, bgKey: 'alley',
+    boss: 'boss-shadow-lord', bossRate: 0.005,
   },
   {
     id: 'metro-underpass', name: 'Metro Underpass',
     description: 'Abandoned train tunnels dripping with mutant slime.',
-    levelReq: 6, monsters: ['slime', 'alpha-rat', 'rogue-vagrant'],
+    levelReq: 6,
+    monsters: ['slime', 'alpha-rat', 'rogue-vagrant', 'tunnel-bat', 'rail-wraith', 'metro-snake', 'pipe-golem', 'sludge-slime', 'volt-spider', 'rust-skeleton', 'signal-ghost'],
     encounterRate: 0.6, lootRate: 0.25, bgKey: 'station',
+    boss: 'boss-conductor', bossRate: 0.005,
   },
   {
     id: 'skyline-rooftops', name: 'Skyline Rooftops',
     description: 'Windy roofs patrolled by organized scavenger crews.',
-    levelReq: 10, monsters: ['vagrant', 'rogue-vagrant', 'alpha-rat'],
+    levelReq: 10,
+    monsters: ['vagrant', 'rogue-vagrant', 'alpha-rat', 'sky-hawk', 'roof-stalker', 'antenna-golem', 'wind-phantom', 'drone-wasp', 'scaffold-wolf', 'neon-gargoyle', 'rooftop-sniper', 'sky-serpent'],
     encounterRate: 0.65, lootRate: 0.3, bgKey: 'rooftop',
+    boss: 'boss-storm-sentinel', bossRate: 0.005,
   },
   {
     id: 'ironworks-yard', name: 'Ironworks Yard',
     description: 'Industrial lots buzzing with toxic runoff and slime.',
-    levelReq: 14, monsters: ['toxic-slime', 'rogue-vagrant', 'alpha-rat'],
+    levelReq: 14,
+    monsters: ['toxic-slime', 'rogue-vagrant', 'alpha-rat', 'forge-elemental', 'scrap-golem', 'molten-slime', 'factory-drone', 'acid-sprayer', 'iron-wolf', 'chain-wraith', 'furnace-bat', 'steam-skeleton'],
     encounterRate: 0.7, lootRate: 0.35, bgKey: 'industrial',
+    boss: 'boss-iron-titan', bossRate: 0.005,
   },
   {
     id: 'midnight-terminal', name: 'Midnight Terminal',
     description: 'Final stop where bold-face enforcers push back the grime.',
-    levelReq: 18, monsters: ['rogue-vagrant', 'toxic-slime'],
+    levelReq: 18,
+    monsters: ['rogue-vagrant', 'toxic-slime', 'terminal-enforcer', 'midnight-wolf', 'phantom-conductor', 'glitch-golem', 'void-slime', 'dark-assassin', 'shadow-dragon', 'neon-reaper'],
     encounterRate: 0.72, lootRate: 0.4, bgKey: 'station',
+    boss: 'boss-void-overlord', bossRate: 0.005,
   },
 ];
 
@@ -87,6 +99,308 @@ const MONSTERS = {
     baseExp: 48, baseGold: 28, skills: ['slash', 'steal'],
     dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }],
   },
+
+  // ---- NEON MILE ENEMIES (Lv.1 area) ----
+  'sewer-roach': {
+    name: 'Sewer Roach', sprite: 'rat', baseHp: 18, baseAtk: 4, baseDef: 1,
+    baseExp: 10, baseGold: 4, skills: ['sting'],
+    dropTable: [{ type: 'potion', weight: 40 }, { type: 'boots', weight: 5 }],
+  },
+  'stray-cat': {
+    name: 'Stray Cat', sprite: 'rat', baseHp: 20, baseAtk: 6, baseDef: 1,
+    baseExp: 11, baseGold: 5, skills: ['scratch'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'ring', weight: 6 }],
+  },
+  'neon-beetle': {
+    name: 'Neon Beetle', sprite: 'rat', baseHp: 16, baseAtk: 3, baseDef: 3,
+    baseExp: 9, baseGold: 5, skills: [],
+    dropTable: [{ type: 'potion', weight: 40 }, { type: 'helmet', weight: 5 }],
+  },
+  'alley-mutt': {
+    name: 'Alley Mutt', sprite: 'wolf', baseHp: 26, baseAtk: 7, baseDef: 2,
+    baseExp: 14, baseGold: 7, skills: ['bite'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'boots', weight: 8 }, { type: 'sword', weight: 5 }],
+  },
+  'junk-spider': {
+    name: 'Junk Spider', sprite: 'rat', baseHp: 15, baseAtk: 5, baseDef: 1,
+    baseExp: 10, baseGold: 4, skills: ['web'],
+    dropTable: [{ type: 'potion', weight: 40 }, { type: 'ring', weight: 4 }],
+  },
+  'rust-moth': {
+    name: 'Rust Moth', sprite: 'bat', baseHp: 14, baseAtk: 4, baseDef: 0,
+    baseExp: 8, baseGold: 3, skills: ['screech'],
+    dropTable: [{ type: 'potion', weight: 45 }],
+  },
+  'grime-crawler': {
+    name: 'Grime Crawler', sprite: 'snake', baseHp: 20, baseAtk: 5, baseDef: 2,
+    baseExp: 11, baseGold: 6, skills: ['poison'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'boots', weight: 6 }],
+  },
+  'pixel-pest': {
+    name: 'Pixel Pest', sprite: 'slime', baseHp: 12, baseAtk: 3, baseDef: 0,
+    baseExp: 7, baseGold: 3, skills: [],
+    dropTable: [{ type: 'potion', weight: 50 }],
+  },
+
+  // ---- SHADOW ALLEY ENEMIES (Lv.3 area) ----
+  'shadow-bat': {
+    name: 'Shadow Bat', sprite: 'bat', baseHp: 24, baseAtk: 8, baseDef: 2,
+    baseExp: 18, baseGold: 9, skills: ['screech', 'bite'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'helmet', weight: 8 }],
+  },
+  'dumpster-snake': {
+    name: 'Dumpster Snake', sprite: 'snake', baseHp: 28, baseAtk: 9, baseDef: 3,
+    baseExp: 20, baseGold: 10, skills: ['venom', 'bite'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 7 }, { type: 'boots', weight: 6 }],
+  },
+  'gutter-goblin': {
+    name: 'Gutter Goblin', sprite: 'goblin', baseHp: 30, baseAtk: 10, baseDef: 3,
+    baseExp: 22, baseGold: 12, skills: ['slash', 'steal'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 25 }],
+  },
+  'alley-wolf': {
+    name: 'Alley Wolf', sprite: 'wolf', baseHp: 32, baseAtk: 11, baseDef: 4,
+    baseExp: 24, baseGold: 13, skills: ['bite', 'howl'],
+    dropTable: [{ type: 'armor', weight: 7 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 25 }],
+  },
+  'trash-golem': {
+    name: 'Trash Golem', sprite: 'golem', baseHp: 42, baseAtk: 8, baseDef: 6,
+    baseExp: 26, baseGold: 14, skills: ['bash'],
+    dropTable: [{ type: 'shield', weight: 10 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'sewer-lurker': {
+    name: 'Sewer Lurker', sprite: 'snake', baseHp: 26, baseAtk: 10, baseDef: 3,
+    baseExp: 19, baseGold: 11, skills: ['poison'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'ring', weight: 5 }],
+  },
+  'neon-phantom': {
+    name: 'Neon Phantom', sprite: 'ghost', baseHp: 22, baseAtk: 12, baseDef: 2,
+    baseExp: 21, baseGold: 10, skills: ['curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 30 }],
+  },
+  'wire-rat': {
+    name: 'Wire Rat', sprite: 'rat', baseHp: 25, baseAtk: 9, baseDef: 2,
+    baseExp: 17, baseGold: 9, skills: ['shock', 'bite'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 6 }],
+  },
+
+  // ---- METRO UNDERPASS ENEMIES (Lv.6 area) ----
+  'tunnel-bat': {
+    name: 'Tunnel Bat', sprite: 'bat', baseHp: 32, baseAtk: 13, baseDef: 4,
+    baseExp: 28, baseGold: 15, skills: ['screech', 'drain'],
+    dropTable: [{ type: 'potion', weight: 25 }, { type: 'helmet', weight: 10 }],
+  },
+  'rail-wraith': {
+    name: 'Rail Wraith', sprite: 'ghost', baseHp: 38, baseAtk: 15, baseDef: 5,
+    baseExp: 34, baseGold: 18, skills: ['curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'sword', weight: 8 }, { type: 'potion', weight: 22 }],
+  },
+  'metro-snake': {
+    name: 'Metro Snake', sprite: 'snake', baseHp: 35, baseAtk: 14, baseDef: 4,
+    baseExp: 30, baseGold: 16, skills: ['venom', 'slash'],
+    dropTable: [{ type: 'potion', weight: 28 }, { type: 'boots', weight: 8 }, { type: 'ring', weight: 6 }],
+  },
+  'pipe-golem': {
+    name: 'Pipe Golem', sprite: 'golem', baseHp: 55, baseAtk: 12, baseDef: 8,
+    baseExp: 36, baseGold: 20, skills: ['bash', 'slam'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 18 }],
+  },
+  'sludge-slime': {
+    name: 'Sludge Slime', sprite: 'slime', baseHp: 40, baseAtk: 11, baseDef: 5,
+    baseExp: 30, baseGold: 15, skills: ['poison'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'ring', weight: 6 }],
+  },
+  'volt-spider': {
+    name: 'Volt Spider', sprite: 'rat', baseHp: 30, baseAtk: 16, baseDef: 3,
+    baseExp: 32, baseGold: 17, skills: ['shock', 'web'],
+    dropTable: [{ type: 'ring', weight: 9 }, { type: 'potion', weight: 28 }],
+  },
+  'rust-skeleton': {
+    name: 'Rust Skeleton', sprite: 'skeleton', baseHp: 42, baseAtk: 14, baseDef: 6,
+    baseExp: 33, baseGold: 18, skills: ['slash', 'curse'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 22 }],
+  },
+  'signal-ghost': {
+    name: 'Signal Ghost', sprite: 'ghost', baseHp: 34, baseAtk: 15, baseDef: 4,
+    baseExp: 31, baseGold: 16, skills: ['shock', 'curse'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 25 }],
+  },
+
+  // ---- SKYLINE ROOFTOPS ENEMIES (Lv.10 area) ----
+  'sky-hawk': {
+    name: 'Sky Hawk', sprite: 'bat', baseHp: 44, baseAtk: 20, baseDef: 6,
+    baseExp: 42, baseGold: 22, skills: ['slash', 'screech'],
+    dropTable: [{ type: 'helmet', weight: 10 }, { type: 'boots', weight: 9 }, { type: 'potion', weight: 22 }],
+  },
+  'roof-stalker': {
+    name: 'Roof Stalker', sprite: 'vagrant', baseHp: 50, baseAtk: 22, baseDef: 7,
+    baseExp: 46, baseGold: 25, skills: ['backstab', 'steal'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'antenna-golem': {
+    name: 'Antenna Golem', sprite: 'golem', baseHp: 70, baseAtk: 16, baseDef: 10,
+    baseExp: 48, baseGold: 26, skills: ['shock', 'bash'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 16 }],
+  },
+  'wind-phantom': {
+    name: 'Wind Phantom', sprite: 'ghost', baseHp: 40, baseAtk: 23, baseDef: 5,
+    baseExp: 44, baseGold: 23, skills: ['curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 25 }],
+  },
+  'drone-wasp': {
+    name: 'Drone Wasp', sprite: 'bat', baseHp: 38, baseAtk: 21, baseDef: 5,
+    baseExp: 40, baseGold: 22, skills: ['sting', 'poison'],
+    dropTable: [{ type: 'potion', weight: 28 }, { type: 'boots', weight: 8 }, { type: 'ring', weight: 6 }],
+  },
+  'scaffold-wolf': {
+    name: 'Scaffold Wolf', sprite: 'wolf', baseHp: 52, baseAtk: 20, baseDef: 8,
+    baseExp: 45, baseGold: 24, skills: ['bite', 'howl', 'charge'],
+    dropTable: [{ type: 'armor', weight: 9 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 22 }],
+  },
+  'neon-gargoyle': {
+    name: 'Neon Gargoyle', sprite: 'golem', baseHp: 58, baseAtk: 19, baseDef: 9,
+    baseExp: 47, baseGold: 25, skills: ['slam', 'screech'],
+    dropTable: [{ type: 'shield', weight: 10 }, { type: 'helmet', weight: 9 }, { type: 'potion', weight: 18 }],
+  },
+  'rooftop-sniper': {
+    name: 'Rooftop Sniper', sprite: 'vagrant', baseHp: 42, baseAtk: 25, baseDef: 5,
+    baseExp: 44, baseGold: 24, skills: ['backstab'],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'ring', weight: 7 }, { type: 'potion', weight: 20 }],
+  },
+  'sky-serpent': {
+    name: 'Sky Serpent', sprite: 'snake', baseHp: 48, baseAtk: 21, baseDef: 7,
+    baseExp: 43, baseGold: 23, skills: ['venom', 'charge'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 25 }],
+  },
+
+  // ---- IRONWORKS YARD ENEMIES (Lv.14 area) ----
+  'forge-elemental': {
+    name: 'Forge Elemental', sprite: 'slime', baseHp: 62, baseAtk: 24, baseDef: 8,
+    baseExp: 55, baseGold: 30, skills: ['firebreath', 'slam'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'scrap-golem': {
+    name: 'Scrap Golem', sprite: 'golem', baseHp: 80, baseAtk: 20, baseDef: 12,
+    baseExp: 58, baseGold: 32, skills: ['bash', 'slam', 'charge'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 16 }],
+  },
+  'molten-slime': {
+    name: 'Molten Slime', sprite: 'slime', baseHp: 55, baseAtk: 22, baseDef: 7,
+    baseExp: 52, baseGold: 28, skills: ['firebreath', 'poison'],
+    dropTable: [{ type: 'potion', weight: 28 }, { type: 'ring', weight: 8 }, { type: 'armor', weight: 6 }],
+  },
+  'factory-drone': {
+    name: 'Factory Drone', sprite: 'bat', baseHp: 48, baseAtk: 26, baseDef: 7,
+    baseExp: 54, baseGold: 29, skills: ['shock', 'charge'],
+    dropTable: [{ type: 'helmet', weight: 9 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 22 }],
+  },
+  'acid-sprayer': {
+    name: 'Acid Sprayer', sprite: 'snake', baseHp: 50, baseAtk: 23, baseDef: 6,
+    baseExp: 52, baseGold: 27, skills: ['venom', 'screech'],
+    dropTable: [{ type: 'potion', weight: 25 }, { type: 'ring', weight: 8 }, { type: 'boots', weight: 7 }],
+  },
+  'iron-wolf': {
+    name: 'Iron Wolf', sprite: 'wolf', baseHp: 65, baseAtk: 24, baseDef: 10,
+    baseExp: 56, baseGold: 30, skills: ['bite', 'charge', 'howl'],
+    dropTable: [{ type: 'armor', weight: 10 }, { type: 'sword', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'chain-wraith': {
+    name: 'Chain Wraith', sprite: 'ghost', baseHp: 52, baseAtk: 25, baseDef: 7,
+    baseExp: 54, baseGold: 28, skills: ['curse', 'drain', 'slash'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'sword', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'furnace-bat': {
+    name: 'Furnace Bat', sprite: 'bat', baseHp: 45, baseAtk: 27, baseDef: 6,
+    baseExp: 53, baseGold: 28, skills: ['firebreath', 'screech'],
+    dropTable: [{ type: 'helmet', weight: 9 }, { type: 'potion', weight: 25 }],
+  },
+  'steam-skeleton': {
+    name: 'Steam Skeleton', sprite: 'skeleton', baseHp: 58, baseAtk: 23, baseDef: 9,
+    baseExp: 55, baseGold: 29, skills: ['slash', 'bash', 'curse'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 9 }, { type: 'potion', weight: 18 }],
+  },
+
+  // ---- MIDNIGHT TERMINAL ENEMIES (Lv.18 area) ----
+  'terminal-enforcer': {
+    name: 'Terminal Enforcer', sprite: 'vagrant', baseHp: 72, baseAtk: 28, baseDef: 10,
+    baseExp: 65, baseGold: 35, skills: ['slash', 'bash', 'charge'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 9 }, { type: 'potion', weight: 18 }],
+  },
+  'midnight-wolf': {
+    name: 'Midnight Wolf', sprite: 'wolf', baseHp: 70, baseAtk: 27, baseDef: 11,
+    baseExp: 63, baseGold: 34, skills: ['bite', 'howl', 'frenzy'],
+    dropTable: [{ type: 'armor', weight: 10 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'phantom-conductor': {
+    name: 'Phantom Conductor', sprite: 'ghost', baseHp: 60, baseAtk: 30, baseDef: 8,
+    baseExp: 66, baseGold: 35, skills: ['shock', 'curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'glitch-golem': {
+    name: 'Glitch Golem', sprite: 'golem', baseHp: 90, baseAtk: 24, baseDef: 14,
+    baseExp: 68, baseGold: 36, skills: ['slam', 'shock', 'bash'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 15 }],
+  },
+  'void-slime': {
+    name: 'Void Slime', sprite: 'slime', baseHp: 65, baseAtk: 26, baseDef: 9,
+    baseExp: 64, baseGold: 33, skills: ['drain', 'poison', 'curse'],
+    dropTable: [{ type: 'ring', weight: 9 }, { type: 'potion', weight: 25 }],
+  },
+  'dark-assassin': {
+    name: 'Dark Assassin', sprite: 'vagrant', baseHp: 55, baseAtk: 32, baseDef: 7,
+    baseExp: 67, baseGold: 36, skills: ['backstab', 'steal', 'slash'],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'shadow-dragon': {
+    name: 'Shadow Dragon', sprite: 'dragon', baseHp: 85, baseAtk: 30, baseDef: 12,
+    baseExp: 72, baseGold: 40, skills: ['firebreath', 'slash', 'charge'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 15 }],
+  },
+  'neon-reaper': {
+    name: 'Neon Reaper', sprite: 'skeleton', baseHp: 68, baseAtk: 31, baseDef: 9,
+    baseExp: 70, baseGold: 38, skills: ['curse', 'drain', 'slash'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 9 }, { type: 'potion', weight: 18 }],
+  },
+};
+
+// ---- BOSSES ----
+export const BOSSES = {
+  'boss-king-rat': {
+    name: 'King Rat', sprite: 'rat', isBoss: true, baseHp: 120, baseAtk: 14, baseDef: 5,
+    baseExp: 80, baseGold: 50, skills: ['bite', 'screech', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 15 }, { type: 'armor', weight: 12 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 20 }],
+    title: 'Monarch of the Gutter',
+  },
+  'boss-shadow-lord': {
+    name: 'Shadow Lord', sprite: 'vagrant', isBoss: true, baseHp: 180, baseAtk: 22, baseDef: 8,
+    baseExp: 150, baseGold: 90, skills: ['shadowstrike', 'curse', 'drain'],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'ring', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 18 }],
+    title: 'Lord of the Dark Alleys',
+  },
+  'boss-conductor': {
+    name: 'The Conductor', sprite: 'ghost', isBoss: true, baseHp: 250, baseAtk: 28, baseDef: 10,
+    baseExp: 240, baseGold: 140, skills: ['shock', 'thunderclap', 'drain', 'curse'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 15 }],
+    title: 'Spectral Master of the Rails',
+  },
+  'boss-storm-sentinel': {
+    name: 'Storm Sentinel', sprite: 'golem', isBoss: true, baseHp: 340, baseAtk: 34, baseDef: 14,
+    baseExp: 350, baseGold: 200, skills: ['thunderclap', 'slam', 'charge', 'roar'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'helmet', weight: 10 }, { type: 'sword', weight: 8 }, { type: 'potion', weight: 12 }],
+    title: 'Guardian of the Skyline',
+  },
+  'boss-iron-titan': {
+    name: 'Iron Titan', sprite: 'golem', isBoss: true, baseHp: 450, baseAtk: 40, baseDef: 18,
+    baseExp: 480, baseGold: 280, skills: ['ironcrush', 'firebreath', 'slam', 'charge'],
+    dropTable: [{ type: 'armor', weight: 12 }, { type: 'sword', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 10 }],
+    title: 'Colossus of the Ironworks',
+  },
+  'boss-void-overlord': {
+    name: 'Void Overlord', sprite: 'dragon', isBoss: true, baseHp: 600, baseAtk: 48, baseDef: 20,
+    baseExp: 650, baseGold: 400, skills: ['voidblast', 'inferno', 'deathgrip', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Final Terminus Overlord',
+  },
 };
 
 // ---- SKILLS ----
@@ -99,6 +413,25 @@ export const SKILLS = {
   curse:      { name: 'Curse',       multiplier: 0.7, effect: 'lower_atk' },
   slam:       { name: 'Slam',        multiplier: 1.6 },
   firebreath: { name: 'Fire Breath', multiplier: 1.8 },
+  // New skills for expanded enemy roster
+  sting:      { name: 'Sting',       multiplier: 1.2 },
+  scratch:    { name: 'Scratch',     multiplier: 1.1 },
+  web:        { name: 'Web',         multiplier: 0.5, effect: 'lower_def' },
+  howl:       { name: 'Howl',        multiplier: 0.9, effect: 'lower_atk' },
+  drain:      { name: 'Drain',       multiplier: 1.0, effect: 'drain_hp' },
+  venom:      { name: 'Venom',       multiplier: 0.8, effect: 'poison' },
+  shock:      { name: 'Shock',       multiplier: 1.5 },
+  backstab:   { name: 'Backstab',    multiplier: 1.7 },
+  bash:       { name: 'Bash',        multiplier: 1.4 },
+  roar:       { name: 'Roar',        multiplier: 0.6, effect: 'lower_atk' },
+  frenzy:     { name: 'Frenzy',      multiplier: 1.9 },
+  charge:     { name: 'Charge',      multiplier: 1.6 },
+  shadowstrike: { name: 'Shadow Strike', multiplier: 1.8 },
+  inferno:    { name: 'Inferno',     multiplier: 2.0 },
+  voidblast:  { name: 'Void Blast',  multiplier: 2.2 },
+  ironcrush:  { name: 'Iron Crush',  multiplier: 1.7 },
+  thunderclap: { name: 'Thunderclap', multiplier: 1.9, effect: 'lower_def' },
+  deathgrip:  { name: 'Death Grip',  multiplier: 1.5, effect: 'poison' },
 };
 
 // ---- RARITIES ----
@@ -394,6 +727,28 @@ export function scaleMonster(monsterId, areaLevel) {
     def: Math.floor(base.baseDef * scale),
     exp: Math.floor(base.baseExp * scale),
     gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 5),
+    skills: base.skills,
+    dropTable: base.dropTable,
+    level: areaLevel,
+  };
+}
+
+export function scaleBoss(bossId, areaLevel) {
+  const base = BOSSES[bossId];
+  if (!base) return null;
+  const scale = 1 + (areaLevel - 1) * 0.25;
+  return {
+    id: bossId,
+    name: base.name,
+    sprite: base.sprite,
+    isBoss: true,
+    title: base.title,
+    maxHp: Math.floor(base.baseHp * scale),
+    hp: Math.floor(base.baseHp * scale),
+    atk: Math.floor(base.baseAtk * scale),
+    def: Math.floor(base.baseDef * scale),
+    exp: Math.floor(base.baseExp * scale),
+    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 15),
     skills: base.skills,
     dropTable: base.dropTable,
     level: areaLevel,

@@ -1,15 +1,20 @@
 export default function BattleResultScreen({ result, onContinue }) {
   if (!result) return null;
 
+  const isBoss = result.isBoss;
+
   return (
     <div className="screen screen-result">
-      <div className={`result-title ${result.victory ? 'victory' : 'defeat'}`}>
-        {result.victory ? 'VICTORY!' : 'DEFEATED...'}
+      <div className={`result-title ${result.victory ? 'victory' : 'defeat'} ${isBoss ? 'boss-result' : ''}`}>
+        {result.victory
+          ? (isBoss ? 'BOSS DEFEATED!' : 'VICTORY!')
+          : 'DEFEATED...'}
       </div>
 
       <div className="result-rewards">
         {result.victory ? (
           <>
+            {isBoss && <div className="boss-victory-text">You conquered {result.bossName}!</div>}
             <div>+{result.expGain} EXP</div>
             <div>+{result.goldGain} Gold</div>
             {result.droppedItem && (
@@ -26,7 +31,7 @@ export default function BattleResultScreen({ result, onContinue }) {
         ) : (
           <>
             <div>Lost {result.goldLost} gold...</div>
-            <div>You barely escaped with your life.</div>
+            <div>{isBoss ? 'The boss was too powerful...' : 'You barely escaped with your life.'}</div>
           </>
         )}
       </div>

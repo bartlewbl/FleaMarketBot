@@ -1491,6 +1491,93 @@ body {
   flex: 0 0 auto;
 }
 
+/* ---- BOSS CONFIRM SCREEN ---- */
+.screen-boss-confirm {
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.boss-warning {
+  font-size: 16px;
+  color: #ff4444;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+  animation: pulse 0.5s infinite alternate;
+  margin-bottom: 4px;
+}
+
+.screen-boss-confirm .boss-name {
+  font-size: 14px;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.screen-boss-confirm .boss-title {
+  font-size: 8px;
+  color: #ffb38a;
+  margin-bottom: 8px;
+}
+
+.boss-stats {
+  font-size: 9px;
+  color: #e0e0e0;
+  line-height: 2;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #555;
+  padding: 12px 20px;
+  margin-bottom: 8px;
+}
+
+.boss-confirm-text {
+  font-size: 8px;
+  color: #ffcc66;
+  max-width: 360px;
+  line-height: 1.8;
+}
+
+.boss-confirm-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-danger {
+  background: #6a1a1a;
+  border-color: #f44336;
+  color: #ff8a8a;
+}
+
+.btn-danger:hover {
+  background: #8a2a2a;
+}
+
+/* ---- BOSS BATTLE INDICATORS ---- */
+.boss-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  color: #fff;
+  font-size: 7px;
+  padding: 2px 6px;
+  margin-bottom: 4px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+.monster-name.boss-name {
+  color: #ffd700;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+}
+
+.boss-subtitle {
+  font-size: 7px;
+  color: #ffb38a;
+  margin-bottom: 4px;
+}
+
+.hp-bar.boss-hp .bar-fill {
+  background: linear-gradient(to bottom, #ff6600, #cc0000);
+}
+
 /* ---- BATTLE RESULT ---- */
 .screen-result {
   padding-top: 0;
@@ -1503,6 +1590,8 @@ body {
 
 .result-title.victory { color: #4caf50; }
 .result-title.defeat { color: #f44336; }
+.result-title.boss-result.victory { color: #ffd700; text-shadow: 0 0 12px rgba(255, 215, 0, 0.6); }
+.boss-victory-text { color: #ffd700; font-size: 8px; margin-bottom: 4px; }
 
 .result-rewards {
   font-size: 9px;

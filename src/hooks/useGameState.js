@@ -1,7 +1,7 @@
 import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   expForLevel, scaleMonster, calcDamage, rollDrop, SKILLS, EXPLORE_TEXTS, generateItem,
-  CHARACTER_CLASSES,
+  CHARACTER_CLASSES,scaleBoss,
 } from '../data/gameData';
 import { saveGame } from '../api';
 
@@ -43,6 +43,7 @@ function createInitialState() {
     message: null,
     energy: ENERGY_MAX,
     lastEnergyUpdate: Date.now(),
+    pendingBoss: null,
   };
 }
 
@@ -125,7 +126,7 @@ function extractSaveData(state) {
   if (screen === 'class-select') screen = 'class-select';
   return {
     player: state.player,
-    screen,
+    screen: (state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm') ? 'town' : state.screen,
     energy: state.energy,
     lastEnergyUpdate: state.lastEnergyUpdate,
   };
@@ -173,7 +174,7 @@ function gameReducer(state, action) {
     }
 
     case 'GO_TO_TOWN':
-      return { ...state, screen: 'town', currentLocation: null, battle: null, battleResult: null, battleLog: [] };
+      return { ...state, screen: 'town', currentLocation: null, battle: null, battleResult: null, battleLog: [], pendingBoss: null };
 
     case 'SHOW_SCREEN':
       return { ...state, screen: action.screen };
@@ -204,6 +205,18 @@ function gameReducer(state, action) {
       if (!loc) return state;
       const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.street;
       const text = texts[Math.floor(Math.random() * texts.length)];
+
+      // Boss encounter check (0.5% chance when location has a boss)
+      if (loc.boss && Math.random() < (loc.bossRate || 0.005)) {
+        const boss = scaleBoss(loc.boss, loc.levelReq);
+        if (boss) {
+          return {
+            ...state, screen: 'boss-confirm',
+            exploreText: text,
+            pendingBoss: boss,
+          };
+        }
+      }
 
       if (Math.random() < loc.encounterRate) {
         const monsterId = loc.monsters[Math.floor(Math.random() * loc.monsters.length)];
@@ -342,6 +355,31 @@ function gameReducer(state, action) {
       return { ...state, player: p, battle: b, battleLog: log };
     }
 
+    case 'BOSS_ACCEPT': {
+      const boss = state.pendingBoss;
+      if (!boss) return { ...state, screen: 'explore', pendingBoss: null };
+      return {
+        ...state, screen: 'battle',
+        pendingBoss: null,
+        battle: {
+          monster: boss, isPlayerTurn: true, defending: false,
+          poisonTurns: 0, atkDebuff: 0, defDebuff: 0, animating: false,
+        },
+        battleLog: [
+          { text: `BOSS BATTLE!`, type: 'info' },
+          { text: `${boss.name} - ${boss.title} appears!`, type: 'info' },
+        ],
+        battleResult: null,
+      };
+    }
+
+    case 'BOSS_DECLINE': {
+      return {
+        ...state, screen: 'explore', pendingBoss: null,
+        exploreText: 'You sense a powerful presence but decide to retreat...',
+      };
+    }
+
     case 'BATTLE_RUN': {
       const cls = getClassData(state.player);
       const escapeChance = (cls?.passive === 'Greed') ? 0.75 : 0.5;
@@ -390,6 +428,10 @@ function gameReducer(state, action) {
           const stolen = Math.floor(Math.random() * 10 + 1);
           p.gold = Math.max(0, p.gold - stolen);
           log.push({ text: `Stole ${stolen} gold!`, type: 'dmg-player' });
+        } else if (skill.effect === 'drain_hp') {
+          const healed = Math.floor(dmg * 0.5);
+          b.monster = { ...m, hp: Math.min(m.maxHp, m.hp + healed) };
+          log.push({ text: `${m.name} drained ${healed} HP!`, type: 'dmg-player' });
         }
       } else {
         let dmg = calcDamage(m.atk, getPlayerDef(p, b));
@@ -572,11 +614,14 @@ function handleVictory(state) {
       lostItemName,
       levelUps: gains,
       newLevel: leveledPlayer.level,
+      isBoss: !!m.isBoss,
+      bossName: m.isBoss ? m.name : null,
     },
   };
 }
 
 function handleDefeat(state) {
+  const m = state.battle.monster;
   const goldLost = Math.floor(state.player.gold * 0.2);
   const p = {
     ...state.player,
@@ -589,7 +634,11 @@ function handleDefeat(state) {
     ...state,
     screen: 'battle-result',
     player: p,
-    battleResult: { defeated: true, goldLost },
+    battleResult: {
+      defeated: true, goldLost,
+      isBoss: !!m?.isBoss,
+      bossName: m?.isBoss ? m.name : null,
+    },
   };
 }
 
@@ -648,6 +697,8 @@ export function useGameState(isLoggedIn) {
     battleDefend: () => dispatch({ type: 'BATTLE_DEFEND' }),
     battlePotion: () => dispatch({ type: 'BATTLE_USE_POTION' }),
     battleRun: () => dispatch({ type: 'BATTLE_RUN' }),
+    bossAccept: () => dispatch({ type: 'BOSS_ACCEPT' }),
+    bossDecline: () => dispatch({ type: 'BOSS_DECLINE' }),
     monsterTurn: () => dispatch({ type: 'MONSTER_TURN' }),
     continueAfterBattle: () => dispatch({ type: 'CONTINUE_AFTER_BATTLE' }),
     restAtInn: () => dispatch({ type: 'REST_AT_INN' }),
