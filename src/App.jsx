@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useGameState, ENERGY_COST_PER_TRIP, ENERGY_MAX } from './hooks/useGameState';
-import { CHARACTER_CLASSES } from './data/gameData';
 import { login, register, getMe, loadGame, hasSavedSession } from './api';
 import GameCanvas from './components/GameCanvas';
 import TopBar from './components/TopBar';
@@ -237,13 +236,15 @@ export default function App() {
               <BattleScreen
                 battle={state.battle}
                 battleLog={state.battleLog}
+                player={state.player}
                 onAttack={actions.battleAttack}
                 onSkill={actions.battleSkill}
                 onDefend={actions.battleDefend}
                 onPotion={actions.battlePotion}
                 onRun={actions.battleRun}
                 onMonsterTurn={actions.monsterTurn}
-                skillName={state.player.characterClass ? CHARACTER_CLASSES[state.player.characterClass]?.skillName : 'Skill'}
+                onTreeSkill={actions.battleTreeSkill}
+                onToggleSkillMenu={actions.toggleSkillMenu}
               />
             )}
 
@@ -277,8 +278,9 @@ export default function App() {
 
             {state.screen === 'skills' && (
               <SkillsScreen
+                player={state.player}
                 onBack={actions.goToTown}
-                characterClass={state.player.characterClass}
+                onUnlockSkill={actions.unlockSkill}
               />
             )}
 
