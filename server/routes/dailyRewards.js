@@ -71,6 +71,8 @@ router.get('/', requireAuth, (req, res) => {
 });
 
 // POST /api/daily-rewards/claim - claim today's reward
+// Returns the rewardDay; the client resolves the actual rewards from DAILY_REWARDS
+// and generates items scaled to the player's level.
 router.post('/claim', requireAuth, (req, res) => {
   const today = getTodayUTC();
   const latest = getLatestLogin.get(req.userId);
@@ -95,50 +97,11 @@ router.post('/claim', requireAuth, (req, res) => {
 
   insertLogin.run(req.userId, today, newStreak, newRewardDay);
 
-  // Return the reward for this day
-  const reward = DAILY_REWARDS[newRewardDay - 1];
-
   res.json({
     streak: newStreak,
     rewardDay: newRewardDay,
-    reward,
     claimedToday: true,
   });
 });
 
-// 30-day reward schedule
-const DAILY_REWARDS = [
-  { day: 1,  gold: 25,  label: '25 Gold' },
-  { day: 2,  gold: 35,  label: '35 Gold' },
-  { day: 3,  gold: 50,  label: '50 Gold' },
-  { day: 4,  gold: 50,  energy: 30,  label: '50 Gold + 30 Energy' },
-  { day: 5,  gold: 75,  label: '75 Gold' },
-  { day: 6,  gold: 60,  energy: 50,  label: '60 Gold + 50 Energy' },
-  { day: 7,  gold: 150, label: '150 Gold (Weekly!)' },
-  { day: 8,  gold: 40,  label: '40 Gold' },
-  { day: 9,  gold: 50,  label: '50 Gold' },
-  { day: 10, gold: 75,  energy: 30,  label: '75 Gold + 30 Energy' },
-  { day: 11, gold: 60,  label: '60 Gold' },
-  { day: 12, gold: 80,  label: '80 Gold' },
-  { day: 13, gold: 75,  energy: 50,  label: '75 Gold + 50 Energy' },
-  { day: 14, gold: 200, label: '200 Gold (2-Week!)' },
-  { day: 15, gold: 60,  label: '60 Gold' },
-  { day: 16, gold: 75,  label: '75 Gold' },
-  { day: 17, gold: 80,  energy: 40,  label: '80 Gold + 40 Energy' },
-  { day: 18, gold: 100, label: '100 Gold' },
-  { day: 19, gold: 90,  label: '90 Gold' },
-  { day: 20, gold: 100, energy: 50,  label: '100 Gold + 50 Energy' },
-  { day: 21, gold: 300, label: '300 Gold (3-Week!)' },
-  { day: 22, gold: 80,  label: '80 Gold' },
-  { day: 23, gold: 100, label: '100 Gold' },
-  { day: 24, gold: 100, energy: 50,  label: '100 Gold + 50 Energy' },
-  { day: 25, gold: 120, label: '120 Gold' },
-  { day: 26, gold: 120, energy: 60,  label: '120 Gold + 60 Energy' },
-  { day: 27, gold: 150, label: '150 Gold' },
-  { day: 28, gold: 200, energy: 80,  label: '200 Gold + 80 Energy' },
-  { day: 29, gold: 250, label: '250 Gold' },
-  { day: 30, gold: 500, energy: 100, label: '500 Gold + Full Energy (30-Day!)' },
-];
-
-export { DAILY_REWARDS };
 export default router;

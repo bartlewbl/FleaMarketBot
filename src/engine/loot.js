@@ -83,6 +83,45 @@ export function rollDrop(dropTable, monsterLevel) {
   return generateItem(drop.type, monsterLevel);
 }
 
+// Generate an item from a daily reward spec: { kind:'item'|'potion', type, rarity, minLevel }
+// Picks a random template of the given type + rarity, scaled to player level.
+export function generateRewardItem(spec, playerLevel) {
+  const effectiveLevel = Math.max(spec.minLevel || 1, playerLevel);
+
+  if (spec.kind === 'potion') {
+    const rarityData = RARITY_LOOKUP[spec.rarity] || RARITIES[0];
+    const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(effectiveLevel / 4));
+    const tier = POTION_TIERS[tierIndex];
+    const healAmount = Math.floor(tier.baseHeal + effectiveLevel * 4 * rarityData.multiplier);
+    return {
+      id: uid(),
+      name: tier.name,
+      type: 'potion',
+      slot: null,
+      level: effectiveLevel,
+      rarity: rarityData.name,
+      rarityClass: rarityData.cssClass,
+      rarityColor: rarityData.color,
+      healAmount,
+      icon: 'potion',
+      sellPrice: Math.floor(healAmount * 0.6),
+    };
+  }
+
+  const pool = ITEM_LIBRARY[spec.type];
+  if (!pool) return null;
+
+  // Filter to matching rarity candidates near the player's level
+  const candidates = pool.filter(t => t.rarity === spec.rarity && t.level <= effectiveLevel + 3);
+  const source = candidates.length > 0
+    ? candidates
+    : pool.filter(t => t.rarity === spec.rarity);
+  if (source.length === 0) return generateItem(spec.type, effectiveLevel);
+
+  const template = source[Math.floor(Math.random() * source.length)];
+  return buildGearDrop(template, effectiveLevel, spec.type);
+}
+
 export function getShopItems(playerLevel) {
   const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(playerLevel / 4));
   const start = Math.max(0, tierIndex - 1);

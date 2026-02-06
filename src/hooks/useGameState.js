@@ -5,7 +5,7 @@ import { calcDamage, getClassData, playerHasSkill, getEffectiveManaCost, getPlay
 import { applySkillEffect } from '../engine/skillEffects';
 import { applyAttackPassives, applySkillPassives, applyLifeTap, tryBladeDance, tryLuckyStrike, applyTurnStartPassives, applyDamageReduction, applyManaShield, checkDodge, applySurvivalPassives, applyCursedBlood } from '../engine/passives';
 import { scaleMonster, scaleBoss } from '../engine/scaling';
-import { rollDrop, generateItem } from '../engine/loot';
+import { rollDrop, generateItem, generateRewardItem } from '../engine/loot';
 import { saveGame } from '../api';
 
 export const ENERGY_MAX = 100;
@@ -764,14 +764,36 @@ function gameReducer(state, action) {
       return { ...state, message: null };
 
     case 'CLAIM_DAILY_REWARD': {
-      const reward = action.reward;
-      if (!reward) return state;
-      const p = { ...state.player, gold: state.player.gold + (reward.gold || 0) };
+      const { rewards, label } = action;
+      if (!rewards || rewards.length === 0) return state;
+      let p = { ...state.player, inventory: [...state.player.inventory] };
       let newEnergy = state.energy;
-      if (reward.energy) {
-        newEnergy = Math.min(ENERGY_MAX, state.energy + reward.energy);
+      const itemNames = [];
+      for (const r of rewards) {
+        switch (r.kind) {
+          case 'gold':
+            p.gold += r.amount;
+            break;
+          case 'energy':
+            newEnergy = Math.min(ENERGY_MAX, newEnergy + r.amount);
+            break;
+          case 'item':
+          case 'potion': {
+            if (p.inventory.length < p.maxInventory) {
+              const generated = generateRewardItem(r, p.level);
+              if (generated) {
+                p.inventory.push(generated);
+                itemNames.push(generated.name);
+              }
+            }
+            break;
+          }
+        }
       }
-      return { ...state, player: p, energy: newEnergy, message: `Daily reward: ${reward.label}!` };
+      const msg = itemNames.length > 0
+        ? `Day reward: ${label} (${itemNames.join(', ')})`
+        : `Day reward: ${label}`;
+      return { ...state, player: p, energy: newEnergy, message: msg };
     }
 
     case 'ENERGY_TICK': {
@@ -919,7 +941,7 @@ export function useGameState(isLoggedIn) {
     sellItem: (item) => dispatch({ type: 'SELL_ITEM', item }),
     reorderInventory: (fromIndex, toIndex) => dispatch({ type: 'REORDER_INVENTORY', fromIndex, toIndex }),
     buyItem: (item) => dispatch({ type: 'BUY_ITEM', item }),
-    claimDailyReward: (reward) => dispatch({ type: 'CLAIM_DAILY_REWARD', reward }),
+    claimDailyReward: (rewards, label) => dispatch({ type: 'CLAIM_DAILY_REWARD', rewards, label }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),
   }), []);
