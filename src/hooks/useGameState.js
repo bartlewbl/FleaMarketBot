@@ -763,6 +763,17 @@ function gameReducer(state, action) {
     case 'CLEAR_MESSAGE':
       return { ...state, message: null };
 
+    case 'CLAIM_DAILY_REWARD': {
+      const reward = action.reward;
+      if (!reward) return state;
+      const p = { ...state.player, gold: state.player.gold + (reward.gold || 0) };
+      let newEnergy = state.energy;
+      if (reward.energy) {
+        newEnergy = Math.min(ENERGY_MAX, state.energy + reward.energy);
+      }
+      return { ...state, player: p, energy: newEnergy, message: `Daily reward: ${reward.label}!` };
+    }
+
     case 'ENERGY_TICK': {
       const now = action.now ?? Date.now();
       const { energy, lastEnergyUpdate } = regenEnergy(state.energy, state.lastEnergyUpdate, now);
@@ -908,6 +919,7 @@ export function useGameState(isLoggedIn) {
     sellItem: (item) => dispatch({ type: 'SELL_ITEM', item }),
     reorderInventory: (fromIndex, toIndex) => dispatch({ type: 'REORDER_INVENTORY', fromIndex, toIndex }),
     buyItem: (item) => dispatch({ type: 'BUY_ITEM', item }),
+    claimDailyReward: (reward) => dispatch({ type: 'CLAIM_DAILY_REWARD', reward }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),
   }), []);

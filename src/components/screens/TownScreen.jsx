@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { CHARACTER_CLASSES, LOCATIONS } from '../../data/gameData';
 import { getDailyFeaturedItems } from '../../engine/loot';
+import DailyRewardPanel from '../DailyRewardPanel';
 const townNotices = [
   'Daily hunt: Defeat 5 forest goblins for 50 bonus XP.',
   'Blacksmith sale: Shields 15% off until midnight.',
@@ -36,7 +37,7 @@ const statLine = (item) => {
   return stats.length ? stats.join(' ') : 'No bonuses';
 };
 
-export default function TownScreen({ player, energy, energyCost, onRest, onEnterLocation, onBuy, canRest }) {
+export default function TownScreen({ player, energy, energyCost, onRest, onEnterLocation, onBuy, canRest, onClaimDailyReward }) {
   const equipment = player?.equipment || {};
   const atkBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.atk || 0), 0);
   const defBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.def || 0), 0);
@@ -174,6 +175,9 @@ export default function TownScreen({ player, energy, energyCost, onRest, onEnter
             </div>
           </button>
         </section>
+
+        {/* Daily Login Rewards */}
+        <DailyRewardPanel onClaimReward={onClaimDailyReward} />
 
         {/* Events Board */}
         <section className="town-panel town-events-panel">
