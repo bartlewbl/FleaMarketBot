@@ -13,6 +13,7 @@ import InventoryScreen from './components/screens/InventoryScreen';
 import ShopScreen from './components/screens/ShopScreen';
 import ProfileScreen from './components/screens/ProfileScreen';
 import SkillsScreen from './components/screens/SkillsScreen';
+import BossConfirmScreen from './components/screens/BossConfirmScreen';
 import SidePanel from './components/SidePanel';
 
 export default function App() {
@@ -135,7 +136,7 @@ export default function App() {
     );
   }
 
-  const navLocked = state.screen === 'battle' || state.screen === 'battle-result';
+  const navLocked = state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm';
   const canRest = !navLocked && (state.screen === 'town' || state.screen === 'locations');
 
   return (
@@ -199,6 +200,14 @@ export default function App() {
                 text={state.exploreText}
                 onContinue={actions.exploreStep}
                 onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'boss-confirm' && (
+              <BossConfirmScreen
+                boss={state.pendingBoss}
+                onAccept={actions.bossAccept}
+                onDecline={actions.bossDecline}
               />
             )}
 
