@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { getPlayerPassiveSkills, getPlayerActiveSkills, getTreeSkill } from '../../data/gameData';
+import { getPlayerPassiveSkills, getPlayerActiveSkills, getTreeSkill } from '../../data/skillTrees';
 
 export default function BattleScreen({
   battle, battleLog, player,

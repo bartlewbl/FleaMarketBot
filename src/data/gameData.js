@@ -1,19 +1,7 @@
-// All game data: locations, monsters, items, skills
-
-let _uid = 0;
-function uid() {
-  return 'item_' + (++_uid) + '_' + Date.now();
-}
-
-function pickWeighted(items) {
-  const total = items.reduce((s, i) => s + i.weight, 0);
-  let roll = Math.random() * total;
-  for (const item of items) {
-    roll -= item.weight;
-    if (roll <= 0) return item;
-  }
-  return items[items.length - 1];
-}
+// ============================================================
+// PURE GAME DATA - Constants and definitions only.
+// All game logic lives in src/engine/*.js modules.
+// ============================================================
 
 // ---- LOCATIONS ----
 export const LOCATIONS = [
@@ -68,7 +56,7 @@ export const LOCATIONS = [
 ];
 
 // ---- MONSTERS ----
-const MONSTERS = {
+export const MONSTERS = {
   rat: {
     name: 'Gutter Rat', sprite: 'rat', baseHp: 22, baseAtk: 5, baseDef: 1,
     baseExp: 12, baseGold: 6, skills: ['bite'],
@@ -99,8 +87,6 @@ const MONSTERS = {
     baseExp: 48, baseGold: 28, skills: ['slash', 'steal'],
     dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }],
   },
-
-  // ---- NEON MILE ENEMIES (Lv.1 area) ----
   'sewer-roach': {
     name: 'Sewer Roach', sprite: 'rat', baseHp: 18, baseAtk: 4, baseDef: 1,
     baseExp: 10, baseGold: 4, skills: ['sting'],
@@ -141,8 +127,6 @@ const MONSTERS = {
     baseExp: 7, baseGold: 3, skills: [],
     dropTable: [{ type: 'potion', weight: 50 }],
   },
-
-  // ---- SHADOW ALLEY ENEMIES (Lv.3 area) ----
   'shadow-bat': {
     name: 'Shadow Bat', sprite: 'bat', baseHp: 24, baseAtk: 8, baseDef: 2,
     baseExp: 18, baseGold: 9, skills: ['screech', 'bite'],
@@ -183,8 +167,6 @@ const MONSTERS = {
     baseExp: 17, baseGold: 9, skills: ['shock', 'bite'],
     dropTable: [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 6 }],
   },
-
-  // ---- METRO UNDERPASS ENEMIES (Lv.6 area) ----
   'tunnel-bat': {
     name: 'Tunnel Bat', sprite: 'bat', baseHp: 32, baseAtk: 13, baseDef: 4,
     baseExp: 28, baseGold: 15, skills: ['screech', 'drain'],
@@ -225,8 +207,6 @@ const MONSTERS = {
     baseExp: 31, baseGold: 16, skills: ['shock', 'curse'],
     dropTable: [{ type: 'ring', weight: 8 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 25 }],
   },
-
-  // ---- SKYLINE ROOFTOPS ENEMIES (Lv.10 area) ----
   'sky-hawk': {
     name: 'Sky Hawk', sprite: 'bat', baseHp: 44, baseAtk: 20, baseDef: 6,
     baseExp: 42, baseGold: 22, skills: ['slash', 'screech'],
@@ -272,8 +252,6 @@ const MONSTERS = {
     baseExp: 43, baseGold: 23, skills: ['venom', 'charge'],
     dropTable: [{ type: 'ring', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 25 }],
   },
-
-  // ---- IRONWORKS YARD ENEMIES (Lv.14 area) ----
   'forge-elemental': {
     name: 'Forge Elemental', sprite: 'slime', baseHp: 62, baseAtk: 24, baseDef: 8,
     baseExp: 55, baseGold: 30, skills: ['firebreath', 'slam'],
@@ -319,8 +297,6 @@ const MONSTERS = {
     baseExp: 55, baseGold: 29, skills: ['slash', 'bash', 'curse'],
     dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 9 }, { type: 'potion', weight: 18 }],
   },
-
-  // ---- MIDNIGHT TERMINAL ENEMIES (Lv.18 area) ----
   'terminal-enforcer': {
     name: 'Terminal Enforcer', sprite: 'vagrant', baseHp: 72, baseAtk: 28, baseDef: 10,
     baseExp: 65, baseGold: 35, skills: ['slash', 'bash', 'charge'],
@@ -403,7 +379,7 @@ export const BOSSES = {
   },
 };
 
-// ---- SKILLS ----
+// ---- MONSTER/BOSS SKILLS ----
 export const SKILLS = {
   bite:       { name: 'Bite',        multiplier: 1.3 },
   slash:      { name: 'Slash',       multiplier: 1.4 },
@@ -413,7 +389,6 @@ export const SKILLS = {
   curse:      { name: 'Curse',       multiplier: 0.7, effect: 'lower_atk' },
   slam:       { name: 'Slam',        multiplier: 1.6 },
   firebreath: { name: 'Fire Breath', multiplier: 1.8 },
-  // New skills for expanded enemy roster
   sting:      { name: 'Sting',       multiplier: 1.2 },
   scratch:    { name: 'Scratch',     multiplier: 1.1 },
   web:        { name: 'Web',         multiplier: 0.5, effect: 'lower_def' },
@@ -435,7 +410,7 @@ export const SKILLS = {
 };
 
 // ---- RARITIES ----
-const RARITIES = [
+export const RARITIES = [
   { name: 'Common',    cssClass: 'rarity-common',    color: '#ccc',    multiplier: 1.0, weight: 60 },
   { name: 'Uncommon',  cssClass: 'rarity-uncommon',  color: '#4fc3f7', multiplier: 1.3, weight: 25 },
   { name: 'Rare',      cssClass: 'rarity-rare',      color: '#ab47bc', multiplier: 1.7, weight: 10 },
@@ -443,11 +418,21 @@ const RARITIES = [
   { name: 'Legendary', cssClass: 'rarity-legendary', color: '#ffd700', multiplier: 3.0, weight: 1 },
 ];
 
-const RARITY_LOOKUP = RARITIES.reduce((acc, rarity) => {
+export const RARITY_LOOKUP = RARITIES.reduce((acc, rarity) => {
   acc[rarity.name] = rarity;
   return acc;
 }, {});
 
+// ---- POTION TIERS ----
+export const POTION_TIERS = [
+  { name: 'Small Medkit', baseHeal: 35 },
+  { name: 'Field Syringe', baseHeal: 55 },
+  { name: 'Combat Stims', baseHeal: 75 },
+  { name: 'Mega Infusion', baseHeal: 100 },
+  { name: 'Phoenix Serum', baseHeal: 130 },
+];
+
+// ---- ITEM LIBRARY ----
 function createGearList(slot, icon, entries) {
   return entries.map(entry => ({
     ...entry,
@@ -459,7 +444,7 @@ function createGearList(slot, icon, entries) {
   }));
 }
 
-const ITEM_LIBRARY = {
+export const ITEM_LIBRARY = {
   sword: createGearList('weapon', 'sword', [
     { name: 'Rusty Shiv', rarity: 'Uncommon', level: 1, baseAtk: 3 },
     { name: 'Copper Dagger', rarity: 'Common', level: 2, baseAtk: 4 },
@@ -481,7 +466,6 @@ const ITEM_LIBRARY = {
     { name: 'Apex Warstaff', rarity: 'Rare', level: 18, baseAtk: 21 },
     { name: 'Singularity Edge', rarity: 'Uncommon', level: 19, baseAtk: 23 },
     { name: 'Cosmic Guillotine', rarity: 'Epic', level: 20, baseAtk: 25, baseDef: 2 },
-    // Offensive strategy: glass-cannon weapons with high ATK, no DEF
     { name: 'Plasma Cutter', rarity: 'Legendary', level: 2, baseAtk: 5 },
     { name: 'Voltage Switchblade', rarity: 'Rare', level: 5, baseAtk: 9 },
     { name: 'Overclocked Cleaver', rarity: 'Epic', level: 8, baseAtk: 13 },
@@ -490,7 +474,6 @@ const ITEM_LIBRARY = {
     { name: 'Wrath of Neon', rarity: 'Rare', level: 16, baseAtk: 21 },
     { name: 'Oblivion Reaver', rarity: 'Common', level: 18, baseAtk: 24 },
     { name: 'Doomsday Splicer', rarity: 'Uncommon', level: 20, baseAtk: 28 },
-    // Rarity-decoupled: high-level commons, low-level legendaries, mixed combos
     { name: 'Concrete Greatsword', rarity: 'Common', level: 15, baseAtk: 14 },
     { name: 'Gridline Machete', rarity: 'Common', level: 18, baseAtk: 16 },
     { name: 'Rusted Titan Blade', rarity: 'Common', level: 20, baseAtk: 18 },
@@ -521,7 +504,6 @@ const ITEM_LIBRARY = {
     { name: 'Voidcarapace', rarity: 'Rare', level: 18, baseDef: 20 },
     { name: 'Celestial Rampart', rarity: 'Uncommon', level: 19, baseDef: 21 },
     { name: 'Infinity Guard', rarity: 'Legendary', level: 20, baseDef: 23 },
-    // Defensive strategy: ultra-tank shields with boosted DEF
     { name: 'Junkyard Barricade', rarity: 'Epic', level: 1, baseDef: 4 },
     { name: 'Scrapwall Gate', rarity: 'Uncommon', level: 3, baseDef: 6 },
     { name: 'Titanium Kiteshield', rarity: 'Legendary', level: 6, baseDef: 10 },
@@ -530,7 +512,6 @@ const ITEM_LIBRARY = {
     { name: 'Impenetrable Ward', rarity: 'Common', level: 15, baseDef: 19 },
     { name: 'Dimensional Barricade', rarity: 'Rare', level: 18, baseDef: 22 },
     { name: 'Absolute Zero Wall', rarity: 'Epic', level: 20, baseDef: 25 },
-    // Rarity-decoupled shields
     { name: 'Blast Door Fragment', rarity: 'Common', level: 16, baseDef: 14 },
     { name: 'Manhole Cover Shield', rarity: 'Common', level: 19, baseDef: 16 },
     { name: 'Scrap Titan Shield', rarity: 'Common', level: 20, baseDef: 17 },
@@ -560,14 +541,12 @@ const ITEM_LIBRARY = {
     { name: 'Void Prophet Hood', rarity: 'Common', level: 18, baseDef: 15 },
     { name: 'Astral Mindguard', rarity: 'Rare', level: 19, baseDef: 16 },
     { name: 'Infinity Circlet', rarity: 'Legendary', level: 20, baseDef: 17, baseAtk: 2 },
-    // Offensive strategy: ATK-focused headgear for aggressive builds
     { name: 'Targeting Visor', rarity: 'Rare', level: 2, baseAtk: 2, baseDef: 1 },
     { name: 'Neural Amp Helm', rarity: 'Epic', level: 5, baseAtk: 3, baseDef: 2 },
     { name: 'Fury Circuit Crown', rarity: 'Common', level: 9, baseAtk: 5, baseDef: 3 },
     { name: 'Warhead Casing', rarity: 'Uncommon', level: 13, baseAtk: 7, baseDef: 4 },
     { name: 'Berserker Faceplate', rarity: 'Common', level: 16, baseAtk: 9, baseDef: 4 },
     { name: 'Annihilator Helm', rarity: 'Rare', level: 20, baseAtk: 11, baseDef: 5 },
-    // Rarity-decoupled helmets
     { name: 'Welder\'s Full Mask', rarity: 'Common', level: 14, baseDef: 9 },
     { name: 'Hardhat Mk-IX', rarity: 'Common', level: 18, baseDef: 12 },
     { name: 'Concrete Cranium', rarity: 'Common', level: 20, baseDef: 13 },
@@ -597,14 +576,12 @@ const ITEM_LIBRARY = {
     { name: 'Celestial Bulwark Suit', rarity: 'Common', level: 18, baseDef: 20 },
     { name: 'Eternium Aegis Frame', rarity: 'Epic', level: 19, baseDef: 21 },
     { name: 'Singularity Battlesuit', rarity: 'Legendary', level: 20, baseDef: 23, baseAtk: 1 },
-    // Defensive strategy: ultra-tank armor with boosted DEF
     { name: 'Lead-Lined Poncho', rarity: 'Rare', level: 2, baseDef: 6 },
     { name: 'Riot Suppression Suit', rarity: 'Legendary', level: 6, baseDef: 11 },
     { name: 'Neutronium Plate', rarity: 'Common', level: 10, baseDef: 15 },
     { name: 'Monolith Exoskeleton', rarity: 'Uncommon', level: 14, baseDef: 19 },
     { name: 'Event Horizon Shell', rarity: 'Common', level: 18, baseDef: 23 },
     { name: 'Omega Fortress Armor', rarity: 'Epic', level: 20, baseDef: 26 },
-    // Rarity-decoupled armor
     { name: 'Industrial Coveralls', rarity: 'Common', level: 15, baseDef: 13 },
     { name: 'Sewer Plate Carrier', rarity: 'Common', level: 19, baseDef: 16 },
     { name: 'Forklift Exo-Rig', rarity: 'Common', level: 20, baseDef: 17 },
@@ -634,14 +611,12 @@ const ITEM_LIBRARY = {
     { name: 'Chrono Greaves', rarity: 'Uncommon', level: 18, baseDef: 9, baseAtk: 1 },
     { name: 'Rift Sabatons', rarity: 'Rare', level: 19, baseDef: 10 },
     { name: 'Infinity Marchers', rarity: 'Legendary', level: 20, baseDef: 11, baseAtk: 2 },
-    // Offensive strategy: ATK-focused boots for rush/aggressive play
     { name: 'Spike-Tipped Runners', rarity: 'Epic', level: 3, baseAtk: 2, baseDef: 1 },
     { name: 'Blitz Stompers', rarity: 'Legendary', level: 7, baseAtk: 3, baseDef: 2 },
     { name: 'Razor Striders', rarity: 'Common', level: 10, baseAtk: 4, baseDef: 3 },
     { name: 'Assault Thrusters', rarity: 'Uncommon', level: 14, baseAtk: 5, baseDef: 4 },
     { name: 'Havoc Tramples', rarity: 'Rare', level: 17, baseAtk: 6, baseDef: 5 },
     { name: 'Annihilation Treads', rarity: 'Common', level: 20, baseAtk: 8, baseDef: 5 },
-    // Rarity-decoupled boots
     { name: 'Steel-Toed Waders', rarity: 'Common', level: 14, baseDef: 6 },
     { name: 'Foundry Stompers', rarity: 'Common', level: 18, baseDef: 8 },
     { name: 'Concrete Crushers', rarity: 'Common', level: 20, baseDef: 9 },
@@ -671,7 +646,6 @@ const ITEM_LIBRARY = {
     { name: 'Infinity Anklet', rarity: 'Epic', level: 18, baseAtk: 9, baseDef: 5 },
     { name: 'Singularity Charm', rarity: 'Uncommon', level: 19, baseAtk: 10, baseDef: 5 },
     { name: 'Paradox Halo', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 6 },
-    // Offensive strategy: ATK-heavy accessories for glass cannon builds
     { name: 'Jagged Tooth Necklace', rarity: 'Rare', level: 1, baseAtk: 2 },
     { name: 'Voltage Coil', rarity: 'Epic', level: 3, baseAtk: 3 },
     { name: 'Razorwire Bracelet', rarity: 'Legendary', level: 6, baseAtk: 4, baseDef: 1 },
@@ -680,7 +654,6 @@ const ITEM_LIBRARY = {
     { name: 'Berserker Torque', rarity: 'Common', level: 15, baseAtk: 9, baseDef: 2 },
     { name: 'Destruction Matrix', rarity: 'Uncommon', level: 18, baseAtk: 11, baseDef: 3 },
     { name: 'Apocalypse Sigil', rarity: 'Rare', level: 20, baseAtk: 13, baseDef: 3 },
-    // Defensive strategy: DEF-heavy accessories for tank builds
     { name: 'Iron Wristguard', rarity: 'Epic', level: 2, baseDef: 2, baseAtk: 1 },
     { name: 'Hardened Amulet', rarity: 'Legendary', level: 4, baseDef: 3 },
     { name: 'Dampening Coil', rarity: 'Common', level: 7, baseDef: 4, baseAtk: 1 },
@@ -689,7 +662,6 @@ const ITEM_LIBRARY = {
     { name: 'Bastion Core', rarity: 'Rare', level: 15, baseDef: 7, baseAtk: 3 },
     { name: 'Immortal Shell Locket', rarity: 'Common', level: 18, baseDef: 9, baseAtk: 3 },
     { name: 'Eternity Ward Halo', rarity: 'Uncommon', level: 20, baseDef: 10, baseAtk: 4 },
-    // Rarity-decoupled accessories
     { name: 'Bent Nail Pendant', rarity: 'Common', level: 13, baseAtk: 4, baseDef: 3 },
     { name: 'Duct Tape Bracelet', rarity: 'Common', level: 16, baseAtk: 5, baseDef: 4 },
     { name: 'Rebar Knuckle Ring', rarity: 'Common', level: 19, baseAtk: 6, baseDef: 5 },
@@ -706,253 +678,6 @@ const ITEM_LIBRARY = {
     { name: 'Cracked Data Chip', rarity: 'Uncommon', level: 18, baseAtk: 6, baseDef: 4 },
   ]),
 };
-
-// ---- PUBLIC FUNCTIONS ----
-
-export function expForLevel(level) {
-  return Math.floor(50 * Math.pow(level, 1.5));
-}
-
-export function scaleMonster(monsterId, areaLevel) {
-  const base = MONSTERS[monsterId];
-  if (!base) return null;
-  const scale = 1 + (areaLevel - 1) * 0.2;
-  return {
-    id: monsterId,
-    name: base.name,
-    sprite: base.sprite,
-    maxHp: Math.floor(base.baseHp * scale),
-    hp: Math.floor(base.baseHp * scale),
-    atk: Math.floor(base.baseAtk * scale),
-    def: Math.floor(base.baseDef * scale),
-    exp: Math.floor(base.baseExp * scale),
-    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 5),
-    skills: base.skills,
-    dropTable: base.dropTable,
-    level: areaLevel,
-  };
-}
-
-export function scaleBoss(bossId, areaLevel) {
-  const base = BOSSES[bossId];
-  if (!base) return null;
-  const scale = 1 + (areaLevel - 1) * 0.25;
-  return {
-    id: bossId,
-    name: base.name,
-    sprite: base.sprite,
-    isBoss: true,
-    title: base.title,
-    maxHp: Math.floor(base.baseHp * scale),
-    hp: Math.floor(base.baseHp * scale),
-    atk: Math.floor(base.baseAtk * scale),
-    def: Math.floor(base.baseDef * scale),
-    exp: Math.floor(base.baseExp * scale),
-    gold: Math.floor(base.baseGold * scale) + Math.floor(Math.random() * 15),
-    skills: base.skills,
-    dropTable: base.dropTable,
-    level: areaLevel,
-  };
-}
-
-const POTION_TIERS = [
-  { name: 'Small Medkit', baseHeal: 35 },
-  { name: 'Field Syringe', baseHeal: 55 },
-  { name: 'Combat Stims', baseHeal: 75 },
-  { name: 'Mega Infusion', baseHeal: 100 },
-  { name: 'Phoenix Serum', baseHeal: 130 },
-];
-
-function pickFromLibrary(pool, targetLevel) {
-  if (!pool || pool.length === 0) return null;
-  const weighted = pool.map(item => {
-    const levelDiff = Math.abs(item.level - targetLevel);
-    const levelWeight = Math.max(1, 18 - levelDiff * 2);
-    return { item, weight: (item.weight || 1) * levelWeight };
-  });
-  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
-  let roll = Math.random() * total;
-  for (const entry of weighted) {
-    roll -= entry.weight;
-    if (roll <= 0) return entry.item;
-  }
-  return weighted[weighted.length - 1].item;
-}
-
-function buildGearDrop(template, monsterLevel, dropType) {
-  const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
-  const baseLevelFactor = 1 + template.level * 0.05;
-  const adaptFactor = 1 + Math.max(0, monsterLevel - template.level) * 0.04;
-  const atk = template.baseAtk > 0
-    ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * adaptFactor * rarityData.multiplier))
-    : 0;
-  const def = template.baseDef > 0
-    ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * adaptFactor * rarityData.multiplier))
-    : 0;
-  const effectiveLevel = Math.max(template.level, monsterLevel);
-
-  return {
-    id: uid(),
-    name: template.name,
-    type: dropType,
-    slot: template.slot,
-    level: effectiveLevel,
-    rarity: template.rarity,
-    rarityClass: rarityData.cssClass,
-    rarityColor: rarityData.color,
-    atk,
-    def,
-    icon: template.icon,
-    sellPrice: Math.max(10, Math.floor((atk + def) * 4 + effectiveLevel * 3 + rarityData.multiplier * 10)),
-  };
-}
-
-export function generateItem(dropType, monsterLevel) {
-  if (dropType === 'potion') {
-    const rarity = pickWeighted(RARITIES);
-    const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(monsterLevel / 4));
-    const tier = POTION_TIERS[tierIndex];
-    const healAmount = Math.floor(tier.baseHeal + monsterLevel * 4 * rarity.multiplier);
-    return {
-      id: uid(),
-      name: tier.name,
-      type: 'potion',
-      slot: null,
-      level: Math.max(1, monsterLevel),
-      rarity: rarity.name,
-      rarityClass: rarity.cssClass,
-      rarityColor: rarity.color,
-      healAmount,
-      icon: 'potion',
-      sellPrice: Math.floor(healAmount * 0.6),
-    };
-  }
-
-  const pool = ITEM_LIBRARY[dropType];
-  if (!pool) return null;
-  const template = pickFromLibrary(pool, monsterLevel);
-  if (!template) return null;
-
-  return buildGearDrop(template, monsterLevel, dropType);
-}
-
-export function getShopItems(playerLevel) {
-  const tierIndex = Math.min(POTION_TIERS.length - 1, Math.floor(playerLevel / 4));
-  const start = Math.max(0, tierIndex - 1);
-  const end = Math.min(POTION_TIERS.length - 1, start + 2);
-  const normalizedStart = Math.max(0, end - 2);
-  const tiers = POTION_TIERS.slice(normalizedStart, end + 1);
-
-  return tiers.map((tier, offset) => {
-    const absoluteIdx = normalizedStart + offset;
-    const rarity = RARITIES[Math.min(RARITIES.length - 1, absoluteIdx)];
-    const effectiveLevel = Math.max(1, absoluteIdx * 4 + 1);
-    const healAmount = Math.floor(tier.baseHeal + playerLevel * 3 + absoluteIdx * 10);
-    const buyPrice = Math.floor(healAmount * 1.4 + effectiveLevel * 5);
-
-    return {
-      id: uid(),
-      name: tier.name,
-      type: 'potion',
-      slot: null,
-      level: effectiveLevel,
-      rarity: rarity.name,
-      rarityClass: rarity.cssClass,
-      rarityColor: rarity.color,
-      healAmount,
-      icon: 'potion',
-      buyPrice,
-      sellPrice: Math.floor(healAmount * 0.6),
-    };
-  });
-}
-
-export function rollDrop(dropTable, monsterLevel) {
-  if (!dropTable || dropTable.length === 0) return null;
-  const drop = pickWeighted(dropTable);
-  return generateItem(drop.type, monsterLevel);
-}
-
-// Seeded RNG for deterministic daily results
-function seededRandom(seed) {
-  let s = seed;
-  return function () {
-    s = (s * 16807 + 0) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
-}
-
-function seededPickWeighted(items, rng) {
-  const total = items.reduce((s, i) => s + i.weight, 0);
-  let roll = rng() * total;
-  for (const item of items) {
-    roll -= item.weight;
-    if (roll <= 0) return item;
-  }
-  return items[items.length - 1];
-}
-
-export function getDailyFeaturedItems(playerLevel) {
-  const today = new Date();
-  const daySeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-  const rng = seededRandom(daySeed + playerLevel);
-
-  const extraordinaryRarities = RARITIES.filter(r => r.name === 'Rare' || r.name === 'Epic' || r.name === 'Legendary');
-  const gearTypes = ['sword', 'shield', 'helmet', 'armor', 'boots', 'ring'];
-  const featured = [];
-  const usedNames = new Set();
-
-  const count = 3;
-  for (let i = 0; i < count; i++) {
-    const typeIdx = Math.floor(rng() * gearTypes.length);
-    const type = gearTypes[typeIdx];
-    const pool = ITEM_LIBRARY[type];
-    if (!pool) continue;
-
-    const rarity = seededPickWeighted(extraordinaryRarities, rng);
-    const candidates = pool.filter(item => item.rarity === rarity.name && item.level <= Math.max(playerLevel + 3, 5));
-    if (candidates.length === 0) continue;
-
-    const template = candidates[Math.floor(rng() * candidates.length)];
-    if (usedNames.has(template.name)) continue;
-    usedNames.add(template.name);
-
-    const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
-    const baseLevelFactor = 1 + template.level * 0.05;
-    const atk = template.baseAtk > 0
-      ? Math.max(0, Math.round(template.baseAtk * baseLevelFactor * rarityData.multiplier))
-      : 0;
-    const def = template.baseDef > 0
-      ? Math.max(0, Math.round(template.baseDef * baseLevelFactor * rarityData.multiplier))
-      : 0;
-
-    const buyPrice = Math.floor((atk + def) * 8 + template.level * 6 + rarityData.multiplier * 20);
-
-    featured.push({
-      id: uid(),
-      name: template.name,
-      type,
-      slot: template.slot,
-      level: template.level,
-      rarity: template.rarity,
-      rarityClass: rarityData.cssClass,
-      rarityColor: rarityData.color,
-      atk,
-      def,
-      icon: template.icon,
-      buyPrice,
-      sellPrice: Math.max(10, Math.floor((atk + def) * 4 + template.level * 3 + rarityData.multiplier * 10)),
-    });
-  }
-
-  return featured;
-}
-
-export function calcDamage(atk, def) {
-  const base = Math.max(1, atk - def * 0.5);
-  const variance = 0.85 + Math.random() * 0.3;
-  return Math.max(1, Math.floor(base * variance));
-}
 
 // ---- CHARACTER CLASSES ----
 export const CHARACTER_CLASSES = {
@@ -1033,293 +758,12 @@ export const CHARACTER_CLASSES = {
   },
 };
 
-// ---- SKILL TREES ----
-// Each class has 10 tiers (20 skills total). At each tier the player picks A or B (permanent choice).
-// type: 'passive' (always active) or 'active' (usable in battle, costs mana)
-export const SKILL_TREES = {
-  berserker: {
-    tiers: [
-      { level: 2, label: 'Tier 1', choices: [
-        { id: 'brs_t1a', name: 'Blood Frenzy', type: 'passive', desc: '+3% ATK for each 10% HP missing', icon: 'P' },
-        { id: 'brs_t1b', name: 'Savage Strike', type: 'active', desc: '2.2x damage, take 5% max HP recoil', manaCost: 8, multiplier: 2.2, effect: 'recoil_small', icon: 'A' },
-      ]},
-      { level: 4, label: 'Tier 2', choices: [
-        { id: 'brs_t2a', name: 'Undying Will', type: 'passive', desc: 'Survive one lethal hit per battle at 1 HP', icon: 'P' },
-        { id: 'brs_t2b', name: 'Cleave', type: 'active', desc: '1.8x damage, ignores 30% DEF', manaCost: 10, multiplier: 1.8, effect: 'pierce_30', icon: 'A' },
-      ]},
-      { level: 6, label: 'Tier 3', choices: [
-        { id: 'brs_t3a', name: 'Bloodlust', type: 'passive', desc: 'Heal 20% of damage dealt when below 30% HP', icon: 'P' },
-        { id: 'brs_t3b', name: 'Rampage', type: 'active', desc: '3.0x damage, take 20% max HP recoil', manaCost: 15, multiplier: 3.0, effect: 'recoil_heavy', icon: 'A' },
-      ]},
-      { level: 8, label: 'Tier 4', choices: [
-        { id: 'brs_t4a', name: 'War Machine', type: 'passive', desc: '+15% ATK, +25% ATK when below 50% HP', icon: 'P' },
-        { id: 'brs_t4b', name: 'Skull Crusher', type: 'active', desc: '3.5x damage, reduce enemy DEF by 40%', manaCost: 18, multiplier: 3.5, effect: 'shred_def', icon: 'A' },
-      ]},
-      { level: 10, label: 'Tier 5', choices: [
-        { id: 'brs_t5a', name: 'Thick Skin', type: 'passive', desc: 'Take 8% less damage from all sources', icon: 'P' },
-        { id: 'brs_t5b', name: 'Whirlwind', type: 'active', desc: '2.5x damage, ignores 20% DEF', manaCost: 12, multiplier: 2.5, effect: 'pierce_20', icon: 'A' },
-      ]},
-      { level: 12, label: 'Tier 6', choices: [
-        { id: 'brs_t6a', name: 'Adrenaline Rush', type: 'passive', desc: 'Restore 3 mana each time you attack', icon: 'P' },
-        { id: 'brs_t6b', name: 'Decimate', type: 'active', desc: '2.8x damage, enemy ATK -15%', manaCost: 14, multiplier: 2.8, effect: 'weaken_15', icon: 'A' },
-      ]},
-      { level: 14, label: 'Tier 7', choices: [
-        { id: 'brs_t7a', name: 'Tenacity', type: 'passive', desc: 'Poison and debuff durations reduced by 1 turn', icon: 'P' },
-        { id: 'brs_t7b', name: 'Execution', type: 'active', desc: '4.0x damage if enemy below 25% HP, else 1.5x', manaCost: 16, multiplier: 1.5, effect: 'execute_25', icon: 'A' },
-      ]},
-      { level: 16, label: 'Tier 8', choices: [
-        { id: 'brs_t8a', name: 'Bloodbath', type: 'passive', desc: 'Heal 5% max HP on every kill', icon: 'P' },
-        { id: 'brs_t8b', name: 'Devastating Blow', type: 'active', desc: '3.2x damage, ignores 50% DEF', manaCost: 18, multiplier: 3.2, effect: 'pierce_50', icon: 'A' },
-      ]},
-      { level: 18, label: 'Tier 9', choices: [
-        { id: 'brs_t9a', name: 'Relentless', type: 'passive', desc: '+20% ATK when above 80% HP', icon: 'P' },
-        { id: 'brs_t9b', name: 'Blood Nova', type: 'active', desc: '3.8x damage, heal 25% of damage dealt, 10% recoil', manaCost: 22, multiplier: 3.8, effect: 'blood_nova', icon: 'A' },
-      ]},
-      { level: 20, label: 'Tier 10', choices: [
-        { id: 'brs_t10a', name: 'Immortal Rage', type: 'passive', desc: 'When below 10% HP, ATK doubled', icon: 'P' },
-        { id: 'brs_t10b', name: 'Apocalypse', type: 'active', desc: '5.0x damage, take 30% max HP recoil', manaCost: 28, multiplier: 5.0, effect: 'recoil_extreme', icon: 'A' },
-      ]},
-    ],
-  },
-  warrior: {
-    tiers: [
-      { level: 2, label: 'Tier 1', choices: [
-        { id: 'war_t1a', name: 'Iron Skin', type: 'passive', desc: 'Take 10% less damage from all attacks', icon: 'P' },
-        { id: 'war_t1b', name: 'War Cry', type: 'active', desc: 'Reduce enemy ATK by 25% for the fight', manaCost: 8, multiplier: 0.8, effect: 'war_cry', icon: 'A' },
-      ]},
-      { level: 4, label: 'Tier 2', choices: [
-        { id: 'war_t2a', name: 'Bulwark', type: 'passive', desc: 'Defend blocks 85% damage instead of 70%', icon: 'P' },
-        { id: 'war_t2b', name: 'Counter Strike', type: 'active', desc: '2.0x damage, 2.5x if defended last turn', manaCost: 10, multiplier: 2.0, effect: 'counter', icon: 'A' },
-      ]},
-      { level: 6, label: 'Tier 3', choices: [
-        { id: 'war_t3a', name: 'Unbreakable', type: 'passive', desc: '+15% max HP during battle', icon: 'P' },
-        { id: 'war_t3b', name: 'Earthquake', type: 'active', desc: '2.2x damage, lower enemy DEF by 30%', manaCost: 15, multiplier: 2.2, effect: 'quake', icon: 'A' },
-      ]},
-      { level: 8, label: 'Tier 4', choices: [
-        { id: 'war_t4a', name: 'Aegis', type: 'passive', desc: '15% chance to fully block any attack', icon: 'P' },
-        { id: 'war_t4b', name: 'Final Stand', type: 'active', desc: '2.8x damage, heal 30% of damage dealt', manaCost: 18, multiplier: 2.8, effect: 'final_stand', icon: 'A' },
-      ]},
-      { level: 10, label: 'Tier 5', choices: [
-        { id: 'war_t5a', name: 'Stalwart', type: 'passive', desc: '+5 DEF permanently in battle', icon: 'P' },
-        { id: 'war_t5b', name: 'Shield Slam', type: 'active', desc: '1.8x damage + DEF added to ATK for this hit', manaCost: 12, multiplier: 1.8, effect: 'shield_slam', icon: 'A' },
-      ]},
-      { level: 12, label: 'Tier 6', choices: [
-        { id: 'war_t6a', name: 'Regeneration', type: 'passive', desc: 'Heal 3% max HP at the start of each turn', icon: 'P' },
-        { id: 'war_t6b', name: 'Heroic Strike', type: 'active', desc: '2.5x damage, restore 5 mana', manaCost: 10, multiplier: 2.5, effect: 'heroic_mana', icon: 'A' },
-      ]},
-      { level: 14, label: 'Tier 7', choices: [
-        { id: 'war_t7a', name: 'Armor Mastery', type: 'passive', desc: 'Equipment DEF bonuses increased by 15%', icon: 'P' },
-        { id: 'war_t7b', name: 'Mighty Cleave', type: 'active', desc: '2.6x damage, ignores 25% DEF', manaCost: 14, multiplier: 2.6, effect: 'pierce_25', icon: 'A' },
-      ]},
-      { level: 16, label: 'Tier 8', choices: [
-        { id: 'war_t8a', name: 'Last Stand', type: 'passive', desc: '+30% DEF when below 40% HP', icon: 'P' },
-        { id: 'war_t8b', name: 'Rallying Blow', type: 'active', desc: '2.2x damage, heal 20% max HP', manaCost: 16, multiplier: 2.2, effect: 'rally_heal', icon: 'A' },
-      ]},
-      { level: 18, label: 'Tier 9', choices: [
-        { id: 'war_t9a', name: 'Indomitable', type: 'passive', desc: 'Cannot be reduced below 1 HP by poison or DoT', icon: 'P' },
-        { id: 'war_t9b', name: 'Colossus Smash', type: 'active', desc: '3.5x damage, reduce enemy DEF to 0 for 2 turns', manaCost: 22, multiplier: 3.5, effect: 'armor_break', icon: 'A' },
-      ]},
-      { level: 20, label: 'Tier 10', choices: [
-        { id: 'war_t10a', name: 'Fortress', type: 'passive', desc: 'All damage taken reduced by 20%', icon: 'P' },
-        { id: 'war_t10b', name: 'Avatar of War', type: 'active', desc: '4.0x damage, +50% DEF for 3 turns', manaCost: 28, multiplier: 4.0, effect: 'avatar', icon: 'A' },
-      ]},
-    ],
-  },
-  thief: {
-    tiers: [
-      { level: 2, label: 'Tier 1', choices: [
-        { id: 'thf_t1a', name: 'Shadow Step', type: 'passive', desc: '15% chance to dodge enemy attacks', icon: 'P' },
-        { id: 'thf_t1b', name: 'Poison Blade', type: 'active', desc: '1.5x damage, poison enemy for 3 turns', manaCost: 8, multiplier: 1.5, effect: 'apply_poison', icon: 'A' },
-      ]},
-      { level: 4, label: 'Tier 2', choices: [
-        { id: 'thf_t2a', name: 'Plunder', type: 'passive', desc: '+50% gold from battles', icon: 'P' },
-        { id: 'thf_t2b', name: 'Assassinate', type: 'active', desc: '3.0x damage if enemy <30% HP, else 1.5x', manaCost: 10, multiplier: 1.5, effect: 'execute', icon: 'A' },
-      ]},
-      { level: 6, label: 'Tier 3', choices: [
-        { id: 'thf_t3a', name: 'Evasion Mastery', type: 'passive', desc: 'Dodge chance +10% (stacks with Shadow Step)', icon: 'P' },
-        { id: 'thf_t3b', name: 'Shadow Dance', type: 'active', desc: '2.0x damage, dodge the next enemy attack', manaCost: 15, multiplier: 2.0, effect: 'shadow_dance', icon: 'A' },
-      ]},
-      { level: 8, label: 'Tier 4', choices: [
-        { id: 'thf_t4a', name: 'Lucky Strike', type: 'passive', desc: '20% chance to deal double damage on attacks', icon: 'P' },
-        { id: 'thf_t4b', name: 'Death Mark', type: 'active', desc: '2.5x damage, ignores all enemy DEF', manaCost: 18, multiplier: 2.5, effect: 'true_damage', icon: 'A' },
-      ]},
-      { level: 10, label: 'Tier 5', choices: [
-        { id: 'thf_t5a', name: 'Quick Hands', type: 'passive', desc: 'Potions heal 30% more', icon: 'P' },
-        { id: 'thf_t5b', name: 'Fan of Knives', type: 'active', desc: '2.0x damage, apply poison for 2 turns', manaCost: 10, multiplier: 2.0, effect: 'apply_poison_short', icon: 'A' },
-      ]},
-      { level: 12, label: 'Tier 6', choices: [
-        { id: 'thf_t6a', name: 'Opportunist', type: 'passive', desc: '+15% damage against poisoned enemies', icon: 'P' },
-        { id: 'thf_t6b', name: 'Cheap Shot', type: 'active', desc: '1.8x damage, reduce enemy ATK by 20%', manaCost: 10, multiplier: 1.8, effect: 'cheap_shot', icon: 'A' },
-      ]},
-      { level: 14, label: 'Tier 7', choices: [
-        { id: 'thf_t7a', name: 'Slippery', type: 'passive', desc: '100% escape chance from non-boss fights', icon: 'P' },
-        { id: 'thf_t7b', name: 'Garrote', type: 'active', desc: '2.2x damage, strong poison for 3 turns', manaCost: 14, multiplier: 2.2, effect: 'strong_poison_3', icon: 'A' },
-      ]},
-      { level: 16, label: 'Tier 8', choices: [
-        { id: 'thf_t8a', name: 'Treasure Hunter', type: 'passive', desc: 'Better loot drop rates from monsters', icon: 'P' },
-        { id: 'thf_t8b', name: 'Ambush', type: 'active', desc: '3.0x damage, ignores 50% DEF', manaCost: 16, multiplier: 3.0, effect: 'pierce_50', icon: 'A' },
-      ]},
-      { level: 18, label: 'Tier 9', choices: [
-        { id: 'thf_t9a', name: 'Blade Dance', type: 'passive', desc: '10% chance to attack twice', icon: 'P' },
-        { id: 'thf_t9b', name: 'Shadowstrike', type: 'active', desc: '3.5x damage, dodge next 2 attacks', manaCost: 22, multiplier: 3.5, effect: 'shadow_dance_2', icon: 'A' },
-      ]},
-      { level: 20, label: 'Tier 10', choices: [
-        { id: 'thf_t10a', name: 'Master Thief', type: 'passive', desc: 'Double gold + guaranteed rare+ loot drops', icon: 'P' },
-        { id: 'thf_t10b', name: 'Phantom Blade', type: 'active', desc: '4.5x true damage, dodge next attack', manaCost: 28, multiplier: 4.5, effect: 'phantom_blade', icon: 'A' },
-      ]},
-    ],
-  },
-  mage: {
-    tiers: [
-      { level: 2, label: 'Tier 1', choices: [
-        { id: 'mag_t1a', name: 'Mana Shield', type: 'passive', desc: '20% of damage taken is absorbed by mana', icon: 'P' },
-        { id: 'mag_t1b', name: 'Fireball', type: 'active', desc: '2.0x true damage (ignores DEF)', manaCost: 10, multiplier: 2.0, effect: 'true_damage', icon: 'A' },
-      ]},
-      { level: 4, label: 'Tier 2', choices: [
-        { id: 'mag_t2a', name: 'Spell Echo', type: 'passive', desc: '20% chance for skills to deal double damage', icon: 'P' },
-        { id: 'mag_t2b', name: 'Ice Lance', type: 'active', desc: '1.6x damage, reduce enemy ATK by 20%', manaCost: 10, multiplier: 1.6, effect: 'freeze', icon: 'A' },
-      ]},
-      { level: 6, label: 'Tier 3', choices: [
-        { id: 'mag_t3a', name: 'Arcane Overflow', type: 'passive', desc: '+1 ATK for every 10 current mana', icon: 'P' },
-        { id: 'mag_t3b', name: 'Meteor', type: 'active', desc: '3.0x true damage (ignores DEF)', manaCost: 20, multiplier: 3.0, effect: 'true_damage', icon: 'A' },
-      ]},
-      { level: 8, label: 'Tier 4', choices: [
-        { id: 'mag_t4a', name: 'Mana Surge', type: 'passive', desc: 'All skills cost 25% less mana', icon: 'P' },
-        { id: 'mag_t4b', name: 'Chain Lightning', type: 'active', desc: '2.5x damage, reduce enemy DEF by 25%', manaCost: 16, multiplier: 2.5, effect: 'chain_lightning', icon: 'A' },
-      ]},
-      { level: 10, label: 'Tier 5', choices: [
-        { id: 'mag_t5a', name: 'Meditation', type: 'passive', desc: 'Restore 4 mana at the start of each turn', icon: 'P' },
-        { id: 'mag_t5b', name: 'Frost Nova', type: 'active', desc: '1.8x damage, enemy ATK -30%', manaCost: 14, multiplier: 1.8, effect: 'frost_nova', icon: 'A' },
-      ]},
-      { level: 12, label: 'Tier 6', choices: [
-        { id: 'mag_t6a', name: 'Elemental Mastery', type: 'passive', desc: 'All skill damage +20%', icon: 'P' },
-        { id: 'mag_t6b', name: 'Lightning Bolt', type: 'active', desc: '2.2x true damage', manaCost: 14, multiplier: 2.2, effect: 'true_damage', icon: 'A' },
-      ]},
-      { level: 14, label: 'Tier 7', choices: [
-        { id: 'mag_t7a', name: 'Arcane Barrier', type: 'passive', desc: 'Defend also restores 10 mana', icon: 'P' },
-        { id: 'mag_t7b', name: 'Blizzard', type: 'active', desc: '2.0x damage, enemy ATK & DEF -15%', manaCost: 16, multiplier: 2.0, effect: 'blizzard', icon: 'A' },
-      ]},
-      { level: 16, label: 'Tier 8', choices: [
-        { id: 'mag_t8a', name: 'Spellweaver', type: 'passive', desc: 'After using a skill, next attack deals +50% damage', icon: 'P' },
-        { id: 'mag_t8b', name: 'Pyroblast', type: 'active', desc: '3.5x true damage', manaCost: 22, multiplier: 3.5, effect: 'true_damage', icon: 'A' },
-      ]},
-      { level: 18, label: 'Tier 9', choices: [
-        { id: 'mag_t9a', name: 'Mana Regeneration', type: 'passive', desc: 'Restore 8% max mana each turn', icon: 'P' },
-        { id: 'mag_t9b', name: 'Arcane Torrent', type: 'active', desc: '3.0x damage, restore 50% mana spent', manaCost: 20, multiplier: 3.0, effect: 'mana_refund', icon: 'A' },
-      ]},
-      { level: 20, label: 'Tier 10', choices: [
-        { id: 'mag_t10a', name: 'Transcendence', type: 'passive', desc: 'Mana Shield absorbs 40% instead of 20%', icon: 'P' },
-        { id: 'mag_t10b', name: 'Cataclysm', type: 'active', desc: '5.0x true damage', manaCost: 30, multiplier: 5.0, effect: 'true_damage', icon: 'A' },
-      ]},
-    ],
-  },
-  necromancer: {
-    tiers: [
-      { level: 2, label: 'Tier 1', choices: [
-        { id: 'nec_t1a', name: 'Soul Siphon', type: 'passive', desc: 'Attacks have 25% chance to restore 5 mana', icon: 'P' },
-        { id: 'nec_t1b', name: 'Bone Spear', type: 'active', desc: '1.8x damage, ignores 40% DEF', manaCost: 8, multiplier: 1.8, effect: 'pierce_40', icon: 'A' },
-      ]},
-      { level: 4, label: 'Tier 2', choices: [
-        { id: 'nec_t2a', name: "Death's Embrace", type: 'passive', desc: 'When below 25% HP, heal 15% max HP (once/battle)', icon: 'P' },
-        { id: 'nec_t2b', name: 'Plague', type: 'active', desc: '1.2x damage, strong poison for 4 turns', manaCost: 10, multiplier: 1.2, effect: 'strong_poison', icon: 'A' },
-      ]},
-      { level: 6, label: 'Tier 3', choices: [
-        { id: 'nec_t3a', name: 'Vampiric Aura', type: 'passive', desc: 'All attacks heal 10% of damage dealt', icon: 'P' },
-        { id: 'nec_t3b', name: 'Soul Harvest', type: 'active', desc: '2.5x damage, heal 60% of damage dealt', manaCost: 15, multiplier: 2.5, effect: 'soul_harvest', icon: 'A' },
-      ]},
-      { level: 8, label: 'Tier 4', choices: [
-        { id: 'nec_t4a', name: 'Dark Pact', type: 'passive', desc: 'Sacrifice 5% HP per turn, gain +25% ATK', icon: 'P' },
-        { id: 'nec_t4b', name: 'Doom', type: 'active', desc: '2.0x damage, enemy takes 8% max HP/turn for 3 turns', manaCost: 20, multiplier: 2.0, effect: 'doom', icon: 'A' },
-      ]},
-      { level: 10, label: 'Tier 5', choices: [
-        { id: 'nec_t5a', name: 'Necrotic Touch', type: 'passive', desc: 'Normal attacks reduce enemy DEF by 1 each hit', icon: 'P' },
-        { id: 'nec_t5b', name: 'Corpse Explosion', type: 'active', desc: '2.2x damage, +50% if enemy is poisoned', manaCost: 12, multiplier: 2.2, effect: 'corpse_explode', icon: 'A' },
-      ]},
-      { level: 12, label: 'Tier 6', choices: [
-        { id: 'nec_t6a', name: 'Life Tap', type: 'passive', desc: 'Spending mana heals 50% of mana spent as HP', icon: 'P' },
-        { id: 'nec_t6b', name: 'Shadow Bolt', type: 'active', desc: '2.4x damage, ignores 30% DEF', manaCost: 12, multiplier: 2.4, effect: 'pierce_30', icon: 'A' },
-      ]},
-      { level: 14, label: 'Tier 7', choices: [
-        { id: 'nec_t7a', name: 'Undead Fortitude', type: 'passive', desc: '+10% max HP and +10% DEF', icon: 'P' },
-        { id: 'nec_t7b', name: 'Death Coil', type: 'active', desc: '2.0x damage, heal 100% of damage dealt', manaCost: 18, multiplier: 2.0, effect: 'full_drain', icon: 'A' },
-      ]},
-      { level: 16, label: 'Tier 8', choices: [
-        { id: 'nec_t8a', name: 'Cursed Blood', type: 'passive', desc: 'When hit, 20% chance to poison the attacker for 2 turns', icon: 'P' },
-        { id: 'nec_t8b', name: 'Wither', type: 'active', desc: '1.5x damage, reduce enemy ATK and DEF by 25%', manaCost: 16, multiplier: 1.5, effect: 'wither', icon: 'A' },
-      ]},
-      { level: 18, label: 'Tier 9', choices: [
-        { id: 'nec_t9a', name: 'Eternal Hunger', type: 'passive', desc: 'Lifesteal from all sources increased by 50%', icon: 'P' },
-        { id: 'nec_t9b', name: 'Army of the Dead', type: 'active', desc: '3.5x damage, heal 40% of damage dealt', manaCost: 22, multiplier: 3.5, effect: 'army_drain', icon: 'A' },
-      ]},
-      { level: 20, label: 'Tier 10', choices: [
-        { id: 'nec_t10a', name: 'Lich Form', type: 'passive', desc: 'All healing doubled, +20% ATK, immune to poison', icon: 'P' },
-        { id: 'nec_t10b', name: 'Apocalypse', type: 'active', desc: '4.5x damage, doom for 4 turns, heal 30%', manaCost: 30, multiplier: 4.5, effect: 'nec_apocalypse', icon: 'A' },
-      ]},
-    ],
-  },
-};
-
-// Helper to look up a tree skill by ID
-const _allTreeSkills = {};
-for (const cls of Object.values(SKILL_TREES)) {
-  for (const tier of cls.tiers) {
-    for (const choice of tier.choices) {
-      _allTreeSkills[choice.id] = choice;
-    }
-  }
-}
-export function getTreeSkill(id) {
-  return _allTreeSkills[id] || null;
+// ---- XP FORMULA ----
+export function expForLevel(level) {
+  return Math.floor(50 * Math.pow(level, 1.5));
 }
 
-// Get all unlocked active skills for a player (class skill + tree actives)
-export function getPlayerActiveSkills(player) {
-  const cls = player.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
-  if (!cls) return [];
-  const skills = [];
-  // Class skill is always available
-  skills.push({
-    id: 'class_skill',
-    name: cls.skillName,
-    desc: cls.skillDesc,
-    manaCost: cls.skillManaCost,
-    multiplier: cls.skillMultiplier,
-    effect: cls.skillEffect,
-    isClassSkill: true,
-  });
-  // Tree skills
-  const tree = player.skillTree || [];
-  for (const skillId of tree) {
-    const skill = _allTreeSkills[skillId];
-    if (skill && skill.type === 'active') {
-      skills.push(skill);
-    }
-  }
-  return skills;
-}
-
-// Get all unlocked passive skills for a player (class passive + tree passives)
-export function getPlayerPassiveSkills(player) {
-  const cls = player.characterClass ? CHARACTER_CLASSES[player.characterClass] : null;
-  if (!cls) return [];
-  const passives = [];
-  // Class passive
-  passives.push({
-    id: 'class_passive',
-    name: cls.passive,
-    desc: cls.passiveDesc,
-  });
-  // Tree passives
-  const tree = player.skillTree || [];
-  for (const skillId of tree) {
-    const skill = _allTreeSkills[skillId];
-    if (skill && skill.type === 'passive') {
-      passives.push(skill);
-    }
-  }
-  return passives;
-}
-
+// ---- EXPLORE TEXTS ----
 export const EXPLORE_TEXTS = {
   street: [
     'Neon signs buzz overhead as you weave between rusted cars...',

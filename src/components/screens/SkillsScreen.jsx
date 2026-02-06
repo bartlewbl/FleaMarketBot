@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { SKILL_TREES, CHARACTER_CLASSES, getPlayerPassiveSkills } from '../../data/gameData';
+import { CHARACTER_CLASSES } from '../../data/gameData';
+import { SKILL_TREES, getPlayerPassiveSkills } from '../../data/skillTrees';
 
 export default function SkillsScreen({ player, onBack, onUnlockSkill }) {
   const [confirmSkill, setConfirmSkill] = useState(null);
