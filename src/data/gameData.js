@@ -23,7 +23,7 @@ export const LOCATIONS = [
     levelReq: 1,
     monsters: ['rat', 'slime', 'sewer-roach', 'stray-cat', 'neon-beetle', 'alley-mutt', 'junk-spider', 'rust-moth', 'grime-crawler', 'pixel-pest'],
     encounterRate: 0.5, lootRate: 0.2, bgKey: 'street',
-    boss: 'boss-king-rat', bossRate: 0.08,
+    boss: 'boss-king-rat', bossRate: 0.005,
   },
   {
     id: 'shadow-alley', name: 'Shadow Alley',
@@ -31,7 +31,7 @@ export const LOCATIONS = [
     levelReq: 3,
     monsters: ['rat', 'vagrant', 'slime', 'shadow-bat', 'dumpster-snake', 'gutter-goblin', 'alley-wolf', 'trash-golem', 'sewer-lurker', 'neon-phantom', 'wire-rat'],
     encounterRate: 0.55, lootRate: 0.2, bgKey: 'alley',
-    boss: 'boss-shadow-lord', bossRate: 0.08,
+    boss: 'boss-shadow-lord', bossRate: 0.005,
   },
   {
     id: 'metro-underpass', name: 'Metro Underpass',
@@ -39,7 +39,7 @@ export const LOCATIONS = [
     levelReq: 6,
     monsters: ['slime', 'alpha-rat', 'rogue-vagrant', 'tunnel-bat', 'rail-wraith', 'metro-snake', 'pipe-golem', 'sludge-slime', 'volt-spider', 'rust-skeleton', 'signal-ghost'],
     encounterRate: 0.6, lootRate: 0.25, bgKey: 'station',
-    boss: 'boss-conductor', bossRate: 0.08,
+    boss: 'boss-conductor', bossRate: 0.005,
   },
   {
     id: 'skyline-rooftops', name: 'Skyline Rooftops',
@@ -47,7 +47,7 @@ export const LOCATIONS = [
     levelReq: 10,
     monsters: ['vagrant', 'rogue-vagrant', 'alpha-rat', 'sky-hawk', 'roof-stalker', 'antenna-golem', 'wind-phantom', 'drone-wasp', 'scaffold-wolf', 'neon-gargoyle', 'rooftop-sniper', 'sky-serpent'],
     encounterRate: 0.65, lootRate: 0.3, bgKey: 'rooftop',
-    boss: 'boss-storm-sentinel', bossRate: 0.08,
+    boss: 'boss-storm-sentinel', bossRate: 0.005,
   },
   {
     id: 'ironworks-yard', name: 'Ironworks Yard',
@@ -55,7 +55,7 @@ export const LOCATIONS = [
     levelReq: 14,
     monsters: ['toxic-slime', 'rogue-vagrant', 'alpha-rat', 'forge-elemental', 'scrap-golem', 'molten-slime', 'factory-drone', 'acid-sprayer', 'iron-wolf', 'chain-wraith', 'furnace-bat', 'steam-skeleton'],
     encounterRate: 0.7, lootRate: 0.35, bgKey: 'industrial',
-    boss: 'boss-iron-titan', bossRate: 0.08,
+    boss: 'boss-iron-titan', bossRate: 0.005,
   },
   {
     id: 'midnight-terminal', name: 'Midnight Terminal',
@@ -63,7 +63,7 @@ export const LOCATIONS = [
     levelReq: 18,
     monsters: ['rogue-vagrant', 'toxic-slime', 'terminal-enforcer', 'midnight-wolf', 'phantom-conductor', 'glitch-golem', 'void-slime', 'dark-assassin', 'shadow-dragon', 'neon-reaper'],
     encounterRate: 0.72, lootRate: 0.4, bgKey: 'station',
-    boss: 'boss-void-overlord', bossRate: 0.08,
+    boss: 'boss-void-overlord', bossRate: 0.005,
   },
 ];
 

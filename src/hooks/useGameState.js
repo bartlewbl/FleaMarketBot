@@ -170,8 +170,8 @@ function gameReducer(state, action) {
       const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.street;
       const text = texts[Math.floor(Math.random() * texts.length)];
 
-      // Boss encounter check (8% chance when location has a boss)
-      if (loc.boss && Math.random() < (loc.bossRate || 0.08)) {
+      // Boss encounter check (0.5% chance when location has a boss)
+      if (loc.boss && Math.random() < (loc.bossRate || 0.005)) {
         const boss = scaleBoss(loc.boss, loc.levelReq);
         if (boss) {
           return {
