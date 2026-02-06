@@ -157,6 +157,15 @@ const ITEM_LIBRARY = {
     { name: 'Wrath of Neon', rarity: 'Epic', level: 16, baseAtk: 21 },
     { name: 'Oblivion Reaver', rarity: 'Legendary', level: 18, baseAtk: 24 },
     { name: 'Doomsday Splicer', rarity: 'Legendary', level: 20, baseAtk: 28 },
+    // Rarity-decoupled: high-level commons, low-level legendaries, mixed combos
+    { name: 'Concrete Greatsword', rarity: 'Common', level: 15, baseAtk: 14 },
+    { name: 'Gridline Machete', rarity: 'Common', level: 18, baseAtk: 16 },
+    { name: 'Rusted Titan Blade', rarity: 'Common', level: 20, baseAtk: 18 },
+    { name: 'Neon Whisper', rarity: 'Legendary', level: 3, baseAtk: 4 },
+    { name: 'Chrono Fang', rarity: 'Legendary', level: 6, baseAtk: 6 },
+    { name: 'Spectral Tanto', rarity: 'Rare', level: 2, baseAtk: 3 },
+    { name: 'Glitch Knife', rarity: 'Epic', level: 4, baseAtk: 5 },
+    { name: 'Salvaged Vorpal Edge', rarity: 'Uncommon', level: 16, baseAtk: 15 },
   ]),
   shield: createGearList('shield', 'shield', [
     { name: 'Splintered Plank', rarity: 'Common', level: 1, baseDef: 3 },
@@ -188,6 +197,14 @@ const ITEM_LIBRARY = {
     { name: 'Impenetrable Ward', rarity: 'Epic', level: 15, baseDef: 19 },
     { name: 'Dimensional Barricade', rarity: 'Legendary', level: 18, baseDef: 22 },
     { name: 'Absolute Zero Wall', rarity: 'Legendary', level: 20, baseDef: 25 },
+    // Rarity-decoupled shields
+    { name: 'Blast Door Fragment', rarity: 'Common', level: 16, baseDef: 14 },
+    { name: 'Manhole Cover Shield', rarity: 'Common', level: 19, baseDef: 16 },
+    { name: 'Scrap Titan Shield', rarity: 'Common', level: 20, baseDef: 17 },
+    { name: 'Pixelated Ward', rarity: 'Legendary', level: 2, baseDef: 3 },
+    { name: 'Data Lattice Buckler', rarity: 'Legendary', level: 5, baseDef: 5 },
+    { name: 'Hologram Deflector', rarity: 'Epic', level: 3, baseDef: 4 },
+    { name: 'Corroded Riot Shield', rarity: 'Uncommon', level: 17, baseDef: 14 },
   ]),
   helmet: createGearList('helmet', 'helmet', [
     { name: 'Frayed Bandana', rarity: 'Common', level: 1, baseDef: 2 },
@@ -217,6 +234,14 @@ const ITEM_LIBRARY = {
     { name: 'Warhead Casing', rarity: 'Epic', level: 13, baseAtk: 7, baseDef: 4 },
     { name: 'Berserker Faceplate', rarity: 'Epic', level: 16, baseAtk: 9, baseDef: 4 },
     { name: 'Annihilator Helm', rarity: 'Legendary', level: 20, baseAtk: 11, baseDef: 5 },
+    // Rarity-decoupled helmets
+    { name: 'Welder\'s Full Mask', rarity: 'Common', level: 14, baseDef: 9 },
+    { name: 'Hardhat Mk-IX', rarity: 'Common', level: 18, baseDef: 12 },
+    { name: 'Concrete Cranium', rarity: 'Common', level: 20, baseDef: 13 },
+    { name: 'Glitchborn Tiara', rarity: 'Legendary', level: 2, baseDef: 2, baseAtk: 1 },
+    { name: 'Flickering Diadem', rarity: 'Legendary', level: 5, baseDef: 3, baseAtk: 2 },
+    { name: 'Cracked Oracle Visor', rarity: 'Epic', level: 4, baseDef: 3, baseAtk: 1 },
+    { name: 'Makeshift Cage Helm', rarity: 'Uncommon', level: 15, baseDef: 10 },
   ]),
   armor: createGearList('armor', 'armor', [
     { name: 'Tattered Vest', rarity: 'Common', level: 1, baseDef: 4 },
@@ -246,6 +271,14 @@ const ITEM_LIBRARY = {
     { name: 'Monolith Exoskeleton', rarity: 'Epic', level: 14, baseDef: 19 },
     { name: 'Event Horizon Shell', rarity: 'Legendary', level: 18, baseDef: 23 },
     { name: 'Omega Fortress Armor', rarity: 'Legendary', level: 20, baseDef: 26 },
+    // Rarity-decoupled armor
+    { name: 'Industrial Coveralls', rarity: 'Common', level: 15, baseDef: 13 },
+    { name: 'Sewer Plate Carrier', rarity: 'Common', level: 19, baseDef: 16 },
+    { name: 'Forklift Exo-Rig', rarity: 'Common', level: 20, baseDef: 17 },
+    { name: 'Phantom Weave Vest', rarity: 'Legendary', level: 3, baseDef: 4 },
+    { name: 'Starthread Robe', rarity: 'Legendary', level: 6, baseDef: 6 },
+    { name: 'Wraithcloth Tunic', rarity: 'Epic', level: 4, baseDef: 5 },
+    { name: 'Surplus Combat Jacket', rarity: 'Uncommon', level: 17, baseDef: 15 },
   ]),
   boots: createGearList('boots', 'boots', [
     { name: 'Cracked Sandals', rarity: 'Common', level: 1, baseDef: 1 },
@@ -275,6 +308,14 @@ const ITEM_LIBRARY = {
     { name: 'Assault Thrusters', rarity: 'Epic', level: 14, baseAtk: 5, baseDef: 4 },
     { name: 'Havoc Tramples', rarity: 'Legendary', level: 17, baseAtk: 6, baseDef: 5 },
     { name: 'Annihilation Treads', rarity: 'Legendary', level: 20, baseAtk: 8, baseDef: 5 },
+    // Rarity-decoupled boots
+    { name: 'Steel-Toed Waders', rarity: 'Common', level: 14, baseDef: 6 },
+    { name: 'Foundry Stompers', rarity: 'Common', level: 18, baseDef: 8 },
+    { name: 'Concrete Crushers', rarity: 'Common', level: 20, baseDef: 9 },
+    { name: 'Phantom Step Wraps', rarity: 'Legendary', level: 2, baseDef: 1, baseAtk: 1 },
+    { name: 'Holo-Sprint Anklets', rarity: 'Legendary', level: 5, baseDef: 2, baseAtk: 2 },
+    { name: 'Flickerstep Sandals', rarity: 'Epic', level: 3, baseDef: 2, baseAtk: 1 },
+    { name: 'Patched Running Shoes', rarity: 'Uncommon', level: 16, baseDef: 7 },
   ]),
   ring: createGearList('accessory', 'ring', [
     { name: 'Copper Ring', rarity: 'Common', level: 1, baseAtk: 1 },
@@ -315,6 +356,21 @@ const ITEM_LIBRARY = {
     { name: 'Bastion Core', rarity: 'Epic', level: 15, baseDef: 7, baseAtk: 3 },
     { name: 'Immortal Shell Locket', rarity: 'Legendary', level: 18, baseDef: 9, baseAtk: 3 },
     { name: 'Eternity Ward Halo', rarity: 'Legendary', level: 20, baseDef: 10, baseAtk: 4 },
+    // Rarity-decoupled accessories
+    { name: 'Bent Nail Pendant', rarity: 'Common', level: 13, baseAtk: 4, baseDef: 3 },
+    { name: 'Duct Tape Bracelet', rarity: 'Common', level: 16, baseAtk: 5, baseDef: 4 },
+    { name: 'Rebar Knuckle Ring', rarity: 'Common', level: 19, baseAtk: 6, baseDef: 5 },
+    { name: 'Junkyard Dog Tags', rarity: 'Common', level: 20, baseAtk: 7, baseDef: 5 },
+    { name: 'Glitch Prism', rarity: 'Legendary', level: 1, baseAtk: 1, baseDef: 1 },
+    { name: 'Neon Ghost Locket', rarity: 'Legendary', level: 4, baseAtk: 2, baseDef: 1 },
+    { name: 'Starfall Shard', rarity: 'Legendary', level: 7, baseAtk: 3, baseDef: 2 },
+    { name: 'Wraithbone Charm', rarity: 'Epic', level: 2, baseAtk: 1, baseDef: 1 },
+    { name: 'Pixelated Amulet', rarity: 'Epic', level: 5, baseAtk: 2, baseDef: 2 },
+    { name: 'Cursed Lucky Penny', rarity: 'Epic', level: 8, baseAtk: 3, baseDef: 2 },
+    { name: 'Faded Heirloom Ring', rarity: 'Rare', level: 1, baseAtk: 1 },
+    { name: 'Recycled Coil Band', rarity: 'Rare', level: 16, baseAtk: 6, baseDef: 3 },
+    { name: 'Jury-Rigged Scope', rarity: 'Uncommon', level: 15, baseAtk: 5, baseDef: 3 },
+    { name: 'Cracked Data Chip', rarity: 'Uncommon', level: 18, baseAtk: 6, baseDef: 4 },
   ]),
 };
 
