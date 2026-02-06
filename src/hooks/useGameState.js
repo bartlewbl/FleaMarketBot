@@ -37,7 +37,7 @@ function createInitialPlayer() {
 
 function createInitialState() {
   return {
-    screen: 'class-select',
+    screen: 'username-entry',
     player: createInitialPlayer(),
     currentLocation: null,
     battle: null,
@@ -101,8 +101,9 @@ function regenEnergy(currentEnergy, lastEnergyUpdate, now = Date.now()) {
 function extractSaveData(state) {
   let screen = state.screen;
   if (screen === 'battle' || screen === 'battle-result') screen = 'town';
-  // Don't save class-select; if no class is chosen yet, they'll see it on load
+  // Don't save setup screens; they'll see them on load based on player state
   if (screen === 'class-select') screen = 'class-select';
+  if (screen === 'username-entry') screen = 'username-entry';
   return {
     player: state.player,
     screen: (state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm') ? 'town' : state.screen,
@@ -122,8 +123,11 @@ function gameReducer(state, action) {
         lastEnergyUpdate ?? base.lastEnergyUpdate,
       );
       const mergedPlayer = { ...base.player, ...player };
-      // If the player has no class, send them to class select
-      const resolvedScreen = !mergedPlayer.characterClass ? 'class-select' : (screen || 'town');
+      // If the player has no custom name, send them to username entry
+      // If they have a name but no class, send them to class select
+      let resolvedScreen = screen || 'town';
+      if (!mergedPlayer.characterClass) resolvedScreen = 'class-select';
+      if (mergedPlayer.name === 'Hero') resolvedScreen = 'username-entry';
       return {
         ...base,
         screen: resolvedScreen,
@@ -135,6 +139,16 @@ function gameReducer(state, action) {
 
     case 'START_GAME':
       return createInitialState();
+
+    case 'SET_USERNAME': {
+      const name = action.name;
+      if (!name || name.length < 2) return state;
+      return {
+        ...state,
+        screen: 'class-select',
+        player: { ...state.player, name },
+      };
+    }
 
     case 'SELECT_CLASS': {
       const cls = CHARACTER_CLASSES[action.classId];
@@ -869,6 +883,7 @@ export function useGameState(isLoggedIn) {
 
   const actions = useMemo(() => ({
     startGame: () => dispatch({ type: 'START_GAME' }),
+    setUsername: (name) => dispatch({ type: 'SET_USERNAME', name }),
     selectClass: (classId) => dispatch({ type: 'SELECT_CLASS', classId }),
     goToTown: () => dispatch({ type: 'GO_TO_TOWN' }),
     showScreen: (screen) => dispatch({ type: 'SHOW_SCREEN', screen }),

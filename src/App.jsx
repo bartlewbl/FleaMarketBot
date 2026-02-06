@@ -15,7 +15,9 @@ import ProfileScreen from './components/screens/ProfileScreen';
 import SkillsScreen from './components/screens/SkillsScreen';
 import ClassSelectScreen from './components/screens/ClassSelectScreen';
 import BossConfirmScreen from './components/screens/BossConfirmScreen';
+import UsernameScreen from './components/screens/UsernameScreen';
 import SidePanel from './components/SidePanel';
+import RightPanel from './components/RightPanel';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -27,6 +29,7 @@ export default function App() {
   const { state, actions, playerAtk, playerDef } = useGameState(isLoggedIn);
   const [animTick, setAnimTick] = useState(0);
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
+  const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(false);
 
   // Check existing session on mount and go straight to game
   useEffect(() => {
@@ -132,6 +135,18 @@ export default function App() {
             error={authError}
             loading={authLoading}
           />
+        </div>
+      </div>
+    );
+  }
+
+  // Username entry screen (full-screen, no side panels)
+  if (state.screen === 'username-entry') {
+    return (
+      <div className="game-container">
+        <GameCanvas screen="town" location={null} battle={null} animTick={animTick} />
+        <div className="ui-overlay">
+          <UsernameScreen onSubmit={actions.setUsername} />
         </div>
       </div>
     );
@@ -293,6 +308,11 @@ export default function App() {
               />
             )}
           </div>
+
+          <RightPanel
+            collapsed={isRightPanelCollapsed}
+            onToggle={() => setIsRightPanelCollapsed(v => !v)}
+          />
         </div>
 
         {state.message && (
