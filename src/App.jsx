@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useGameState, ENERGY_COST_PER_TRIP, ENERGY_MAX } from './hooks/useGameState';
 import { login, register, getMe, loadGame, hasSavedSession } from './api';
 import GameCanvas from './components/GameCanvas';
-import TopBar from './components/TopBar';
 import AuthScreen from './components/screens/AuthScreen';
 import TownScreen from './components/screens/TownScreen';
 import LocationsScreen from './components/screens/LocationsScreen';
@@ -179,8 +178,6 @@ export default function App() {
       />
 
       <div className="ui-overlay">
-        <TopBar player={state.player} energy={state.energy} energyMax={ENERGY_MAX} />
-
         <div className="ui-main">
           <SidePanel
             collapsed={isMenuCollapsed}

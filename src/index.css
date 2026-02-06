@@ -242,44 +242,7 @@ body {
   border-radius: 4px;
 }
 
-/* ---- TOP BAR ---- */
-.top-bar {
-  display: flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.88);
-  padding: 8px 12px;
-  border-bottom: 2px solid #333;
-  font-size: 8px;
-  gap: 10px;
-  flex-shrink: 0;
-  z-index: 10;
-}
-
-.top-bar-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 60px;
-}
-
-.player-name {
-  color: #ffd700;
-  font-size: 9px;
-}
-
-.player-level {
-  color: #aaa;
-  font-size: 7px;
-}
-
-.top-bar-bars {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
+/* ---- STAT BARS (shared by battle screen) ---- */
 .stat-bar {
   display: flex;
   align-items: center;
@@ -315,25 +278,9 @@ body {
   background: linear-gradient(to bottom, #f44336, #b71c1c);
 }
 
-.exp-bar .bar-fill {
-  background: linear-gradient(to bottom, #2196f3, #1565c0);
-}
-
-.energy-bar .bar-fill {
-  background: linear-gradient(to bottom, #ffeb3b, #f57f17);
-}
-
 .bar-text {
   font-size: 7px;
   min-width: 50px;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.top-bar-gold {
-  color: #ffd700;
-  font-size: 8px;
-  min-width: 70px;
   text-align: right;
   white-space: nowrap;
 }
@@ -2279,8 +2226,6 @@ body {
   .town-layout { grid-template-columns: 1fr; }
   .town-hero-level-badge { width: 36px; height: 36px; }
   .level-number { font-size: 12px; }
-  .top-bar { padding: 6px 8px; gap: 6px; }
-  .top-bar-gold { min-width: 55px; font-size: 7px; }
   .bar-text { min-width: 40px; font-size: 6px; }
   .equipment-grid { grid-template-columns: repeat(2, 1fr); }
   .location-item { padding: 8px; }
@@ -2311,7 +2256,6 @@ body {
 
 /* Short screens (landscape phones) */
 @media (max-height: 500px) {
-  .top-bar { padding: 4px 8px; }
   .screen { padding-top: 40px; }
   .side-panel { padding-top: 38px; }
   .btn { padding: 8px 14px; font-size: 8px; }
@@ -3032,9 +2976,6 @@ body {
 
 /* Safe area for notched phones */
 @supports (padding: env(safe-area-inset-top)) {
-  .top-bar {
-    padding-top: calc(8px + env(safe-area-inset-top));
-  }
   .battle-actions, .explore-actions {
     padding-bottom: env(safe-area-inset-bottom);
   }
