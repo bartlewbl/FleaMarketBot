@@ -4798,3 +4798,736 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* ============================================================
+   BASE BUILDING SYSTEM
+   ============================================================ */
+
+.screen-base {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 16px 24px;
+  overflow: hidden;
+}
+
+.base-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.base-title {
+  font-size: 12px;
+  color: #ffd700;
+  flex: 1;
+}
+
+.base-gold {
+  font-size: 9px;
+  color: #ffd700;
+}
+
+.base-back-btn {
+  font-size: 7px;
+}
+
+/* ---- Tabs ---- */
+.base-tabs {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+  overflow-x: auto;
+  flex-shrink: 0;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.base-tab {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 6px 10px;
+  background: rgba(20, 20, 42, 0.9);
+  color: #8888aa;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.base-tab:hover {
+  color: #c0c0e0;
+  background: rgba(30, 30, 60, 0.95);
+}
+
+.base-tab.active {
+  background: rgba(35, 35, 70, 0.98);
+  color: #ffd700;
+  border-color: rgba(255,215,0,0.2);
+}
+
+/* ---- Content area ---- */
+.base-content {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(18, 18, 38, 0.92);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 0 0 6px 6px;
+  padding: 14px;
+}
+
+/* ---- Section titles ---- */
+.base-section-title {
+  font-size: 10px;
+  color: #ffd700;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255,215,0,0.15);
+}
+
+.base-section-desc {
+  font-size: 7px;
+  color: #8888aa;
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+
+.base-sub-label {
+  font-size: 7px;
+  color: #aaaacc;
+  margin: 8px 0 4px;
+}
+
+.base-empty-text {
+  font-size: 7px;
+  color: #6e6e9a;
+  font-style: italic;
+  padding: 8px 0;
+}
+
+.base-warning {
+  font-size: 7px;
+  color: #ff6666;
+  padding: 4px 0;
+}
+
+.base-max-level {
+  font-size: 7px;
+  color: #44dd44;
+  padding: 4px 0;
+}
+
+/* ---- Fuel Panel ---- */
+.base-fuel-panel {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.base-fuel-bar-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.base-fuel-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6600, #ff9900);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.base-fuel-label {
+  font-size: 7px;
+  color: #ff9900;
+  margin-bottom: 6px;
+}
+
+.base-fuel-sources {
+  margin-top: 6px;
+}
+
+.base-fuel-btn {
+  font-size: 6px !important;
+  margin: 2px !important;
+}
+
+/* ---- Material Storage ---- */
+.base-storage-panel {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.base-material-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.base-material-item {
+  font-size: 7px;
+  padding: 4px 8px;
+  background: rgba(30, 30, 60, 0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.base-material-item.rarity-common { border-color: #555; }
+.base-material-item.rarity-uncommon { border-color: #4fc3f7; }
+.base-material-item.rarity-rare { border-color: #ab47bc; }
+.base-material-item.rarity-epic { border-color: #ffa726; }
+.base-material-item.rarity-legendary { border-color: #ffd700; }
+
+.base-mat-name { color: #ccc; }
+.base-mat-qty { color: #ffd700; font-weight: bold; }
+
+.base-store-section {
+  margin-top: 8px;
+}
+
+.base-store-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.base-store-btn {
+  font-size: 6px !important;
+}
+
+/* ---- Buildings Grid (Overview) ---- */
+.base-buildings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.base-building-card {
+  background: rgba(25, 25, 50, 0.8);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.2s;
+}
+
+.base-building-card.built {
+  border-color: rgba(68, 221, 68, 0.3);
+}
+
+.base-building-card.locked {
+  opacity: 0.7;
+}
+
+.base-building-card-name {
+  font-size: 8px;
+  color: #e0e0e0;
+}
+
+.base-building-card-status {
+  font-size: 6px;
+  color: #8888aa;
+}
+
+.base-building-card .btn {
+  margin-top: 4px;
+  font-size: 6px;
+  padding: 4px 8px;
+}
+
+/* ---- Build Panel (Construct) ---- */
+.base-build-panel {
+  padding: 12px;
+}
+
+.base-build-name {
+  font-size: 10px;
+  color: #ffd700;
+  margin-bottom: 6px;
+}
+
+.base-build-desc {
+  font-size: 7px;
+  color: #aaaacc;
+  margin-bottom: 6px;
+  line-height: 1.8;
+}
+
+.base-build-req {
+  font-size: 7px;
+  color: #8888aa;
+  margin-bottom: 6px;
+}
+
+.base-build-costs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.base-cost-item {
+  font-size: 7px;
+  padding: 3px 6px;
+  background: rgba(20, 20, 40, 0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+}
+
+.base-cost-item.met { color: #44dd44; border-color: rgba(68, 221, 68, 0.3); }
+.base-cost-item.unmet { color: #ff6666; border-color: rgba(255, 102, 102, 0.3); }
+
+.base-build-btn {
+  font-size: 8px;
+}
+
+/* ---- Recipe Lists (Brewery, Smelter, Workshop) ---- */
+.base-recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.base-recipe-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(25, 25, 50, 0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.base-recipe-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.base-recipe-name {
+  font-size: 8px;
+  color: #e0e0e0;
+  margin-bottom: 2px;
+}
+
+.base-recipe-desc {
+  font-size: 6px;
+  color: #8888aa;
+  margin-bottom: 4px;
+}
+
+.base-recipe-mats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.base-recipe-mat {
+  font-size: 6px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.3);
+}
+
+.base-recipe-mat.met { color: #44dd44; }
+.base-recipe-mat.unmet { color: #ff6666; }
+
+.base-recipe-fuel {
+  font-size: 6px;
+  color: #ff9900;
+  margin-top: 2px;
+}
+
+/* ---- Crafting Queue ---- */
+.base-crafting-queue {
+  background: rgba(30, 30, 60, 0.7);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.base-craft-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.base-craft-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4fc3f7, #44dd44);
+  border-radius: 3px;
+  transition: width 0.5s;
+}
+
+.base-craft-time {
+  font-size: 7px;
+  color: #4fc3f7;
+}
+
+.base-collect-btn {
+  background: #2a4a2a !important;
+  border-color: #44dd44 !important;
+  color: #44dd44 !important;
+}
+
+.base-collect-btn:hover {
+  background: #3a5a3a !important;
+}
+
+/* ---- Inn Panel ---- */
+.base-inn-current {
+  background: rgba(25, 25, 50, 0.7);
+  border: 1px solid rgba(255,215,0,0.15);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.base-inn-level {
+  font-size: 8px;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+
+.base-inn-bonus {
+  font-size: 7px;
+  color: #44dd44;
+}
+
+.base-inn-active-boost {
+  background: rgba(50, 180, 50, 0.15);
+  border: 1px solid rgba(68, 221, 68, 0.3);
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.base-inn-boost-name {
+  font-size: 8px;
+  color: #44dd44;
+  margin-bottom: 3px;
+}
+
+.base-inn-boost-info {
+  font-size: 7px;
+  color: #88ee88;
+}
+
+.base-inn-boosts {
+  margin-bottom: 10px;
+}
+
+.base-upgrade-section {
+  background: rgba(20, 20, 40, 0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.base-upgrade-desc {
+  font-size: 7px;
+  color: #aaaacc;
+  margin-bottom: 6px;
+}
+
+/* ---- Chamber Panel ---- */
+.base-buffs-summary {
+  background: rgba(25, 40, 25, 0.7);
+  border: 1px solid rgba(68, 221, 68, 0.2);
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.base-buff-tag {
+  font-size: 7px;
+  padding: 3px 6px;
+  background: rgba(68, 221, 68, 0.15);
+  color: #44dd44;
+  border-radius: 3px;
+  border: 1px solid rgba(68, 221, 68, 0.3);
+}
+
+.base-chamber-upgrades {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.base-chamber-sub {
+  background: rgba(25, 25, 50, 0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.base-chamber-sub-name {
+  font-size: 8px;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+
+.base-chamber-current {
+  font-size: 7px;
+  color: #8888aa;
+  margin-bottom: 6px;
+}
+
+.base-chamber-next {
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding-top: 6px;
+}
+
+/* ---- Adventure Camp ---- */
+.base-mission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.base-mission-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(25, 25, 50, 0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.base-mission-info { flex: 1; }
+
+.base-mission-name {
+  font-size: 8px;
+  color: #e0e0e0;
+  margin-bottom: 2px;
+}
+
+.base-mission-desc {
+  font-size: 6px;
+  color: #8888aa;
+}
+
+.base-mission-gold {
+  font-size: 6px;
+  color: #ffd700;
+  margin-top: 2px;
+}
+
+.base-mission-status {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.base-mission-done {
+  font-size: 9px;
+  color: #44dd44;
+  margin-bottom: 8px;
+}
+
+.base-mission-time {
+  font-size: 9px;
+  color: #4fc3f7;
+}
+
+/* ---- Sparring Range ---- */
+.base-dummy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.base-dummy-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(25, 25, 50, 0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.base-dummy-info { flex: 1; }
+
+.base-dummy-name {
+  font-size: 8px;
+  color: #e0e0e0;
+  margin-bottom: 2px;
+}
+
+.base-dummy-desc {
+  font-size: 6px;
+  color: #8888aa;
+}
+
+.base-dummy-stats {
+  font-size: 6px;
+  color: #aaaacc;
+  margin-top: 2px;
+}
+
+.base-spar-active {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.base-spar-dummy-name {
+  font-size: 10px;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+
+.base-spar-desc {
+  font-size: 7px;
+  color: #8888aa;
+  margin-bottom: 6px;
+}
+
+.base-spar-hp {
+  font-size: 8px;
+  color: #ff6666;
+  margin-bottom: 4px;
+}
+
+.base-spar-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ff8888);
+  border-radius: 3px;
+  transition: width 0.2s;
+}
+
+.base-spar-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.base-spar-reset {
+  background: rgba(60, 30, 30, 0.7) !important;
+  border-color: #884444 !important;
+}
+
+/* ---- Bank Panel ---- */
+.base-bank-balance {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(25, 25, 50, 0.7);
+  border: 1px solid rgba(255,215,0,0.15);
+  border-radius: 4px;
+}
+
+.base-bank-stat {
+  font-size: 8px;
+  color: #ccc;
+}
+
+.base-bank-stat strong {
+  color: #ffd700;
+}
+
+.base-bank-section {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.base-bank-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.base-bank-input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 5px 8px;
+  background: rgba(10, 10, 25, 0.9);
+  color: #e0e0e0;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 3px;
+  width: 100px;
+  outline: none;
+}
+
+.base-bank-input:focus {
+  border-color: #ffd700;
+}
+
+.base-freeze-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.base-bank-frozen {
+  font-size: 7px;
+  color: #4fc3f7;
+  padding: 6px 0;
+}
+
+.base-bank-frozen-time {
+  font-size: 7px;
+  color: #8888aa;
+  margin-top: 4px;
+}
+
+.base-bank-loan {
+  font-size: 7px;
+  padding: 6px 0;
+}
+
+/* ---- Town quick-action for Base ---- */
+.town-quick-base {
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+.town-quick-base:hover {
+  border-color: rgba(255, 215, 0, 0.5);
+  background: rgba(50, 40, 20, 0.3);
+}
+
+.base-icon {
+  color: #ffd700;
+}
+
+/* ---- Building content wrapper ---- */
+.base-building-content {
+  min-height: 0;
+}

@@ -15,11 +15,16 @@ export default function BattleResultScreen({ result, onContinue }) {
         {result.victory ? (
           <>
             {isBoss && <div className="boss-victory-text">You conquered {result.bossName}!</div>}
-            <div>+{result.expGain} EXP</div>
+            <div>+{result.expGain} EXP{result.innBonus ? ` (Inn +${Math.round(result.innBonus * 100)}%)` : ''}</div>
             <div>+{result.goldGain} Gold</div>
             {result.droppedItem && (
               <div className={result.droppedItem.rarityClass}>
                 Got: {result.droppedItem.name} [{result.droppedItem.rarity}]
+              </div>
+            )}
+            {result.materialDrop && (
+              <div className={`rarity-${(result.materialDrop.rarity || 'common').toLowerCase()}`}>
+                Material: {result.materialDrop.name}
               </div>
             )}
             {!result.droppedItem && result.lostItemName && (
