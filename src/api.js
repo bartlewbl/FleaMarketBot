@@ -137,3 +137,31 @@ export async function getDailyRewardStatus() {
 export async function claimDailyReward() {
   return apiFetch('/daily-rewards/claim', { method: 'POST' });
 }
+
+// Market API
+export async function getMarketListings(category, search) {
+  const params = new URLSearchParams();
+  if (category && category !== 'all') params.set('category', category);
+  if (search) params.set('search', search);
+  const qs = params.toString();
+  return apiFetch(`/market/listings${qs ? '?' + qs : ''}`);
+}
+
+export async function getMyMarketListings() {
+  return apiFetch('/market/my-listings');
+}
+
+export async function listItemOnMarket(itemId, price) {
+  return apiFetch('/market/list', {
+    method: 'POST',
+    body: JSON.stringify({ itemId, price }),
+  });
+}
+
+export async function buyMarketListing(listingId) {
+  return apiFetch(`/market/${listingId}/buy`, { method: 'POST' });
+}
+
+export async function cancelMarketListing(listingId) {
+  return apiFetch(`/market/${listingId}/cancel`, { method: 'POST' });
+}

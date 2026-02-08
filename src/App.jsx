@@ -17,6 +17,7 @@ import BossConfirmScreen from './components/screens/BossConfirmScreen';
 import UsernameScreen from './components/screens/UsernameScreen';
 import RegionsScreen from './components/screens/RegionsScreen';
 import JournalScreen from './components/screens/JournalScreen';
+import MarketScreen from './components/screens/MarketScreen';
 import SidePanel from './components/SidePanel';
 import RightPanel from './components/RightPanel';
 
@@ -199,6 +200,7 @@ export default function App() {
             onExplore={() => actions.showScreen('regions')}
             onInventory={() => actions.showScreen('inventory')}
             onShop={() => actions.showScreen('shop')}
+            onMarket={() => actions.showScreen('market')}
             onJournal={() => actions.showScreen('journal')}
             onRest={actions.restAtInn}
             navLocked={navLocked}
@@ -330,6 +332,14 @@ export default function App() {
                 tasks={state.tasks}
                 onClaim={actions.claimTask}
                 onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'market' && (
+              <MarketScreen
+                player={state.player}
+                onBack={actions.goToTown}
+                onMarketTransaction={actions.applyMarketTransaction}
               />
             )}
           </div>

@@ -949,6 +949,24 @@ function gameReducer(state, action) {
       return { ...state, player: p, message: 'Trade completed!' };
     }
 
+    case 'MARKET_TRANSACTION': {
+      const tx = action.transaction;
+      let p = { ...state.player, inventory: [...state.player.inventory] };
+      if (tx.type === 'buy') {
+        // Add purchased item, update gold to server-reported value
+        if (tx.item) p.inventory = [...p.inventory, tx.item];
+        if (tx.newGold !== undefined) p.gold = tx.newGold;
+      } else if (tx.type === 'list') {
+        // Remove listed item, update gold (listing fee deducted)
+        if (tx.removedItemId) p.inventory = p.inventory.filter(i => i.id !== tx.removedItemId);
+        if (tx.newGold !== undefined) p.gold = tx.newGold;
+      } else if (tx.type === 'cancel') {
+        // Return cancelled item to inventory
+        if (tx.returnedItem) p.inventory = [...p.inventory, tx.returnedItem];
+      }
+      return { ...state, player: p };
+    }
+
     case 'CLEAR_MESSAGE':
       return { ...state, message: null };
 
@@ -1210,6 +1228,7 @@ export function useGameState(isLoggedIn) {
     claimDailyReward: (rewards, label) => dispatch({ type: 'CLAIM_DAILY_REWARD', rewards, label }),
     claimTask: (taskId, taskType) => dispatch({ type: 'CLAIM_TASK', taskId, taskType }),
     applyTrade: (receivedItems, receivedGold, givenItems, givenGold) => dispatch({ type: 'APPLY_TRADE', receivedItems, receivedGold, givenItems, givenGold }),
+    applyMarketTransaction: (transaction) => dispatch({ type: 'MARKET_TRANSACTION', transaction }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),
   }), []);

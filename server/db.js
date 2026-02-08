@@ -70,6 +70,27 @@ db.exec(`
     FOREIGN KEY (from_user_id) REFERENCES users(id),
     FOREIGN KEY (to_user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS market_listings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    seller_user_id INTEGER NOT NULL,
+    item_data TEXT NOT NULL,
+    price INTEGER NOT NULL,
+    category TEXT NOT NULL,
+    rarity TEXT NOT NULL DEFAULT 'Common',
+    item_level INTEGER NOT NULL DEFAULT 1,
+    item_name TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    buyer_user_id INTEGER,
+    created_at TEXT DEFAULT (datetime('now')),
+    sold_at TEXT,
+    FOREIGN KEY (seller_user_id) REFERENCES users(id),
+    FOREIGN KEY (buyer_user_id) REFERENCES users(id)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_market_status ON market_listings(status);
+  CREATE INDEX IF NOT EXISTS idx_market_category ON market_listings(category, status);
+  CREATE INDEX IF NOT EXISTS idx_market_seller ON market_listings(seller_user_id, status);
 `);
 
 export default db;
