@@ -18,6 +18,7 @@ import {
 
 export const ENERGY_MAX = 100;
 export const ENERGY_COST_PER_TRIP = 10;
+const ENERGY_COST_PER_STEP = 2;
 const ENERGY_REGEN_PERCENT = 0.1;
 const ENERGY_REGEN_INTERVAL_MS = 15 * 60 * 1000;
 
@@ -305,7 +306,7 @@ function gameReducer(state, action) {
       // Drain energy each time the player continues exploring
       const nowExplore = Date.now();
       const exploreRegen = regenEnergy(state.energy, state.lastEnergyUpdate, nowExplore);
-      if (exploreRegen.energy < ENERGY_COST_PER_TRIP) {
+      if (exploreRegen.energy < ENERGY_COST_PER_STEP) {
         return {
           ...state,
           energy: exploreRegen.energy,
@@ -315,7 +316,7 @@ function gameReducer(state, action) {
           message: 'Too exhausted to continue. Wait for energy to recover.',
         };
       }
-      const exploreEnergy = exploreRegen.energy - ENERGY_COST_PER_TRIP;
+      const exploreEnergy = exploreRegen.energy - ENERGY_COST_PER_STEP;
       const exploreLastUpdate = exploreRegen.lastEnergyUpdate;
 
       const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.street;
