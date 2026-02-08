@@ -352,6 +352,7 @@ export default function App() {
                 onCraft={actions.baseCraft}
                 onCollectCraft={actions.baseCollectCraft}
                 onUpgradeInn={actions.baseUpgradeInn}
+                onBuyInnBoost={actions.baseBuyInnBoost}
                 onUpgradeChamber={actions.baseUpgradeChamber}
                 onSendMission={actions.baseSendMission}
                 onCollectMission={actions.baseCollectMission}

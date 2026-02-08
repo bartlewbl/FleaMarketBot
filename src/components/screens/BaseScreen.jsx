@@ -277,22 +277,63 @@ function WorkshopPanel({ base, onCraft, onCollect }) {
   );
 }
 
-function InnPanel({ base, onUpgrade }) {
+function InnPanel({ base, player, onUpgrade, onBuyBoost }) {
   const innLevel = base.innLevel || 1;
   const current = BUILDINGS.inn.upgrades.find(u => u.level === innLevel);
   const next = BUILDINGS.inn.upgrades.find(u => u.level === innLevel + 1);
+  const boosts = current?.boosts || [];
+
+  const boost = base.innBoost;
+  const now = Date.now();
+  const boostActive = boost && (now - boost.startTime < boost.duration);
+  const boostRemaining = boostActive ? boost.duration - (now - boost.startTime) : 0;
+  const boostMins = Math.ceil(boostRemaining / 60000);
+  const boostHours = Math.floor(boostMins / 60);
+  const boostMinsLeft = boostMins % 60;
 
   return (
     <div className="base-building-content">
       <div className="base-section-title">Inn</div>
-      <div className="base-section-desc">A warm tavern that boosts your EXP gains from battles.</div>
+      <div className="base-section-desc">Pay gold for timed EXP boosts. Upgrade the inn for stronger boosts.</div>
       <div className="base-inn-current">
-        <div className="base-inn-level">{current?.name || 'Basic Inn'}</div>
-        <div className="base-inn-bonus">{current?.desc || '+10% EXP from battles'}</div>
+        <div className="base-inn-level">{current?.name || 'Basic Inn'} (Tier {innLevel})</div>
+        <div className="base-inn-bonus">Boost strength: +{Math.round((current?.expBonus || 0.10) * 100)}% EXP</div>
       </div>
+
+      {boostActive && (
+        <div className="base-inn-active-boost">
+          <div className="base-sub-label">Active Boost</div>
+          <div className="base-inn-boost-name">{boost.boostName}</div>
+          <div className="base-inn-boost-info">
+            +{Math.round(boost.expBonus * 100)}% EXP &middot; {boostHours > 0 ? `${boostHours}h ` : ''}{boostMinsLeft}m remaining
+          </div>
+        </div>
+      )}
+
+      <div className="base-inn-boosts">
+        <div className="base-sub-label">{boostActive ? 'Replace Boost' : 'Buy EXP Boost'}</div>
+        <div className="base-recipe-list">
+          {boosts.map(b => (
+            <div key={b.id} className="base-recipe-item">
+              <div className="base-recipe-info">
+                <div className="base-recipe-name">{b.name}</div>
+                <div className="base-recipe-desc">{b.desc}</div>
+              </div>
+              <button
+                className="btn btn-sm"
+                disabled={player.gold < b.cost}
+                onClick={() => onBuyBoost(b.id)}
+              >
+                {b.cost}g
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {next ? (
         <div className="base-upgrade-section">
-          <div className="base-sub-label">Next Upgrade: {next.name}</div>
+          <div className="base-sub-label">Upgrade to: {next.name}</div>
           <div className="base-upgrade-desc">{next.desc}</div>
           <div className="base-build-costs">
             <div className="base-cost-item">{next.upgradeCost.gold}g</div>
@@ -305,7 +346,7 @@ function InnPanel({ base, onUpgrade }) {
           <button className="btn btn-sm" onClick={onUpgrade}>Upgrade</button>
         </div>
       ) : (
-        <div className="base-max-level">Max level reached!</div>
+        <div className="base-max-level">Inn at max tier!</div>
       )}
     </div>
   );
@@ -612,7 +653,7 @@ export default function BaseScreen({
   player, base, onBack,
   onBuild, onAddFuel, onAddFuelFromStorage, onStoreMaterial,
   onBrew, onSmelt, onCraft, onCollectCraft,
-  onUpgradeInn, onUpgradeChamber,
+  onUpgradeInn, onBuyInnBoost, onUpgradeChamber,
   onSendMission, onCollectMission,
   onBankDeposit, onBankWithdraw, onBankFreeze, onBankCollectFrozen, onBankLoan, onBankRepay,
   onStartSpar, onSparAttack, onSparSkill, onResetSpar,
@@ -697,7 +738,7 @@ export default function BaseScreen({
 
       case 'inn':
         if (!buildings.inn?.built) return renderBuildingOrConstruct('inn');
-        return <InnPanel base={base} onUpgrade={onUpgradeInn} />;
+        return <InnPanel base={base} player={player} onUpgrade={onUpgradeInn} onBuyBoost={onBuyInnBoost} />;
 
       case 'chamber':
         if (!buildings.chamber?.built) return renderBuildingOrConstruct('chamber');

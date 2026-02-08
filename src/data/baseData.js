@@ -212,13 +212,36 @@ export const BUILDINGS = {
   inn: {
     id: 'inn',
     name: 'Inn',
-    description: 'A cozy tavern that increases EXP gained from battles.',
+    description: 'Pay gold for timed EXP boosts. Upgrade the inn for stronger boosts.',
     buildCost: { gold: 750, materials: { 'scrap-wood': 20, 'stone-block': 10 } },
     icon: 'inn',
     upgrades: [
-      { level: 1, name: 'Basic Inn', expBonus: 0.10, desc: '+10% EXP from battles' },
-      { level: 2, name: 'Improved Inn', expBonus: 0.20, desc: '+20% EXP from battles', upgradeCost: { gold: 1200, materials: { 'scrap-wood': 15, 'crystal-shard': 2 } } },
-      { level: 3, name: 'Grand Inn', expBonus: 0.35, desc: '+35% EXP from battles', upgradeCost: { gold: 2500, materials: { 'scrap-wood': 25, 'crystal-shard': 5, 'starlight-dust': 2 } } },
+      {
+        level: 1, name: 'Basic Inn', expBonus: 0.10, desc: '+10% EXP boosts available',
+        boosts: [
+          { id: 'boost-1-short', name: 'Quick Meal', cost: 50, duration: 30 * 60 * 1000, desc: '+10% EXP for 30 min' },
+          { id: 'boost-1-med', name: 'Hearty Dinner', cost: 120, duration: 2 * 60 * 60 * 1000, desc: '+10% EXP for 2 hours' },
+        ],
+      },
+      {
+        level: 2, name: 'Improved Inn', expBonus: 0.20, desc: '+20% EXP boosts available',
+        upgradeCost: { gold: 1200, materials: { 'scrap-wood': 15, 'crystal-shard': 2 } },
+        boosts: [
+          { id: 'boost-2-short', name: 'Quick Feast', cost: 80, duration: 30 * 60 * 1000, desc: '+20% EXP for 30 min' },
+          { id: 'boost-2-med', name: 'Tavern Special', cost: 180, duration: 2 * 60 * 60 * 1000, desc: '+20% EXP for 2 hours' },
+          { id: 'boost-2-long', name: 'Room & Board', cost: 350, duration: 8 * 60 * 60 * 1000, desc: '+20% EXP for 8 hours' },
+        ],
+      },
+      {
+        level: 3, name: 'Grand Inn', expBonus: 0.35, desc: '+35% EXP boosts available',
+        upgradeCost: { gold: 2500, materials: { 'scrap-wood': 25, 'crystal-shard': 5, 'starlight-dust': 2 } },
+        boosts: [
+          { id: 'boost-3-short', name: 'Grand Feast', cost: 120, duration: 30 * 60 * 1000, desc: '+35% EXP for 30 min' },
+          { id: 'boost-3-med', name: 'VIP Dining', cost: 250, duration: 2 * 60 * 60 * 1000, desc: '+35% EXP for 2 hours' },
+          { id: 'boost-3-long', name: 'Grand Suite', cost: 500, duration: 8 * 60 * 60 * 1000, desc: '+35% EXP for 8 hours' },
+          { id: 'boost-3-day', name: 'Royal Treatment', cost: 900, duration: 24 * 60 * 60 * 1000, desc: '+35% EXP for 24 hours' },
+        ],
+      },
     ],
     levelReq: 7,
   },
@@ -370,6 +393,13 @@ export const SMELTER_RECIPES = [
 
 // ---- WORKSHOP RECIPES ----
 export const WORKSHOP_RECIPES = [
+  // --- WEAPONS (5) ---
+  {
+    id: 'craft-iron-dagger', name: 'Forge Iron Dagger',
+    materials: { 'iron-ingot': 2, 'scrap-wood': 1 },
+    result: { type: 'sword', template: 'crafted-iron-dagger' }, craftTime: 8000,
+    desc: 'A light, quick iron dagger.',
+  },
   {
     id: 'craft-iron-sword', name: 'Forge Iron Blade',
     materials: { 'iron-ingot': 3, 'scrap-wood': 2 },
@@ -377,11 +407,49 @@ export const WORKSHOP_RECIPES = [
     desc: 'Forge a sturdy iron blade.',
   },
   {
+    id: 'craft-crystal-staff', name: 'Craft Crystal Staff',
+    materials: { 'crystal-shard': 4, 'scrap-wood': 3, 'copper-wire': 1 },
+    result: { type: 'sword', template: 'crafted-crystal-staff' }, craftTime: 14000,
+    desc: 'Channel crystal energy through a wooden staff.',
+  },
+  {
+    id: 'craft-plasma-edge', name: 'Forge Plasma Edge',
+    materials: { 'plasma-core': 2, 'iron-ingot': 3, 'crystal-shard': 1 },
+    result: { type: 'sword', template: 'crafted-plasma-edge' }, craftTime: 20000,
+    desc: 'A blade infused with raw plasma energy.',
+  },
+  {
+    id: 'craft-void-cleaver', name: 'Forge Void Cleaver',
+    materials: { 'void-essence': 2, 'iron-ingot': 4, 'crystal-shard': 2 },
+    result: { type: 'sword', template: 'crafted-void-cleaver' }, craftTime: 25000,
+    desc: 'A devastating weapon forged from the void.',
+  },
+  // --- SHIELDS (4) ---
+  {
     id: 'craft-iron-shield', name: 'Forge Iron Buckler',
     materials: { 'iron-ingot': 4, 'copper-wire': 2 },
     result: { type: 'shield', template: 'crafted-iron-buckler' }, craftTime: 12000,
     desc: 'Hammer out a reliable iron shield.',
   },
+  {
+    id: 'craft-reinforced-barricade', name: 'Forge Reinforced Barricade',
+    materials: { 'iron-ingot': 5, 'stone-block': 4, 'copper-wire': 2 },
+    result: { type: 'shield', template: 'crafted-reinforced-barricade' }, craftTime: 16000,
+    desc: 'A heavy shield built to absorb massive blows.',
+  },
+  {
+    id: 'craft-crystal-ward', name: 'Craft Crystal Ward',
+    materials: { 'crystal-shard': 4, 'iron-ingot': 2, 'glass-vial': 1 },
+    result: { type: 'shield', template: 'crafted-crystal-ward' }, craftTime: 14000,
+    desc: 'A shimmering shield of woven crystal.',
+  },
+  {
+    id: 'craft-coral-bulwark', name: 'Craft Coral Bulwark',
+    materials: { 'deep-coral': 4, 'iron-ingot': 3, 'copper-wire': 2 },
+    result: { type: 'shield', template: 'crafted-coral-bulwark' }, craftTime: 18000,
+    desc: 'Deep-sea coral shaped into a resilient barrier.',
+  },
+  // --- HELMETS (4) ---
   {
     id: 'craft-iron-helm', name: 'Forge Iron Helm',
     materials: { 'iron-ingot': 2, 'copper-wire': 1 },
@@ -389,10 +457,79 @@ export const WORKSHOP_RECIPES = [
     desc: 'Shape iron into a protective helmet.',
   },
   {
+    id: 'craft-copper-circlet', name: 'Craft Copper Circlet',
+    materials: { 'copper-wire': 3, 'iron-ingot': 1 },
+    result: { type: 'helmet', template: 'crafted-copper-circlet' }, craftTime: 10000,
+    desc: 'A lightweight circlet woven from copper.',
+  },
+  {
+    id: 'craft-crystal-tiara', name: 'Craft Crystal Tiara',
+    materials: { 'crystal-shard': 3, 'copper-wire': 2, 'glass-vial': 1 },
+    result: { type: 'helmet', template: 'crafted-crystal-tiara' }, craftTime: 14000,
+    desc: 'A tiara set with focusing crystal shards.',
+  },
+  {
+    id: 'craft-starlight-crown', name: 'Forge Starlight Crown',
+    materials: { 'starlight-dust': 2, 'crystal-shard': 3, 'iron-ingot': 2 },
+    result: { type: 'helmet', template: 'crafted-starlight-crown' }, craftTime: 22000,
+    desc: 'A radiant crown forged from starlight.',
+  },
+  // --- ARMOR (4) ---
+  {
     id: 'craft-iron-armor', name: 'Forge Iron Chestplate',
     materials: { 'iron-ingot': 5, 'copper-wire': 3 },
     result: { type: 'armor', template: 'crafted-iron-chestplate' }, craftTime: 15000,
     desc: 'Forge heavy iron body armor.',
+  },
+  {
+    id: 'craft-stone-vest', name: 'Forge Stone Guard Vest',
+    materials: { 'stone-block': 5, 'iron-ingot': 3, 'scrap-wood': 3 },
+    result: { type: 'armor', template: 'crafted-stone-vest' }, craftTime: 14000,
+    desc: 'Sturdy armor reinforced with cut stone.',
+  },
+  {
+    id: 'craft-coral-chainmail', name: 'Craft Coral Chainmail',
+    materials: { 'deep-coral': 3, 'iron-ingot': 4, 'copper-wire': 3 },
+    result: { type: 'armor', template: 'crafted-coral-chainmail' }, craftTime: 18000,
+    desc: 'Interlocking coral plates over iron chain.',
+  },
+  {
+    id: 'craft-starlight-robe', name: 'Weave Starlight Robe',
+    materials: { 'starlight-dust': 3, 'crystal-shard': 4, 'scrap-wood': 4 },
+    result: { type: 'armor', template: 'crafted-starlight-robe' }, craftTime: 22000,
+    desc: 'A radiant robe woven from celestial dust.',
+  },
+  // --- BOOTS (4) ---
+  {
+    id: 'craft-iron-greaves', name: 'Forge Iron Greaves',
+    materials: { 'iron-ingot': 3, 'copper-wire': 2, 'stone-block': 2 },
+    result: { type: 'boots', template: 'crafted-iron-greaves' }, craftTime: 12000,
+    desc: 'Heavy iron greaves for maximum protection.',
+  },
+  {
+    id: 'craft-explorer-boots', name: 'Craft Explorer Boots',
+    materials: { 'iron-ingot': 2, 'toxic-resin': 2, 'deep-coral': 1 },
+    result: { type: 'boots', template: 'crafted-explorer-boots' }, craftTime: 12000,
+    desc: 'Sturdy boots for long expeditions.',
+  },
+  {
+    id: 'craft-marsh-striders', name: 'Craft Marsh Striders',
+    materials: { 'toxic-resin': 4, 'scrap-wood': 3, 'herb-bundle': 2 },
+    result: { type: 'boots', template: 'crafted-marsh-striders' }, craftTime: 12000,
+    desc: 'Resin-coated boots that grip any terrain.',
+  },
+  {
+    id: 'craft-crystal-walkers', name: 'Craft Crystal Walkers',
+    materials: { 'crystal-shard': 3, 'iron-ingot': 2, 'glass-vial': 2 },
+    result: { type: 'boots', template: 'crafted-crystal-walkers' }, craftTime: 16000,
+    desc: 'Boots lined with crystal for agility and defense.',
+  },
+  // --- ACCESSORIES (4) ---
+  {
+    id: 'craft-iron-bracelet', name: 'Craft Iron Bracelet',
+    materials: { 'iron-ingot': 2, 'copper-wire': 2 },
+    result: { type: 'ring', template: 'crafted-iron-bracelet' }, craftTime: 8000,
+    desc: 'A solid iron bangle for wrist protection.',
   },
   {
     id: 'craft-crystal-ring', name: 'Craft Crystal Ring',
@@ -401,21 +538,52 @@ export const WORKSHOP_RECIPES = [
     desc: 'Set crystal into a powerful ring.',
   },
   {
-    id: 'craft-explorer-boots', name: 'Craft Explorer Boots',
-    materials: { 'iron-ingot': 2, 'toxic-resin': 2, 'deep-coral': 1 },
-    result: { type: 'boots', template: 'crafted-explorer-boots' }, craftTime: 12000,
-    desc: 'Sturdy boots for long expeditions.',
+    id: 'craft-coral-charm', name: 'Craft Coral Charm',
+    materials: { 'deep-coral': 2, 'copper-wire': 2, 'glass-vial': 1 },
+    result: { type: 'ring', template: 'crafted-coral-charm' }, craftTime: 12000,
+    desc: 'A deep-sea coral amulet with protective properties.',
+  },
+  {
+    id: 'craft-starlight-pendant', name: 'Craft Starlight Pendant',
+    materials: { 'starlight-dust': 2, 'crystal-shard': 2, 'copper-wire': 1 },
+    result: { type: 'ring', template: 'crafted-starlight-pendant' }, craftTime: 20000,
+    desc: 'A pendant that radiates with celestial power.',
   },
 ];
 
 // Crafted item templates (used by workshop)
 export const CRAFTED_ITEMS = {
+  // Weapons
+  'crafted-iron-dagger': { name: 'Iron Dagger', slot: 'weapon', rarity: 'Common', baseAtk: 8, baseDef: 0, baseLevel: 6 },
   'crafted-iron-blade': { name: 'Iron Blade', slot: 'weapon', rarity: 'Uncommon', baseAtk: 12, baseDef: 0, baseLevel: 8 },
+  'crafted-crystal-staff': { name: 'Crystal Staff', slot: 'weapon', rarity: 'Rare', baseAtk: 18, baseDef: 2, baseLevel: 15 },
+  'crafted-plasma-edge': { name: 'Plasma Edge', slot: 'weapon', rarity: 'Epic', baseAtk: 26, baseDef: 3, baseLevel: 22 },
+  'crafted-void-cleaver': { name: 'Void Cleaver', slot: 'weapon', rarity: 'Epic', baseAtk: 30, baseDef: 0, baseLevel: 25 },
+  // Shields
   'crafted-iron-buckler': { name: 'Iron Buckler', slot: 'shield', rarity: 'Uncommon', baseAtk: 2, baseDef: 10, baseLevel: 8 },
+  'crafted-reinforced-barricade': { name: 'Reinforced Barricade', slot: 'shield', rarity: 'Rare', baseAtk: 1, baseDef: 16, baseLevel: 14 },
+  'crafted-crystal-ward': { name: 'Crystal Ward', slot: 'shield', rarity: 'Rare', baseAtk: 4, baseDef: 12, baseLevel: 16 },
+  'crafted-coral-bulwark': { name: 'Coral Bulwark', slot: 'shield', rarity: 'Rare', baseAtk: 2, baseDef: 18, baseLevel: 18 },
+  // Helmets
   'crafted-iron-helm': { name: 'Iron Helm', slot: 'helmet', rarity: 'Uncommon', baseAtk: 1, baseDef: 8, baseLevel: 8 },
+  'crafted-copper-circlet': { name: 'Copper Circlet', slot: 'helmet', rarity: 'Uncommon', baseAtk: 3, baseDef: 5, baseLevel: 9 },
+  'crafted-crystal-tiara': { name: 'Crystal Tiara', slot: 'helmet', rarity: 'Rare', baseAtk: 6, baseDef: 7, baseLevel: 15 },
+  'crafted-starlight-crown': { name: 'Starlight Crown', slot: 'helmet', rarity: 'Epic', baseAtk: 8, baseDef: 12, baseLevel: 22 },
+  // Armor
   'crafted-iron-chestplate': { name: 'Iron Chestplate', slot: 'armor', rarity: 'Uncommon', baseAtk: 0, baseDef: 14, baseLevel: 10 },
-  'crafted-crystal-ring': { name: 'Crystal Ring', slot: 'accessory', rarity: 'Rare', baseAtk: 8, baseDef: 5, baseLevel: 15 },
+  'crafted-stone-vest': { name: 'Stone Guard Vest', slot: 'armor', rarity: 'Uncommon', baseAtk: 2, baseDef: 12, baseLevel: 11 },
+  'crafted-coral-chainmail': { name: 'Coral Chainmail', slot: 'armor', rarity: 'Rare', baseAtk: 3, baseDef: 16, baseLevel: 16 },
+  'crafted-starlight-robe': { name: 'Starlight Robe', slot: 'armor', rarity: 'Epic', baseAtk: 10, baseDef: 10, baseLevel: 22 },
+  // Boots
+  'crafted-iron-greaves': { name: 'Iron Greaves', slot: 'boots', rarity: 'Uncommon', baseAtk: 1, baseDef: 10, baseLevel: 10 },
   'crafted-explorer-boots': { name: 'Explorer Boots', slot: 'boots', rarity: 'Rare', baseAtk: 3, baseDef: 9, baseLevel: 12 },
+  'crafted-marsh-striders': { name: 'Marsh Striders', slot: 'boots', rarity: 'Uncommon', baseAtk: 5, baseDef: 6, baseLevel: 12 },
+  'crafted-crystal-walkers': { name: 'Crystal Walkers', slot: 'boots', rarity: 'Rare', baseAtk: 5, baseDef: 11, baseLevel: 17 },
+  // Accessories
+  'crafted-iron-bracelet': { name: 'Iron Bracelet', slot: 'accessory', rarity: 'Uncommon', baseAtk: 4, baseDef: 4, baseLevel: 8 },
+  'crafted-crystal-ring': { name: 'Crystal Ring', slot: 'accessory', rarity: 'Rare', baseAtk: 8, baseDef: 5, baseLevel: 15 },
+  'crafted-coral-charm': { name: 'Coral Charm', slot: 'accessory', rarity: 'Rare', baseAtk: 5, baseDef: 7, baseLevel: 14 },
+  'crafted-starlight-pendant': { name: 'Starlight Pendant', slot: 'accessory', rarity: 'Epic', baseAtk: 12, baseDef: 8, baseLevel: 20 },
 };
 
 // ---- SHOP MATERIAL ITEMS (rarely available) ----
@@ -515,6 +683,7 @@ export function createInitialBase() {
     chamberUpgrades: {}, // { bed: 0, kitchen: 0, study: 0 }
     // Inn
     innLevel: 0,
+    innBoost: null,  // { expBonus, startTime, duration, boostName }
     // Crafting
     craftingQueue: null, // { recipeId, building, startTime, craftTime }
   };
@@ -543,12 +712,14 @@ export function getChamberBuffs(base) {
   return buffs;
 }
 
-// ---- HELPER: Get inn EXP bonus ----
+// ---- HELPER: Get inn EXP bonus (timed boost system) ----
 export function getInnExpBonus(base) {
   if (!base?.buildings?.inn?.built) return 0;
-  const level = base.innLevel || 1;
-  const upgrade = BUILDINGS.inn.upgrades.find(u => u.level === level);
-  return upgrade?.expBonus || 0;
+  const boost = base.innBoost;
+  if (!boost) return 0;
+  const now = Date.now();
+  if (now - boost.startTime >= boost.duration) return 0; // expired
+  return boost.expBonus || 0;
 }
 
 // Generate a material item for inventory/drops

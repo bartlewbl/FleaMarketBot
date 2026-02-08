@@ -1395,6 +1395,31 @@ function gameReducer(state, action) {
       };
     }
 
+    case 'BASE_BUY_INN_BOOST': {
+      if (!state.base.buildings.inn?.built) return { ...state, message: 'Build an Inn first!' };
+      const innLvl = state.base.innLevel || 1;
+      const tierData = BUILDINGS.inn.upgrades.find(u => u.level === innLvl);
+      if (!tierData || !tierData.boosts) return state;
+      const boost = tierData.boosts.find(b => b.id === action.boostId);
+      if (!boost) return state;
+      if (state.player.gold < boost.cost) return { ...state, message: `Need ${boost.cost}g!` };
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold - boost.cost },
+        base: {
+          ...state.base,
+          innBoost: {
+            expBonus: tierData.expBonus,
+            startTime: Date.now(),
+            duration: boost.duration,
+            boostName: boost.name,
+          },
+        },
+        message: `${boost.name} activated! ${boost.desc}`,
+      };
+    }
+
     case 'BASE_UPGRADE_CHAMBER': {
       if (!state.base.buildings.chamber?.built) return { ...state, message: 'Build a Chamber first!' };
       const subId = action.subUpgradeId; // 'bed', 'kitchen', 'study'
@@ -1853,6 +1878,7 @@ export function useGameState(isLoggedIn) {
     baseCraft: (recipeId) => dispatch({ type: 'BASE_CRAFT', recipeId }),
     baseCollectCraft: () => dispatch({ type: 'BASE_COLLECT_CRAFT' }),
     baseUpgradeInn: () => dispatch({ type: 'BASE_UPGRADE_INN' }),
+    baseBuyInnBoost: (boostId) => dispatch({ type: 'BASE_BUY_INN_BOOST', boostId }),
     baseUpgradeChamber: (subUpgradeId) => dispatch({ type: 'BASE_UPGRADE_CHAMBER', subUpgradeId }),
     baseSendMission: (missionId) => dispatch({ type: 'BASE_SEND_MISSION', missionId }),
     baseCollectMission: () => dispatch({ type: 'BASE_COLLECT_MISSION' }),

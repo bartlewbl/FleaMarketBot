@@ -5220,6 +5220,29 @@ body {
   color: #44dd44;
 }
 
+.base-inn-active-boost {
+  background: rgba(50, 180, 50, 0.15);
+  border: 1px solid rgba(68, 221, 68, 0.3);
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.base-inn-boost-name {
+  font-size: 8px;
+  color: #44dd44;
+  margin-bottom: 3px;
+}
+
+.base-inn-boost-info {
+  font-size: 7px;
+  color: #88ee88;
+}
+
+.base-inn-boosts {
+  margin-bottom: 10px;
+}
+
 .base-upgrade-section {
   background: rgba(20, 20, 40, 0.7);
   border: 1px solid rgba(255,255,255,0.06);
