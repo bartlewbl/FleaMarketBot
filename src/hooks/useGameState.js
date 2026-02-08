@@ -1,5 +1,5 @@
 import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
-import { expForLevel, SKILLS, EXPLORE_TEXTS, CHARACTER_CLASSES } from '../data/gameData';
+import { expForLevel, SKILLS, EXPLORE_TEXTS, CHARACTER_CLASSES, REGIONS } from '../data/gameData';
 import { SKILL_TREES, getTreeSkill } from '../data/skillTrees';
 import { calcDamage, getClassData, playerHasSkill, getEffectiveManaCost, getPlayerAtk, getPlayerDef, getPlayerDodgeChance, getBattleMaxHp, getSkillPassiveBonus, rollSpellEcho, getEffectiveDef, getExecuteMultiplier } from '../engine/combat';
 import { applySkillEffect } from '../engine/skillEffects';
@@ -39,6 +39,7 @@ function createInitialState() {
   return {
     screen: 'username-entry',
     player: createInitialPlayer(),
+    currentRegion: null,
     currentLocation: null,
     battle: null,
     battleLog: [],
@@ -109,6 +110,7 @@ function extractSaveData(state) {
     screen: (state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm') ? 'town' : state.screen,
     energy: state.energy,
     lastEnergyUpdate: state.lastEnergyUpdate,
+    currentRegionId: state.currentRegion?.id || null,
   };
 }
 
@@ -116,7 +118,7 @@ function extractSaveData(state) {
 function gameReducer(state, action) {
   switch (action.type) {
     case 'LOAD_SAVE': {
-      const { player, screen, energy, lastEnergyUpdate } = action.saveData || {};
+      const { player, screen, energy, lastEnergyUpdate, currentRegionId } = action.saveData || {};
       const base = createInitialState();
       const regen = regenEnergy(
         energy ?? base.energy,
@@ -128,12 +130,14 @@ function gameReducer(state, action) {
       let resolvedScreen = screen || 'town';
       if (!mergedPlayer.characterClass) resolvedScreen = 'class-select';
       if (mergedPlayer.name === 'Hero') resolvedScreen = 'username-entry';
+      const savedRegion = currentRegionId ? REGIONS.find(r => r.id === currentRegionId) : null;
       return {
         ...base,
         screen: resolvedScreen,
         player: mergedPlayer,
         energy: regen.energy,
         lastEnergyUpdate: regen.lastEnergyUpdate,
+        currentRegion: savedRegion,
       };
     }
 
@@ -167,10 +171,30 @@ function gameReducer(state, action) {
     }
 
     case 'GO_TO_TOWN':
-      return { ...state, screen: 'town', currentLocation: null, battle: null, battleResult: null, battleLog: [], pendingBoss: null };
+      return { ...state, screen: 'town', currentRegion: null, currentLocation: null, battle: null, battleResult: null, battleLog: [], pendingBoss: null };
 
     case 'SHOW_SCREEN':
       return { ...state, screen: action.screen };
+
+    case 'SELECT_REGION': {
+      const region = action.region;
+      if (!region) return state;
+      const cost = region.travelCost || 0;
+      if (cost > 0 && state.player.gold < cost) {
+        return { ...state, message: `Not enough gold for the ticket! (${cost}g needed)` };
+      }
+      return {
+        ...state,
+        screen: 'locations',
+        currentRegion: region,
+        player: cost > 0
+          ? { ...state.player, gold: state.player.gold - cost }
+          : state.player,
+      };
+    }
+
+    case 'BACK_TO_REGIONS':
+      return { ...state, screen: 'regions', currentRegion: null };
 
     case 'ENTER_LOCATION': {
       const now = Date.now();
@@ -659,7 +683,7 @@ function gameReducer(state, action) {
 
     case 'CONTINUE_AFTER_BATTLE': {
       if (state.battleResult?.defeated) {
-        return { ...state, screen: 'town', battle: null, battleResult: null, battleLog: [], currentLocation: null };
+        return { ...state, screen: 'town', battle: null, battleResult: null, battleLog: [], currentLocation: null, currentRegion: null };
       }
       return {
         ...state, screen: 'explore', battle: null, battleResult: null, battleLog: [],
@@ -937,6 +961,8 @@ export function useGameState(isLoggedIn) {
     selectClass: (classId) => dispatch({ type: 'SELECT_CLASS', classId }),
     goToTown: () => dispatch({ type: 'GO_TO_TOWN' }),
     showScreen: (screen) => dispatch({ type: 'SHOW_SCREEN', screen }),
+    selectRegion: (region) => dispatch({ type: 'SELECT_REGION', region }),
+    backToRegions: () => dispatch({ type: 'BACK_TO_REGIONS' }),
     enterLocation: (loc) => dispatch({ type: 'ENTER_LOCATION', location: loc }),
     exploreStep: () => dispatch({ type: 'EXPLORE_STEP' }),
     battleAttack: () => dispatch({ type: 'BATTLE_PLAYER_ATTACK' }),

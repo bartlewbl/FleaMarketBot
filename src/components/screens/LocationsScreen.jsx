@@ -1,10 +1,10 @@
-import { LOCATIONS } from '../../data/gameData';
-
 export default function LocationsScreen({
   playerLevel,
   energy,
   energyMax,
   energyCost,
+  locations,
+  regionName,
   onSelect,
   onBack,
 }) {
@@ -13,12 +13,12 @@ export default function LocationsScreen({
   const maxEnergy = energyMax ?? Math.max(availableEnergy, requiredEnergy, 1);
   return (
     <div className="screen screen-locations">
-      <div className="screen-header">Choose Location</div>
+      <div className="screen-header">{regionName || 'Choose Location'}</div>
       <div className="location-energy-info">
         Energy {availableEnergy}/{maxEnergy} · -{requiredEnergy} per expedition
       </div>
       <div className="location-list">
-        {LOCATIONS.map(loc => {
+        {locations.map(loc => {
           const needsLevel = playerLevel < loc.levelReq;
           const needsEnergy = availableEnergy < requiredEnergy;
           const locked = needsLevel || needsEnergy;
@@ -45,7 +45,7 @@ export default function LocationsScreen({
           );
         })}
       </div>
-      <button className="btn btn-back" onClick={onBack}>Back to Town</button>
+      <button className="btn btn-back" onClick={onBack}>Back to Regions</button>
     </div>
   );
 }

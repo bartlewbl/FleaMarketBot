@@ -15,6 +15,7 @@ import SkillsScreen from './components/screens/SkillsScreen';
 import ClassSelectScreen from './components/screens/ClassSelectScreen';
 import BossConfirmScreen from './components/screens/BossConfirmScreen';
 import UsernameScreen from './components/screens/UsernameScreen';
+import RegionsScreen from './components/screens/RegionsScreen';
 import SidePanel from './components/SidePanel';
 import RightPanel from './components/RightPanel';
 
@@ -165,7 +166,7 @@ export default function App() {
   }
 
   const navLocked = state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm';
-  const canRest = !navLocked && (state.screen === 'town' || state.screen === 'locations');
+  const canRest = !navLocked && (state.screen === 'town' || state.screen === 'locations' || state.screen === 'regions');
 
   return (
     <div className="game-container">
@@ -194,7 +195,7 @@ export default function App() {
             playerName={state.player.name}
             playerLevel={state.player.level}
             onGoToTown={actions.goToTown}
-            onExplore={() => actions.showScreen('locations')}
+            onExplore={() => actions.showScreen('regions')}
             onInventory={() => actions.showScreen('inventory')}
             onShop={() => actions.showScreen('shop')}
             onRest={actions.restAtInn}
@@ -219,14 +220,25 @@ export default function App() {
               />
             )}
 
-            {state.screen === 'locations' && (
+            {state.screen === 'regions' && (
+              <RegionsScreen
+                playerLevel={state.player.level}
+                playerGold={state.player.gold}
+                onSelect={actions.selectRegion}
+                onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'locations' && state.currentRegion && (
               <LocationsScreen
                 playerLevel={state.player.level}
                 energy={state.energy}
                 energyMax={ENERGY_MAX}
                 energyCost={ENERGY_COST_PER_TRIP}
+                locations={state.currentRegion.locations}
+                regionName={state.currentRegion.name}
                 onSelect={actions.enterLocation}
-                onBack={actions.goToTown}
+                onBack={actions.backToRegions}
               />
             )}
 

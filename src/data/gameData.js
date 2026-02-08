@@ -337,6 +337,372 @@ export const MONSTERS = {
     baseExp: 70, baseGold: 38, skills: ['curse', 'drain', 'slash'],
     dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 9 }, { type: 'potion', weight: 18 }],
   },
+  // ---- FROZEN WASTES MONSTERS ----
+  'frost-wolf': {
+    name: 'Frost Wolf', sprite: 'wolf', baseHp: 35, baseAtk: 10, baseDef: 3,
+    baseExp: 20, baseGold: 12, skills: ['bite', 'frostbite'],
+    dropTable: [{ type: 'boots', weight: 8 }, { type: 'potion', weight: 30 }],
+  },
+  'ice-crawler': {
+    name: 'Ice Crawler', sprite: 'snake', baseHp: 28, baseAtk: 8, baseDef: 4,
+    baseExp: 16, baseGold: 9, skills: ['freeze'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'ring', weight: 6 }],
+  },
+  'snow-wraith': {
+    name: 'Snow Wraith', sprite: 'ghost', baseHp: 30, baseAtk: 12, baseDef: 2,
+    baseExp: 22, baseGold: 11, skills: ['frostbite', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 28 }],
+  },
+  'glacial-golem': {
+    name: 'Glacial Golem', sprite: 'golem', baseHp: 55, baseAtk: 9, baseDef: 8,
+    baseExp: 28, baseGold: 16, skills: ['bash', 'freeze'],
+    dropTable: [{ type: 'shield', weight: 10 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'frost-spider': {
+    name: 'Frost Spider', sprite: 'rat', baseHp: 24, baseAtk: 11, baseDef: 2,
+    baseExp: 18, baseGold: 10, skills: ['web', 'frostbite'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'ring', weight: 5 }],
+  },
+  'tundra-stalker': {
+    name: 'Tundra Stalker', sprite: 'vagrant', baseHp: 42, baseAtk: 14, baseDef: 5,
+    baseExp: 30, baseGold: 18, skills: ['backstab', 'frostbite'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 22 }],
+  },
+  'ice-phantom': {
+    name: 'Ice Phantom', sprite: 'ghost', baseHp: 34, baseAtk: 16, baseDef: 3,
+    baseExp: 26, baseGold: 14, skills: ['blizzard', 'curse'],
+    dropTable: [{ type: 'ring', weight: 9 }, { type: 'potion', weight: 25 }],
+  },
+  'blizzard-hawk': {
+    name: 'Blizzard Hawk', sprite: 'bat', baseHp: 32, baseAtk: 15, baseDef: 4,
+    baseExp: 24, baseGold: 13, skills: ['slash', 'blizzard'],
+    dropTable: [{ type: 'helmet', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 22 }],
+  },
+  'crystal-beetle': {
+    name: 'Crystal Beetle', sprite: 'rat', baseHp: 20, baseAtk: 6, baseDef: 6,
+    baseExp: 14, baseGold: 8, skills: ['bash'],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'shield', weight: 6 }],
+  },
+  'permafrost-skeleton': {
+    name: 'Permafrost Skeleton', sprite: 'skeleton', baseHp: 48, baseAtk: 13, baseDef: 6,
+    baseExp: 32, baseGold: 17, skills: ['slash', 'freeze', 'frostbite'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'frozen-vagrant': {
+    name: 'Frozen Vagrant', sprite: 'vagrant', baseHp: 50, baseAtk: 16, baseDef: 6,
+    baseExp: 35, baseGold: 20, skills: ['slash', 'frostbite'],
+    dropTable: [{ type: 'armor', weight: 9 }, { type: 'sword', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'arctic-serpent': {
+    name: 'Arctic Serpent', sprite: 'snake', baseHp: 38, baseAtk: 14, baseDef: 4,
+    baseExp: 28, baseGold: 15, skills: ['venom', 'blizzard'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 23 }],
+  },
+  // ---- SCORCHED BADLANDS MONSTERS ----
+  'sand-crawler': {
+    name: 'Sand Crawler', sprite: 'snake', baseHp: 38, baseAtk: 14, baseDef: 5,
+    baseExp: 28, baseGold: 16, skills: ['sandblast', 'bite'],
+    dropTable: [{ type: 'boots', weight: 8 }, { type: 'potion', weight: 28 }],
+  },
+  'ember-wolf': {
+    name: 'Ember Wolf', sprite: 'wolf', baseHp: 45, baseAtk: 18, baseDef: 5,
+    baseExp: 36, baseGold: 20, skills: ['bite', 'scorch'],
+    dropTable: [{ type: 'armor', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 22 }],
+  },
+  'ash-golem': {
+    name: 'Ash Golem', sprite: 'golem', baseHp: 68, baseAtk: 14, baseDef: 10,
+    baseExp: 40, baseGold: 22, skills: ['bash', 'heatwave'],
+    dropTable: [{ type: 'shield', weight: 11 }, { type: 'armor', weight: 9 }, { type: 'potion', weight: 16 }],
+  },
+  'lava-slime': {
+    name: 'Lava Slime', sprite: 'slime', baseHp: 42, baseAtk: 16, baseDef: 4,
+    baseExp: 32, baseGold: 18, skills: ['scorch', 'firebreath'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'potion', weight: 28 }],
+  },
+  'scorpion-drone': {
+    name: 'Scorpion Drone', sprite: 'rat', baseHp: 35, baseAtk: 20, baseDef: 5,
+    baseExp: 34, baseGold: 19, skills: ['sting', 'poison'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 7 }],
+  },
+  'heat-phantom': {
+    name: 'Heat Phantom', sprite: 'ghost', baseHp: 40, baseAtk: 22, baseDef: 3,
+    baseExp: 38, baseGold: 21, skills: ['heatwave', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 24 }],
+  },
+  'magma-serpent': {
+    name: 'Magma Serpent', sprite: 'snake', baseHp: 50, baseAtk: 20, baseDef: 6,
+    baseExp: 42, baseGold: 24, skills: ['firebreath', 'sandblast'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 22 }],
+  },
+  'cinder-wraith': {
+    name: 'Cinder Wraith', sprite: 'ghost', baseHp: 44, baseAtk: 24, baseDef: 4,
+    baseExp: 44, baseGold: 25, skills: ['scorch', 'curse'],
+    dropTable: [{ type: 'sword', weight: 9 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'flame-beetle': {
+    name: 'Flame Beetle', sprite: 'rat', baseHp: 30, baseAtk: 12, baseDef: 7,
+    baseExp: 26, baseGold: 14, skills: ['scorch'],
+    dropTable: [{ type: 'potion', weight: 32 }, { type: 'helmet', weight: 6 }],
+  },
+  'desert-vagrant': {
+    name: 'Desert Vagrant', sprite: 'vagrant', baseHp: 55, baseAtk: 22, baseDef: 7,
+    baseExp: 46, baseGold: 26, skills: ['slash', 'heatwave', 'steal'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'charred-skeleton': {
+    name: 'Charred Skeleton', sprite: 'skeleton', baseHp: 52, baseAtk: 21, baseDef: 7,
+    baseExp: 43, baseGold: 24, skills: ['slash', 'scorch', 'bash'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 19 }],
+  },
+  'volcanic-bat': {
+    name: 'Volcanic Bat', sprite: 'bat', baseHp: 36, baseAtk: 23, baseDef: 4,
+    baseExp: 37, baseGold: 20, skills: ['firebreath', 'screech'],
+    dropTable: [{ type: 'helmet', weight: 8 }, { type: 'potion', weight: 26 }],
+  },
+  // ---- TOXIC MARSHLANDS MONSTERS ----
+  'bog-lurker': {
+    name: 'Bog Lurker', sprite: 'snake', baseHp: 55, baseAtk: 20, baseDef: 7,
+    baseExp: 42, baseGold: 24, skills: ['poison', 'bite'],
+    dropTable: [{ type: 'boots', weight: 8 }, { type: 'potion', weight: 26 }],
+  },
+  'mire-snake': {
+    name: 'Mire Snake', sprite: 'snake', baseHp: 48, baseAtk: 22, baseDef: 5,
+    baseExp: 40, baseGold: 22, skills: ['venom', 'toxicspore'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'potion', weight: 28 }],
+  },
+  'fungal-zombie': {
+    name: 'Fungal Zombie', sprite: 'golem', baseHp: 65, baseAtk: 18, baseDef: 9,
+    baseExp: 46, baseGold: 26, skills: ['bash', 'toxicspore'],
+    dropTable: [{ type: 'armor', weight: 9 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'spore-cloud': {
+    name: 'Spore Cloud', sprite: 'slime', baseHp: 38, baseAtk: 15, baseDef: 3,
+    baseExp: 34, baseGold: 18, skills: ['toxicspore', 'plague'],
+    dropTable: [{ type: 'potion', weight: 32 }, { type: 'ring', weight: 7 }],
+  },
+  'marsh-wolf': {
+    name: 'Marsh Wolf', sprite: 'wolf', baseHp: 58, baseAtk: 24, baseDef: 8,
+    baseExp: 50, baseGold: 28, skills: ['bite', 'howl', 'poison'],
+    dropTable: [{ type: 'armor', weight: 8 }, { type: 'boots', weight: 7 }, { type: 'potion', weight: 20 }],
+  },
+  'toxic-frog': {
+    name: 'Toxic Frog', sprite: 'slime', baseHp: 42, baseAtk: 19, baseDef: 5,
+    baseExp: 38, baseGold: 20, skills: ['poison', 'slash'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'boots', weight: 6 }],
+  },
+  'plague-rat': {
+    name: 'Plague Rat', sprite: 'rat', baseHp: 35, baseAtk: 17, baseDef: 4,
+    baseExp: 32, baseGold: 17, skills: ['bite', 'plague'],
+    dropTable: [{ type: 'potion', weight: 34 }, { type: 'ring', weight: 5 }],
+  },
+  'rot-golem': {
+    name: 'Rot Golem', sprite: 'golem', baseHp: 80, baseAtk: 22, baseDef: 12,
+    baseExp: 55, baseGold: 32, skills: ['fungalslam', 'rotburst'],
+    dropTable: [{ type: 'shield', weight: 11 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 15 }],
+  },
+  'swamp-wraith': {
+    name: 'Swamp Wraith', sprite: 'ghost', baseHp: 50, baseAtk: 26, baseDef: 5,
+    baseExp: 48, baseGold: 26, skills: ['curse', 'drain', 'toxicspore'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 22 }],
+  },
+  'vine-strangler': {
+    name: 'Vine Strangler', sprite: 'snake', baseHp: 60, baseAtk: 21, baseDef: 8,
+    baseExp: 44, baseGold: 24, skills: ['bash', 'poison', 'web'],
+    dropTable: [{ type: 'armor', weight: 8 }, { type: 'sword', weight: 7 }, { type: 'potion', weight: 20 }],
+  },
+  'marsh-crawler': {
+    name: 'Marsh Crawler', sprite: 'snake', baseHp: 45, baseAtk: 20, baseDef: 6,
+    baseExp: 39, baseGold: 21, skills: ['bite', 'toxicspore'],
+    dropTable: [{ type: 'boots', weight: 7 }, { type: 'potion', weight: 28 }],
+  },
+  'poison-bat': {
+    name: 'Poison Bat', sprite: 'bat', baseHp: 40, baseAtk: 23, baseDef: 4,
+    baseExp: 41, baseGold: 23, skills: ['screech', 'plague'],
+    dropTable: [{ type: 'helmet', weight: 8 }, { type: 'potion', weight: 26 }],
+  },
+  // ---- ABYSSAL DEPTHS MONSTERS ----
+  'tide-crawler': {
+    name: 'Tide Crawler', sprite: 'snake', baseHp: 55, baseAtk: 22, baseDef: 8,
+    baseExp: 48, baseGold: 28, skills: ['drown', 'bash'],
+    dropTable: [{ type: 'armor', weight: 8 }, { type: 'potion', weight: 26 }],
+  },
+  'deep-angler': {
+    name: 'Deep Angler', sprite: 'rat', baseHp: 48, baseAtk: 26, baseDef: 5,
+    baseExp: 50, baseGold: 28, skills: ['bite', 'drain'],
+    dropTable: [{ type: 'potion', weight: 28 }, { type: 'ring', weight: 8 }],
+  },
+  'coral-golem': {
+    name: 'Coral Golem', sprite: 'golem', baseHp: 85, baseAtk: 20, baseDef: 14,
+    baseExp: 56, baseGold: 32, skills: ['bash', 'slam', 'drown'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 15 }],
+  },
+  'pressure-wraith': {
+    name: 'Pressure Wraith', sprite: 'ghost', baseHp: 52, baseAtk: 28, baseDef: 6,
+    baseExp: 54, baseGold: 30, skills: ['crushingdepth', 'curse'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 22 }],
+  },
+  'abyssal-jellyfish': {
+    name: 'Abyssal Jellyfish', sprite: 'slime', baseHp: 45, baseAtk: 20, baseDef: 4,
+    baseExp: 44, baseGold: 24, skills: ['shock', 'poison'],
+    dropTable: [{ type: 'potion', weight: 30 }, { type: 'ring', weight: 7 }],
+  },
+  'sea-serpent': {
+    name: 'Sea Serpent', sprite: 'snake', baseHp: 65, baseAtk: 26, baseDef: 9,
+    baseExp: 58, baseGold: 34, skills: ['tidalwave', 'venom'],
+    dropTable: [{ type: 'sword', weight: 9 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'drowned-vagrant': {
+    name: 'Drowned Vagrant', sprite: 'vagrant', baseHp: 60, baseAtk: 25, baseDef: 8,
+    baseExp: 52, baseGold: 30, skills: ['slash', 'drown', 'steal'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'barnacle-beast': {
+    name: 'Barnacle Beast', sprite: 'golem', baseHp: 75, baseAtk: 22, baseDef: 12,
+    baseExp: 54, baseGold: 31, skills: ['bash', 'drown'],
+    dropTable: [{ type: 'shield', weight: 10 }, { type: 'armor', weight: 9 }, { type: 'potion', weight: 17 }],
+  },
+  'trench-stalker': {
+    name: 'Trench Stalker', sprite: 'vagrant', baseHp: 58, baseAtk: 30, baseDef: 7,
+    baseExp: 58, baseGold: 34, skills: ['backstab', 'crushingdepth'],
+    dropTable: [{ type: 'sword', weight: 11 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'void-fish': {
+    name: 'Void Fish', sprite: 'slime', baseHp: 42, baseAtk: 24, baseDef: 5,
+    baseExp: 46, baseGold: 26, skills: ['drain', 'shock'],
+    dropTable: [{ type: 'ring', weight: 9 }, { type: 'potion', weight: 26 }],
+  },
+  'depth-phantom': {
+    name: 'Depth Phantom', sprite: 'ghost', baseHp: 50, baseAtk: 30, baseDef: 6,
+    baseExp: 56, baseGold: 32, skills: ['abyssalgrip', 'curse', 'drown'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'kraken-spawn': {
+    name: 'Kraken Spawn', sprite: 'snake', baseHp: 70, baseAtk: 28, baseDef: 10,
+    baseExp: 60, baseGold: 36, skills: ['tidalwave', 'bash', 'drown'],
+    dropTable: [{ type: 'armor', weight: 10 }, { type: 'sword', weight: 9 }, { type: 'potion', weight: 16 }],
+  },
+  // ---- CELESTIAL HIGHLANDS MONSTERS ----
+  'cloud-wisp': {
+    name: 'Cloud Wisp', sprite: 'ghost', baseHp: 50, baseAtk: 26, baseDef: 5,
+    baseExp: 52, baseGold: 30, skills: ['shock', 'drain'],
+    dropTable: [{ type: 'ring', weight: 9 }, { type: 'potion', weight: 26 }],
+  },
+  'storm-hawk': {
+    name: 'Storm Hawk', sprite: 'bat', baseHp: 55, baseAtk: 30, baseDef: 7,
+    baseExp: 58, baseGold: 34, skills: ['slash', 'thunderclap'],
+    dropTable: [{ type: 'helmet', weight: 9 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 20 }],
+  },
+  'solar-elemental': {
+    name: 'Solar Elemental', sprite: 'slime', baseHp: 62, baseAtk: 28, baseDef: 8,
+    baseExp: 56, baseGold: 32, skills: ['smite', 'firebreath'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 24 }],
+  },
+  'astral-golem': {
+    name: 'Astral Golem', sprite: 'golem', baseHp: 95, baseAtk: 24, baseDef: 16,
+    baseExp: 64, baseGold: 38, skills: ['slam', 'starfall'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 14 }],
+  },
+  'comet-shard': {
+    name: 'Comet Shard', sprite: 'slime', baseHp: 44, baseAtk: 32, baseDef: 4,
+    baseExp: 54, baseGold: 30, skills: ['starfall', 'charge'],
+    dropTable: [{ type: 'sword', weight: 9 }, { type: 'potion', weight: 26 }],
+  },
+  'sky-wolf': {
+    name: 'Sky Wolf', sprite: 'wolf', baseHp: 68, baseAtk: 28, baseDef: 10,
+    baseExp: 60, baseGold: 34, skills: ['bite', 'howl', 'charge'],
+    dropTable: [{ type: 'armor', weight: 9 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 19 }],
+  },
+  'celestial-knight': {
+    name: 'Celestial Knight', sprite: 'vagrant', baseHp: 72, baseAtk: 30, baseDef: 12,
+    baseExp: 66, baseGold: 38, skills: ['smite', 'slash', 'judgment'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 14 }],
+  },
+  'starfall-wraith': {
+    name: 'Starfall Wraith', sprite: 'ghost', baseHp: 58, baseAtk: 32, baseDef: 6,
+    baseExp: 62, baseGold: 36, skills: ['starfall', 'curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 22 }],
+  },
+  'thunder-drake': {
+    name: 'Thunder Drake', sprite: 'dragon', baseHp: 80, baseAtk: 32, baseDef: 12,
+    baseExp: 68, baseGold: 40, skills: ['thunderclap', 'charge', 'firebreath'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 9 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 14 }],
+  },
+  'wind-dancer': {
+    name: 'Wind Dancer', sprite: 'bat', baseHp: 48, baseAtk: 30, baseDef: 6,
+    baseExp: 55, baseGold: 31, skills: ['slash', 'screech', 'charge'],
+    dropTable: [{ type: 'boots', weight: 9 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 22 }],
+  },
+  'empyrean-sentinel': {
+    name: 'Empyrean Sentinel', sprite: 'golem', baseHp: 90, baseAtk: 28, baseDef: 15,
+    baseExp: 66, baseGold: 39, skills: ['smite', 'slam', 'judgment'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 12 }],
+  },
+  'light-phantom': {
+    name: 'Light Phantom', sprite: 'ghost', baseHp: 52, baseAtk: 34, baseDef: 5,
+    baseExp: 60, baseGold: 34, skills: ['holybeam', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 24 }],
+  },
+  // ---- VOID NEXUS MONSTERS ----
+  'rift-stalker': {
+    name: 'Rift Stalker', sprite: 'vagrant', baseHp: 65, baseAtk: 32, baseDef: 9,
+    baseExp: 64, baseGold: 38, skills: ['voidrift', 'backstab'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'null-wraith': {
+    name: 'Null Wraith', sprite: 'ghost', baseHp: 58, baseAtk: 35, baseDef: 6,
+    baseExp: 66, baseGold: 38, skills: ['nullify', 'drain', 'curse'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 22 }],
+  },
+  'entropy-slime': {
+    name: 'Entropy Slime', sprite: 'slime', baseHp: 55, baseAtk: 28, baseDef: 7,
+    baseExp: 58, baseGold: 34, skills: ['entropy', 'poison'],
+    dropTable: [{ type: 'ring', weight: 8 }, { type: 'potion', weight: 28 }],
+  },
+  'paradox-golem': {
+    name: 'Paradox Golem', sprite: 'golem', baseHp: 100, baseAtk: 28, baseDef: 18,
+    baseExp: 72, baseGold: 42, skills: ['slam', 'voidrift', 'bash'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 13 }],
+  },
+  'singularity-shade': {
+    name: 'Singularity Shade', sprite: 'ghost', baseHp: 52, baseAtk: 36, baseDef: 5,
+    baseExp: 68, baseGold: 40, skills: ['voidrift', 'drain', 'entropy'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'sword', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'void-wolf': {
+    name: 'Void Wolf', sprite: 'wolf', baseHp: 75, baseAtk: 32, baseDef: 12,
+    baseExp: 68, baseGold: 40, skills: ['bite', 'howl', 'voidrift'],
+    dropTable: [{ type: 'armor', weight: 10 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 17 }],
+  },
+  'reality-bender': {
+    name: 'Reality Bender', sprite: 'ghost', baseHp: 60, baseAtk: 38, baseDef: 7,
+    baseExp: 74, baseGold: 44, skills: ['oblivion', 'nullify'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 18 }],
+  },
+  'dimension-crawler': {
+    name: 'Dimension Crawler', sprite: 'snake', baseHp: 62, baseAtk: 30, baseDef: 9,
+    baseExp: 64, baseGold: 38, skills: ['voidrift', 'venom'],
+    dropTable: [{ type: 'boots', weight: 8 }, { type: 'ring', weight: 7 }, { type: 'potion', weight: 22 }],
+  },
+  'oblivion-knight': {
+    name: 'Oblivion Knight', sprite: 'vagrant', baseHp: 80, baseAtk: 34, baseDef: 14,
+    baseExp: 76, baseGold: 46, skills: ['oblivion', 'slash', 'charge'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 12 }],
+  },
+  'chaos-phantom': {
+    name: 'Chaos Phantom', sprite: 'ghost', baseHp: 56, baseAtk: 36, baseDef: 6,
+    baseExp: 70, baseGold: 42, skills: ['entropy', 'curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'potion', weight: 24 }],
+  },
+  'nexus-serpent': {
+    name: 'Nexus Serpent', sprite: 'snake', baseHp: 70, baseAtk: 32, baseDef: 10,
+    baseExp: 72, baseGold: 42, skills: ['venom', 'voidrift', 'charge'],
+    dropTable: [{ type: 'sword', weight: 9 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 19 }],
+  },
+  'abyss-watcher': {
+    name: 'Abyss Watcher', sprite: 'dragon', baseHp: 90, baseAtk: 36, baseDef: 14,
+    baseExp: 78, baseGold: 48, skills: ['oblivion', 'firebreath', 'voidrift'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 12 }],
+  },
 };
 
 // ---- BOSSES ----
@@ -377,7 +743,389 @@ export const BOSSES = {
     dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }, { type: 'energy-drink', weight: 6 }],
     title: 'Final Terminus Overlord',
   },
+  // ---- FROZEN WASTES BOSSES ----
+  'boss-frost-warden': {
+    name: 'Frost Warden', sprite: 'vagrant', isBoss: true, baseHp: 140, baseAtk: 16, baseDef: 6,
+    baseExp: 90, baseGold: 55, skills: ['frostbite', 'blizzard', 'slash'],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'potion', weight: 18 }],
+    title: 'Guardian of the Outpost',
+  },
+  'boss-glacier-wyrm': {
+    name: 'Glacier Wyrm', sprite: 'dragon', isBoss: true, baseHp: 200, baseAtk: 22, baseDef: 9,
+    baseExp: 160, baseGold: 95, skills: ['blizzard', 'icicle', 'charge', 'frostbite'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 16 }],
+    title: 'Serpent of the Deep Ice',
+  },
+  'boss-permafrost-king': {
+    name: 'Permafrost King', sprite: 'skeleton', isBoss: true, baseHp: 260, baseAtk: 26, baseDef: 11,
+    baseExp: 240, baseGold: 140, skills: ['freeze', 'blizzard', 'slam', 'curse'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 14 }],
+    title: 'Undead Ruler of the Ruins',
+  },
+  'boss-blizzard-lord': {
+    name: 'Blizzard Lord', sprite: 'ghost', isBoss: true, baseHp: 320, baseAtk: 30, baseDef: 12,
+    baseExp: 320, baseGold: 180, skills: ['blizzard', 'frostbite', 'thunderclap', 'freeze'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 12 }],
+    title: 'Master of the Endless Storm',
+  },
+  'boss-crystal-titan': {
+    name: 'Crystal Titan', sprite: 'golem', isBoss: true, baseHp: 400, baseAtk: 34, baseDef: 16,
+    baseExp: 420, baseGold: 240, skills: ['slam', 'blizzard', 'freeze', 'charge'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 10 }],
+    title: 'Colossus of the Crystal Caverns',
+  },
+  'boss-frozen-emperor': {
+    name: 'Frozen Emperor', sprite: 'dragon', isBoss: true, baseHp: 500, baseAtk: 40, baseDef: 18,
+    baseExp: 540, baseGold: 320, skills: ['blizzard', 'icicle', 'frostbite', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Sovereign of Eternal Frost',
+  },
+  // ---- SCORCHED BADLANDS BOSSES ----
+  'boss-sandstorm-king': {
+    name: 'Sandstorm King', sprite: 'golem', isBoss: true, baseHp: 220, baseAtk: 24, baseDef: 10,
+    baseExp: 180, baseGold: 100, skills: ['sandblast', 'heatwave', 'slam'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'sword', weight: 10 }, { type: 'potion', weight: 16 }],
+    title: 'Wrath of the Dunes',
+  },
+  'boss-canyon-drake': {
+    name: 'Canyon Drake', sprite: 'dragon', isBoss: true, baseHp: 280, baseAtk: 30, baseDef: 12,
+    baseExp: 260, baseGold: 150, skills: ['firebreath', 'scorch', 'charge', 'sandblast'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 14 }],
+    title: 'Terror of the Canyon',
+  },
+  'boss-magma-lord': {
+    name: 'Magma Lord', sprite: 'slime', isBoss: true, baseHp: 340, baseAtk: 34, baseDef: 13,
+    baseExp: 340, baseGold: 200, skills: ['firebreath', 'eruption', 'heatwave'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 12 }],
+    title: 'Molten Heart of the Vents',
+  },
+  'boss-ashen-warden': {
+    name: 'Ashen Warden', sprite: 'skeleton', isBoss: true, baseHp: 400, baseAtk: 38, baseDef: 14,
+    baseExp: 420, baseGold: 240, skills: ['scorch', 'curse', 'slash', 'heatwave'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 12 }],
+    title: 'Keeper of the Ashen Ruins',
+  },
+  'boss-inferno-beast': {
+    name: 'Inferno Beast', sprite: 'dragon', isBoss: true, baseHp: 480, baseAtk: 42, baseDef: 16,
+    baseExp: 520, baseGold: 300, skills: ['inferno', 'eruption', 'charge', 'firebreath'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Devourer of the Inferno Pit',
+  },
+  'boss-volcanic-titan': {
+    name: 'Volcanic Titan', sprite: 'golem', isBoss: true, baseHp: 580, baseAtk: 46, baseDef: 20,
+    baseExp: 640, baseGold: 380, skills: ['eruption', 'ironcrush', 'firebreath', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Forgemaster of the Volcano',
+  },
+  // ---- TOXIC MARSHLANDS BOSSES ----
+  'boss-bog-horror': {
+    name: 'Bog Horror', sprite: 'snake', isBoss: true, baseHp: 320, baseAtk: 30, baseDef: 11,
+    baseExp: 280, baseGold: 160, skills: ['poison', 'bash', 'toxicspore'],
+    dropTable: [{ type: 'armor', weight: 12 }, { type: 'boots', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 16 }],
+    title: 'Nightmare of the Bog',
+  },
+  'boss-mire-queen': {
+    name: 'Mire Queen', sprite: 'snake', isBoss: true, baseHp: 380, baseAtk: 34, baseDef: 12,
+    baseExp: 360, baseGold: 200, skills: ['plague', 'venom', 'drain', 'toxicspore'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 14 }],
+    title: 'Sovereign of the Mire',
+  },
+  'boss-fungal-behemoth': {
+    name: 'Fungal Behemoth', sprite: 'golem', isBoss: true, baseHp: 460, baseAtk: 36, baseDef: 16,
+    baseExp: 440, baseGold: 260, skills: ['fungalslam', 'rotburst', 'slam', 'toxicspore'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Living Mountain of Fungus',
+  },
+  'boss-venom-matriarch': {
+    name: 'Venom Matriarch', sprite: 'snake', isBoss: true, baseHp: 520, baseAtk: 40, baseDef: 14,
+    baseExp: 520, baseGold: 300, skills: ['rotburst', 'plague', 'venom', 'frenzy'],
+    dropTable: [{ type: 'ring', weight: 10 }, { type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 12 }],
+    title: 'Mother of All Poisons',
+  },
+  'boss-plague-lord': {
+    name: 'Plague Lord', sprite: 'skeleton', isBoss: true, baseHp: 580, baseAtk: 44, baseDef: 16,
+    baseExp: 600, baseGold: 360, skills: ['plague', 'curse', 'rotburst', 'drain'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 10 }],
+    title: 'Herald of the Pestilence',
+  },
+  'boss-rot-titan': {
+    name: 'Rot Titan', sprite: 'golem', isBoss: true, baseHp: 680, baseAtk: 48, baseDef: 20,
+    baseExp: 700, baseGold: 440, skills: ['fungalslam', 'rotburst', 'plague', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Decay Incarnate',
+  },
+  // ---- ABYSSAL DEPTHS BOSSES ----
+  'boss-tidal-warden': {
+    name: 'Tidal Warden', sprite: 'golem', isBoss: true, baseHp: 400, baseAtk: 34, baseDef: 14,
+    baseExp: 380, baseGold: 220, skills: ['tidalwave', 'bash', 'drown'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 10 }, { type: 'sword', weight: 10 }, { type: 'potion', weight: 14 }],
+    title: 'Guardian of the Tides',
+  },
+  'boss-sunken-king': {
+    name: 'Sunken King', sprite: 'skeleton', isBoss: true, baseHp: 480, baseAtk: 40, baseDef: 16,
+    baseExp: 480, baseGold: 280, skills: ['tidalwave', 'curse', 'drown', 'slash'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 12 }],
+    title: 'Drowned Monarch of the Bazaar',
+  },
+  'boss-coral-colossus': {
+    name: 'Coral Colossus', sprite: 'golem', isBoss: true, baseHp: 580, baseAtk: 42, baseDef: 20,
+    baseExp: 580, baseGold: 340, skills: ['crushingdepth', 'slam', 'tidalwave', 'charge'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'helmet', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Living Reef Fortress',
+  },
+  'boss-pressure-lord': {
+    name: 'Pressure Lord', sprite: 'ghost', isBoss: true, baseHp: 640, baseAtk: 46, baseDef: 16,
+    baseExp: 660, baseGold: 400, skills: ['crushingdepth', 'abyssalgrip', 'curse', 'drain'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Tyrant of the Deep Pressure',
+  },
+  'boss-kraken-prime': {
+    name: 'Kraken Prime', sprite: 'dragon', isBoss: true, baseHp: 740, baseAtk: 50, baseDef: 18,
+    baseExp: 760, baseGold: 460, skills: ['tidalwave', 'crushingdepth', 'abyssalgrip', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Ancient Terror of the Abyss',
+  },
+  'boss-abyssal-leviathan': {
+    name: 'Abyssal Leviathan', sprite: 'dragon', isBoss: true, baseHp: 860, baseAtk: 56, baseDef: 22,
+    baseExp: 880, baseGold: 540, skills: ['tidalwave', 'crushingdepth', 'inferno', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Primordial Devourer of the Trench',
+  },
+  // ---- CELESTIAL HIGHLANDS BOSSES ----
+  'boss-cloud-sovereign': {
+    name: 'Cloud Sovereign', sprite: 'ghost', isBoss: true, baseHp: 540, baseAtk: 42, baseDef: 14,
+    baseExp: 520, baseGold: 300, skills: ['thunderclap', 'smite', 'drain'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'helmet', weight: 10 }, { type: 'sword', weight: 10 }, { type: 'potion', weight: 14 }],
+    title: 'Ruler of the Cloud Walkway',
+  },
+  'boss-stormspire-warden': {
+    name: 'Stormspire Warden', sprite: 'golem', isBoss: true, baseHp: 640, baseAtk: 46, baseDef: 18,
+    baseExp: 640, baseGold: 380, skills: ['thunderclap', 'slam', 'smite', 'charge'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Lightning Guardian of the Tower',
+  },
+  'boss-solar-titan': {
+    name: 'Solar Titan', sprite: 'golem', isBoss: true, baseHp: 740, baseAtk: 50, baseDef: 20,
+    baseExp: 760, baseGold: 460, skills: ['holybeam', 'firebreath', 'slam', 'starfall'],
+    dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Burning Heart of the Solar Fields',
+  },
+  'boss-astral-guardian': {
+    name: 'Astral Guardian', sprite: 'dragon', isBoss: true, baseHp: 820, baseAtk: 54, baseDef: 20,
+    baseExp: 860, baseGold: 520, skills: ['starfall', 'smite', 'judgment', 'charge'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Keeper of the Astral Gardens',
+  },
+  'boss-comet-lord': {
+    name: 'Comet Lord', sprite: 'ghost', isBoss: true, baseHp: 900, baseAtk: 58, baseDef: 18,
+    baseExp: 960, baseGold: 580, skills: ['starfall', 'holybeam', 'frenzy', 'charge'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Blazing Harbinger of the Sky',
+  },
+  'boss-empyrean-judge': {
+    name: 'Empyrean Judge', sprite: 'dragon', isBoss: true, baseHp: 1000, baseAtk: 62, baseDef: 24,
+    baseExp: 1100, baseGold: 660, skills: ['holybeam', 'judgment', 'starfall', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Final Arbiter of the Heavens',
+  },
+  // ---- VOID NEXUS BOSSES ----
+  'boss-rift-keeper': {
+    name: 'Rift Keeper', sprite: 'ghost', isBoss: true, baseHp: 700, baseAtk: 50, baseDef: 16,
+    baseExp: 700, baseGold: 420, skills: ['voidrift', 'entropy', 'drain'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 12 }],
+    title: 'Watcher at the Rift\'s Edge',
+  },
+  'boss-null-sovereign': {
+    name: 'Null Sovereign', sprite: 'skeleton', isBoss: true, baseHp: 800, baseAtk: 54, baseDef: 18,
+    baseExp: 820, baseGold: 500, skills: ['nullify', 'oblivion', 'curse', 'drain'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 8 }, { type: 'potion', weight: 10 }],
+    title: 'Emperor of Nothing',
+  },
+  'boss-entropy-lord': {
+    name: 'Entropy Lord', sprite: 'ghost', isBoss: true, baseHp: 900, baseAtk: 58, baseDef: 18,
+    baseExp: 940, baseGold: 580, skills: ['entropy', 'oblivion', 'voidrift', 'drain'],
+    dropTable: [{ type: 'ring', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Architect of Decay',
+  },
+  'boss-paradox-king': {
+    name: 'Paradox King', sprite: 'golem', isBoss: true, baseHp: 1000, baseAtk: 60, baseDef: 22,
+    baseExp: 1060, baseGold: 660, skills: ['voidrift', 'slam', 'oblivion', 'charge'],
+    dropTable: [{ type: 'shield', weight: 12 }, { type: 'armor', weight: 12 }, { type: 'sword', weight: 10 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'Lord of Contradictions',
+  },
+  'boss-singularity-titan': {
+    name: 'Singularity Titan', sprite: 'golem', isBoss: true, baseHp: 1100, baseAtk: 64, baseDef: 24,
+    baseExp: 1200, baseGold: 740, skills: ['oblivion', 'voidrift', 'entropy', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 10 }],
+    title: 'Gravity Well Made Flesh',
+  },
+  'boss-oblivion-god': {
+    name: 'Oblivion God', sprite: 'dragon', isBoss: true, baseHp: 1300, baseAtk: 70, baseDef: 26,
+    baseExp: 1400, baseGold: 900, skills: ['oblivion', 'entropy', 'voidrift', 'frenzy'],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    title: 'End of All Things',
+  },
 };
+
+// ---- REGIONS ----
+export const REGIONS = [
+  {
+    id: 'neon-district', name: 'Neon District',
+    description: 'The urban sprawl where it all began. Neon lights and gutter grime.',
+    levelReq: 1, travelCost: 0, bgKey: 'neon-district',
+    locations: LOCATIONS,
+  },
+  {
+    id: 'frozen-wastes', name: 'Frozen Wastes',
+    description: 'A desolate tundra of howling blizzards and ancient ice.',
+    levelReq: 5, travelCost: 25, bgKey: 'frozen-wastes',
+    locations: [
+      { id: 'frostbite-outpost', name: 'Frostbite Outpost', description: 'An abandoned outpost encrusted in rime and ice.', levelReq: 5,
+        monsters: ['frost-wolf', 'ice-crawler', 'crystal-beetle', 'frost-spider', 'snow-wraith', 'frozen-vagrant'],
+        encounterRate: 0.5, lootRate: 0.2, bgKey: 'tundra', boss: 'boss-frost-warden', bossRate: 0.005 },
+      { id: 'glacier-tunnels', name: 'Glacier Tunnels', description: 'Winding passages carved through translucent blue ice.', levelReq: 8,
+        monsters: ['ice-crawler', 'glacial-golem', 'frost-spider', 'snow-wraith', 'crystal-beetle', 'arctic-serpent', 'permafrost-skeleton'],
+        encounterRate: 0.55, lootRate: 0.22, bgKey: 'tundra', boss: 'boss-glacier-wyrm', bossRate: 0.005 },
+      { id: 'permafrost-ruins', name: 'Permafrost Ruins', description: 'Crumbling ruins preserved beneath layers of eternal frost.', levelReq: 12,
+        monsters: ['permafrost-skeleton', 'frozen-vagrant', 'tundra-stalker', 'ice-phantom', 'glacial-golem', 'snow-wraith', 'arctic-serpent'],
+        encounterRate: 0.6, lootRate: 0.25, bgKey: 'tundra', boss: 'boss-permafrost-king', bossRate: 0.005 },
+      { id: 'blizzard-peak', name: 'Blizzard Peak', description: 'The summit where the wind never stops screaming.', levelReq: 16,
+        monsters: ['blizzard-hawk', 'ice-phantom', 'tundra-stalker', 'frozen-vagrant', 'permafrost-skeleton', 'frost-wolf', 'glacial-golem'],
+        encounterRate: 0.65, lootRate: 0.28, bgKey: 'tundra', boss: 'boss-blizzard-lord', bossRate: 0.005 },
+      { id: 'crystal-caverns', name: 'Crystal Caverns', description: 'Shimmering caves of razor-sharp crystal formations.', levelReq: 20,
+        monsters: ['crystal-beetle', 'glacial-golem', 'ice-phantom', 'arctic-serpent', 'tundra-stalker', 'permafrost-skeleton', 'blizzard-hawk'],
+        encounterRate: 0.68, lootRate: 0.32, bgKey: 'tundra', boss: 'boss-crystal-titan', bossRate: 0.005 },
+      { id: 'frozen-citadel', name: 'Frozen Citadel', description: 'An imposing fortress of solid ice, seat of the Frozen Emperor.', levelReq: 25,
+        monsters: ['frozen-vagrant', 'tundra-stalker', 'ice-phantom', 'blizzard-hawk', 'permafrost-skeleton', 'glacial-golem', 'arctic-serpent'],
+        encounterRate: 0.72, lootRate: 0.35, bgKey: 'tundra', boss: 'boss-frozen-emperor', bossRate: 0.005 },
+    ],
+  },
+  {
+    id: 'scorched-badlands', name: 'Scorched Badlands',
+    description: 'Sun-blasted deserts and volcanic wastelands of searing heat.',
+    levelReq: 10, travelCost: 50, bgKey: 'scorched-badlands',
+    locations: [
+      { id: 'ember-flats', name: 'Ember Flats', description: 'Cracked earth radiates heat from smoldering coal seams below.', levelReq: 10,
+        monsters: ['sand-crawler', 'flame-beetle', 'ember-wolf', 'lava-slime', 'scorpion-drone', 'volcanic-bat'],
+        encounterRate: 0.52, lootRate: 0.22, bgKey: 'desert', boss: 'boss-sandstorm-king', bossRate: 0.005 },
+      { id: 'sunscorch-canyon', name: 'Sunscorch Canyon', description: 'Narrow gorges where the sun bakes everything to ash.', levelReq: 14,
+        monsters: ['sand-crawler', 'ember-wolf', 'scorpion-drone', 'heat-phantom', 'charred-skeleton', 'volcanic-bat', 'desert-vagrant'],
+        encounterRate: 0.57, lootRate: 0.24, bgKey: 'desert', boss: 'boss-canyon-drake', bossRate: 0.005 },
+      { id: 'magma-vents', name: 'Magma Vents', description: 'Geysers of molten rock erupt without warning from the ground.', levelReq: 18,
+        monsters: ['lava-slime', 'ash-golem', 'magma-serpent', 'heat-phantom', 'cinder-wraith', 'ember-wolf', 'charred-skeleton'],
+        encounterRate: 0.62, lootRate: 0.27, bgKey: 'desert', boss: 'boss-magma-lord', bossRate: 0.005 },
+      { id: 'ashen-ruins', name: 'Ashen Ruins', description: 'Civilization swallowed by volcanic eruptions centuries ago.', levelReq: 22,
+        monsters: ['charred-skeleton', 'ash-golem', 'cinder-wraith', 'desert-vagrant', 'magma-serpent', 'heat-phantom', 'scorpion-drone'],
+        encounterRate: 0.66, lootRate: 0.3, bgKey: 'desert', boss: 'boss-ashen-warden', bossRate: 0.005 },
+      { id: 'inferno-pit', name: 'Inferno Pit', description: 'A gaping chasm where fire never ceases to burn.', levelReq: 26,
+        monsters: ['lava-slime', 'cinder-wraith', 'magma-serpent', 'ash-golem', 'heat-phantom', 'desert-vagrant', 'volcanic-bat'],
+        encounterRate: 0.7, lootRate: 0.33, bgKey: 'desert', boss: 'boss-inferno-beast', bossRate: 0.005 },
+      { id: 'volcanic-forge', name: 'Volcanic Forge', description: 'An ancient forge built into the heart of an active volcano.', levelReq: 30,
+        monsters: ['ash-golem', 'lava-slime', 'cinder-wraith', 'magma-serpent', 'desert-vagrant', 'charred-skeleton', 'heat-phantom'],
+        encounterRate: 0.72, lootRate: 0.36, bgKey: 'desert', boss: 'boss-volcanic-titan', bossRate: 0.005 },
+    ],
+  },
+  {
+    id: 'toxic-marshlands', name: 'Toxic Marshlands',
+    description: 'Festering swamps choked with poisonous spores and rotting growth.',
+    levelReq: 18, travelCost: 100, bgKey: 'toxic-marshlands',
+    locations: [
+      { id: 'bogs-edge', name: 'Bog\'s Edge', description: 'Where solid ground ends and treacherous muck begins.', levelReq: 18,
+        monsters: ['bog-lurker', 'plague-rat', 'toxic-frog', 'mire-snake', 'marsh-crawler', 'poison-bat'],
+        encounterRate: 0.55, lootRate: 0.22, bgKey: 'swamp', boss: 'boss-bog-horror', bossRate: 0.005 },
+      { id: 'mire-depths', name: 'Mire Depths', description: 'The deeper marshes where the water turns black.', levelReq: 22,
+        monsters: ['mire-snake', 'bog-lurker', 'spore-cloud', 'toxic-frog', 'marsh-wolf', 'poison-bat', 'swamp-wraith'],
+        encounterRate: 0.6, lootRate: 0.25, bgKey: 'swamp', boss: 'boss-mire-queen', bossRate: 0.005 },
+      { id: 'fungal-hollow', name: 'Fungal Hollow', description: 'A cave system overrun by massive bioluminescent fungi.', levelReq: 26,
+        monsters: ['fungal-zombie', 'spore-cloud', 'marsh-crawler', 'rot-golem', 'vine-strangler', 'poison-bat', 'swamp-wraith'],
+        encounterRate: 0.63, lootRate: 0.28, bgKey: 'swamp', boss: 'boss-fungal-behemoth', bossRate: 0.005 },
+      { id: 'venomous-thicket', name: 'Venomous Thicket', description: 'Dense vegetation that drips with corrosive sap.', levelReq: 30,
+        monsters: ['vine-strangler', 'marsh-wolf', 'mire-snake', 'toxic-frog', 'swamp-wraith', 'rot-golem', 'bog-lurker'],
+        encounterRate: 0.67, lootRate: 0.3, bgKey: 'swamp', boss: 'boss-venom-matriarch', bossRate: 0.005 },
+      { id: 'plague-ponds', name: 'Plague Ponds', description: 'Stagnant pools seething with viral contagion.', levelReq: 34,
+        monsters: ['plague-rat', 'swamp-wraith', 'rot-golem', 'fungal-zombie', 'spore-cloud', 'marsh-wolf', 'vine-strangler'],
+        encounterRate: 0.7, lootRate: 0.33, bgKey: 'swamp', boss: 'boss-plague-lord', bossRate: 0.005 },
+      { id: 'rot-core', name: 'Rot Core', description: 'The pulsating heart of the marshland\'s corruption.', levelReq: 38,
+        monsters: ['rot-golem', 'fungal-zombie', 'swamp-wraith', 'vine-strangler', 'marsh-wolf', 'poison-bat', 'spore-cloud'],
+        encounterRate: 0.72, lootRate: 0.36, bgKey: 'swamp', boss: 'boss-rot-titan', bossRate: 0.005 },
+    ],
+  },
+  {
+    id: 'abyssal-depths', name: 'Abyssal Depths',
+    description: 'Sunken ruins and ocean trenches teeming with deep-sea horrors.',
+    levelReq: 25, travelCost: 200, bgKey: 'abyssal-depths',
+    locations: [
+      { id: 'tidal-caves', name: 'Tidal Caves', description: 'Sea caves flooded by the relentless tide.', levelReq: 25,
+        monsters: ['tide-crawler', 'deep-angler', 'abyssal-jellyfish', 'barnacle-beast', 'void-fish', 'drowned-vagrant'],
+        encounterRate: 0.58, lootRate: 0.25, bgKey: 'ocean', boss: 'boss-tidal-warden', bossRate: 0.005 },
+      { id: 'sunken-bazaar', name: 'Sunken Bazaar', description: 'A once-thriving marketplace now drowned beneath the waves.', levelReq: 30,
+        monsters: ['drowned-vagrant', 'tide-crawler', 'sea-serpent', 'coral-golem', 'abyssal-jellyfish', 'deep-angler', 'barnacle-beast'],
+        encounterRate: 0.62, lootRate: 0.28, bgKey: 'ocean', boss: 'boss-sunken-king', bossRate: 0.005 },
+      { id: 'coral-labyrinth', name: 'Coral Labyrinth', description: 'A twisting maze of living coral that reshapes itself.', levelReq: 35,
+        monsters: ['coral-golem', 'sea-serpent', 'pressure-wraith', 'barnacle-beast', 'trench-stalker', 'void-fish', 'abyssal-jellyfish'],
+        encounterRate: 0.65, lootRate: 0.3, bgKey: 'ocean', boss: 'boss-coral-colossus', bossRate: 0.005 },
+      { id: 'pressure-rift', name: 'Pressure Rift', description: 'A crack in the ocean floor where crushing pressure warps reality.', levelReq: 38,
+        monsters: ['pressure-wraith', 'depth-phantom', 'trench-stalker', 'coral-golem', 'sea-serpent', 'void-fish', 'kraken-spawn'],
+        encounterRate: 0.68, lootRate: 0.32, bgKey: 'ocean', boss: 'boss-pressure-lord', bossRate: 0.005 },
+      { id: 'krakens-rest', name: 'Kraken\'s Rest', description: 'The lair of something ancient and impossibly large.', levelReq: 42,
+        monsters: ['kraken-spawn', 'trench-stalker', 'depth-phantom', 'pressure-wraith', 'sea-serpent', 'drowned-vagrant', 'coral-golem'],
+        encounterRate: 0.7, lootRate: 0.35, bgKey: 'ocean', boss: 'boss-kraken-prime', bossRate: 0.005 },
+      { id: 'abyssal-trench', name: 'Abyssal Trench', description: 'The deepest point of the ocean where light never reaches.', levelReq: 48,
+        monsters: ['depth-phantom', 'kraken-spawn', 'pressure-wraith', 'trench-stalker', 'sea-serpent', 'void-fish', 'coral-golem'],
+        encounterRate: 0.72, lootRate: 0.38, bgKey: 'ocean', boss: 'boss-abyssal-leviathan', bossRate: 0.005 },
+    ],
+  },
+  {
+    id: 'celestial-highlands', name: 'Celestial Highlands',
+    description: 'Floating islands bathed in starlight and guarded by divine constructs.',
+    levelReq: 35, travelCost: 350, bgKey: 'celestial-highlands',
+    locations: [
+      { id: 'cloud-walkway', name: 'Cloud Walkway', description: 'Bridges of solidified cloud stretching between floating isles.', levelReq: 35,
+        monsters: ['cloud-wisp', 'wind-dancer', 'storm-hawk', 'sky-wolf', 'solar-elemental', 'celestial-knight'],
+        encounterRate: 0.6, lootRate: 0.28, bgKey: 'celestial', boss: 'boss-cloud-sovereign', bossRate: 0.005 },
+      { id: 'stormspire-tower', name: 'Stormspire Tower', description: 'A tower that pierces the storm clouds themselves.', levelReq: 39,
+        monsters: ['storm-hawk', 'empyrean-sentinel', 'cloud-wisp', 'thunder-drake', 'celestial-knight', 'starfall-wraith', 'wind-dancer'],
+        encounterRate: 0.63, lootRate: 0.3, bgKey: 'celestial', boss: 'boss-stormspire-warden', bossRate: 0.005 },
+      { id: 'solar-fields', name: 'Solar Fields', description: 'Vast plains of golden light where the sun never sets.', levelReq: 43,
+        monsters: ['solar-elemental', 'light-phantom', 'astral-golem', 'comet-shard', 'celestial-knight', 'sky-wolf', 'storm-hawk'],
+        encounterRate: 0.66, lootRate: 0.32, bgKey: 'celestial', boss: 'boss-solar-titan', bossRate: 0.005 },
+      { id: 'astral-gardens', name: 'Astral Gardens', description: 'Impossible gardens growing in the void between stars.', levelReq: 47,
+        monsters: ['astral-golem', 'starfall-wraith', 'celestial-knight', 'light-phantom', 'empyrean-sentinel', 'cloud-wisp', 'thunder-drake'],
+        encounterRate: 0.68, lootRate: 0.34, bgKey: 'celestial', boss: 'boss-astral-guardian', bossRate: 0.005 },
+      { id: 'comets-trail', name: 'Comet\'s Trail', description: 'A glowing path left by a comet that circles eternally.', levelReq: 51,
+        monsters: ['comet-shard', 'starfall-wraith', 'light-phantom', 'thunder-drake', 'empyrean-sentinel', 'astral-golem', 'sky-wolf'],
+        encounterRate: 0.7, lootRate: 0.36, bgKey: 'celestial', boss: 'boss-comet-lord', bossRate: 0.005 },
+      { id: 'empyrean-gate', name: 'Empyrean Gate', description: 'The final gateway to the realm beyond the sky.', levelReq: 55,
+        monsters: ['empyrean-sentinel', 'celestial-knight', 'thunder-drake', 'astral-golem', 'light-phantom', 'starfall-wraith', 'comet-shard'],
+        encounterRate: 0.72, lootRate: 0.38, bgKey: 'celestial', boss: 'boss-empyrean-judge', bossRate: 0.005 },
+    ],
+  },
+  {
+    id: 'void-nexus', name: 'Void Nexus',
+    description: 'The edge of existence where reality unravels into nothingness.',
+    levelReq: 45, travelCost: 500, bgKey: 'void-nexus',
+    locations: [
+      { id: 'rifts-edge', name: 'Rift\'s Edge', description: 'Where the fabric of reality begins to fray and tear.', levelReq: 45,
+        monsters: ['rift-stalker', 'null-wraith', 'entropy-slime', 'void-wolf', 'dimension-crawler', 'chaos-phantom'],
+        encounterRate: 0.62, lootRate: 0.3, bgKey: 'void', boss: 'boss-rift-keeper', bossRate: 0.005 },
+      { id: 'null-chamber', name: 'Null Chamber', description: 'A vast chamber where all sensation ceases to exist.', levelReq: 49,
+        monsters: ['null-wraith', 'paradox-golem', 'rift-stalker', 'singularity-shade', 'chaos-phantom', 'entropy-slime', 'void-wolf'],
+        encounterRate: 0.65, lootRate: 0.32, bgKey: 'void', boss: 'boss-null-sovereign', bossRate: 0.005 },
+      { id: 'entropy-garden', name: 'Entropy Garden', description: 'A mockery of life where everything decays in reverse.', levelReq: 53,
+        monsters: ['entropy-slime', 'reality-bender', 'dimension-crawler', 'null-wraith', 'oblivion-knight', 'chaos-phantom', 'void-wolf'],
+        encounterRate: 0.67, lootRate: 0.34, bgKey: 'void', boss: 'boss-entropy-lord', bossRate: 0.005 },
+      { id: 'paradox-maze', name: 'Paradox Maze', description: 'A labyrinth where the path forward leads backward.', levelReq: 57,
+        monsters: ['paradox-golem', 'reality-bender', 'oblivion-knight', 'singularity-shade', 'nexus-serpent', 'rift-stalker', 'abyss-watcher'],
+        encounterRate: 0.7, lootRate: 0.36, bgKey: 'void', boss: 'boss-paradox-king', bossRate: 0.005 },
+      { id: 'singularity-well', name: 'Singularity Well', description: 'A point of infinite density that devours all light.', levelReq: 61,
+        monsters: ['singularity-shade', 'abyss-watcher', 'oblivion-knight', 'reality-bender', 'nexus-serpent', 'paradox-golem', 'chaos-phantom'],
+        encounterRate: 0.72, lootRate: 0.38, bgKey: 'void', boss: 'boss-singularity-titan', bossRate: 0.005 },
+      { id: 'oblivion-throne', name: 'Oblivion Throne', description: 'The seat of ultimate destruction at the end of all things.', levelReq: 65,
+        monsters: ['oblivion-knight', 'abyss-watcher', 'reality-bender', 'singularity-shade', 'nexus-serpent', 'paradox-golem', 'null-wraith'],
+        encounterRate: 0.75, lootRate: 0.4, bgKey: 'void', boss: 'boss-oblivion-god', bossRate: 0.005 },
+    ],
+  },
+];
 
 // ---- MONSTER/BOSS SKILLS ----
 export const SKILLS = {
@@ -407,6 +1155,36 @@ export const SKILLS = {
   ironcrush:  { name: 'Iron Crush',  multiplier: 1.7 },
   thunderclap: { name: 'Thunderclap', multiplier: 1.9, effect: 'lower_def' },
   deathgrip:  { name: 'Death Grip',  multiplier: 1.5, effect: 'poison' },
+  // Frozen Wastes skills
+  frostbite:  { name: 'Frostbite',   multiplier: 1.3, effect: 'lower_atk' },
+  blizzard:   { name: 'Blizzard',    multiplier: 1.7 },
+  freeze:     { name: 'Freeze',      multiplier: 0.9, effect: 'lower_def' },
+  icicle:     { name: 'Icicle',      multiplier: 1.4 },
+  // Scorched Badlands skills
+  sandblast:  { name: 'Sandblast',   multiplier: 1.4, effect: 'lower_def' },
+  heatwave:   { name: 'Heatwave',    multiplier: 1.6 },
+  scorch:     { name: 'Scorch',      multiplier: 1.5 },
+  eruption:   { name: 'Eruption',    multiplier: 1.9 },
+  // Toxic Marshlands skills
+  toxicspore: { name: 'Toxic Spore', multiplier: 0.7, effect: 'poison' },
+  plague:     { name: 'Plague',       multiplier: 0.8, effect: 'poison' },
+  fungalslam: { name: 'Fungal Slam', multiplier: 1.5 },
+  rotburst:   { name: 'Rot Burst',   multiplier: 1.6, effect: 'poison' },
+  // Abyssal Depths skills
+  tidalwave:  { name: 'Tidal Wave',  multiplier: 1.8 },
+  drown:      { name: 'Drown',       multiplier: 1.2, effect: 'lower_def' },
+  abyssalgrip:{ name: 'Abyssal Grip',multiplier: 1.5, effect: 'drain_hp' },
+  crushingdepth:{ name: 'Crushing Depth', multiplier: 1.7 },
+  // Celestial Highlands skills
+  smite:      { name: 'Smite',       multiplier: 1.9 },
+  holybeam:   { name: 'Holy Beam',   multiplier: 2.0 },
+  starfall:   { name: 'Starfall',    multiplier: 1.7 },
+  judgment:   { name: 'Judgment',    multiplier: 1.8, effect: 'lower_atk' },
+  // Void Nexus skills
+  voidrift:   { name: 'Void Rift',   multiplier: 1.6, effect: 'lower_def' },
+  nullify:    { name: 'Nullify',     multiplier: 1.4, effect: 'lower_atk' },
+  oblivion:   { name: 'Oblivion',    multiplier: 2.3 },
+  entropy:    { name: 'Entropy',     multiplier: 1.5, effect: 'drain_hp' },
 };
 
 // ---- RARITIES ----
@@ -491,6 +1269,25 @@ export const ITEM_LIBRARY = {
     { name: 'Spectral Tanto', rarity: 'Rare', level: 2, baseAtk: 3 },
     { name: 'Glitch Knife', rarity: 'Epic', level: 4, baseAtk: 5 },
     { name: 'Salvaged Vorpal Edge', rarity: 'Uncommon', level: 16, baseAtk: 15 },
+    // Frozen Wastes tier
+    { name: 'Frostbite Cleaver', rarity: 'Rare', level: 22, baseAtk: 26 },
+    { name: 'Glacier Fang', rarity: 'Epic', level: 25, baseAtk: 29 },
+    // Scorched Badlands tier
+    { name: 'Ember Scimitar', rarity: 'Uncommon', level: 28, baseAtk: 30 },
+    { name: 'Volcanic Greataxe', rarity: 'Rare', level: 30, baseAtk: 33 },
+    // Toxic Marshlands tier
+    { name: 'Venomstrike Blade', rarity: 'Epic', level: 34, baseAtk: 36 },
+    { name: 'Rotwood Glaive', rarity: 'Common', level: 38, baseAtk: 38 },
+    // Abyssal Depths tier
+    { name: 'Coral Trident', rarity: 'Rare', level: 40, baseAtk: 40 },
+    { name: 'Leviathan Tooth', rarity: 'Legendary', level: 45, baseAtk: 44 },
+    // Celestial Highlands tier
+    { name: 'Starblade Saber', rarity: 'Epic', level: 50, baseAtk: 48 },
+    { name: 'Empyrean Warblade', rarity: 'Rare', level: 55, baseAtk: 52 },
+    // Void Nexus tier
+    { name: 'Rift Severer', rarity: 'Legendary', level: 58, baseAtk: 55 },
+    { name: 'Nullpoint Edge', rarity: 'Epic', level: 62, baseAtk: 58 },
+    { name: 'Oblivion Blade', rarity: 'Legendary', level: 65, baseAtk: 62, baseDef: 3 },
   ]),
   shield: createGearList('shield', 'shield', [
     { name: 'Splintered Plank', rarity: 'Rare', level: 1, baseDef: 3 },
@@ -528,6 +1325,25 @@ export const ITEM_LIBRARY = {
     { name: 'Data Lattice Buckler', rarity: 'Legendary', level: 5, baseDef: 5 },
     { name: 'Hologram Deflector', rarity: 'Epic', level: 3, baseDef: 4 },
     { name: 'Corroded Riot Shield', rarity: 'Uncommon', level: 17, baseDef: 14 },
+    // Frozen Wastes tier
+    { name: 'Glacier Barricade', rarity: 'Rare', level: 22, baseDef: 24 },
+    { name: 'Permafrost Bulwark', rarity: 'Epic', level: 25, baseDef: 27 },
+    // Scorched Badlands tier
+    { name: 'Magma Shield', rarity: 'Uncommon', level: 28, baseDef: 28 },
+    { name: 'Volcanic Rampart', rarity: 'Rare', level: 30, baseDef: 30 },
+    // Toxic Marshlands tier
+    { name: 'Fungal Carapace', rarity: 'Epic', level: 34, baseDef: 33 },
+    { name: 'Rot Ward', rarity: 'Common', level: 38, baseDef: 35 },
+    // Abyssal Depths tier
+    { name: 'Coral Bulwark', rarity: 'Rare', level: 40, baseDef: 37 },
+    { name: 'Leviathan Scale', rarity: 'Legendary', level: 45, baseDef: 40 },
+    // Celestial Highlands tier
+    { name: 'Starlight Aegis', rarity: 'Epic', level: 50, baseDef: 44 },
+    { name: 'Empyrean Ward', rarity: 'Rare', level: 55, baseDef: 48 },
+    // Void Nexus tier
+    { name: 'Rift Barrier', rarity: 'Legendary', level: 58, baseDef: 50 },
+    { name: 'Nullpoint Shield', rarity: 'Epic', level: 62, baseDef: 53 },
+    { name: 'Oblivion Guard', rarity: 'Legendary', level: 65, baseDef: 58 },
   ]),
   helmet: createGearList('helmet', 'helmet', [
     { name: 'Frayed Bandana', rarity: 'Common', level: 1, baseDef: 2 },
@@ -563,6 +1379,25 @@ export const ITEM_LIBRARY = {
     { name: 'Flickering Diadem', rarity: 'Legendary', level: 5, baseDef: 3, baseAtk: 2 },
     { name: 'Cracked Oracle Visor', rarity: 'Epic', level: 4, baseDef: 3, baseAtk: 1 },
     { name: 'Makeshift Cage Helm', rarity: 'Uncommon', level: 15, baseDef: 10 },
+    // Frozen Wastes tier
+    { name: 'Frostguard Helm', rarity: 'Rare', level: 22, baseDef: 18 },
+    { name: 'Glacier Crown', rarity: 'Epic', level: 25, baseDef: 20, baseAtk: 2 },
+    // Scorched Badlands tier
+    { name: 'Ember Visor', rarity: 'Uncommon', level: 28, baseDef: 21 },
+    { name: 'Volcanic Crest', rarity: 'Rare', level: 30, baseDef: 23 },
+    // Toxic Marshlands tier
+    { name: 'Sporefilter Mask', rarity: 'Epic', level: 34, baseDef: 25, baseAtk: 2 },
+    { name: 'Rot Helm', rarity: 'Common', level: 38, baseDef: 27 },
+    // Abyssal Depths tier
+    { name: 'Deepwater Crown', rarity: 'Rare', level: 40, baseDef: 28 },
+    { name: 'Leviathan Crest', rarity: 'Legendary', level: 45, baseDef: 31, baseAtk: 3 },
+    // Celestial Highlands tier
+    { name: 'Starforged Circlet', rarity: 'Epic', level: 50, baseDef: 34 },
+    { name: 'Empyrean Halo', rarity: 'Rare', level: 55, baseDef: 37, baseAtk: 3 },
+    // Void Nexus tier
+    { name: 'Rift Mindguard', rarity: 'Legendary', level: 58, baseDef: 39 },
+    { name: 'Nullpoint Crown', rarity: 'Epic', level: 62, baseDef: 42, baseAtk: 4 },
+    { name: 'Oblivion Diadem', rarity: 'Legendary', level: 65, baseDef: 45, baseAtk: 5 },
   ]),
   armor: createGearList('armor', 'armor', [
     { name: 'Tattered Vest', rarity: 'Uncommon', level: 1, baseDef: 4 },
@@ -598,6 +1433,25 @@ export const ITEM_LIBRARY = {
     { name: 'Starthread Robe', rarity: 'Legendary', level: 6, baseDef: 6 },
     { name: 'Wraithcloth Tunic', rarity: 'Epic', level: 4, baseDef: 5 },
     { name: 'Surplus Combat Jacket', rarity: 'Uncommon', level: 17, baseDef: 15 },
+    // Frozen Wastes tier
+    { name: 'Frostweave Coat', rarity: 'Rare', level: 22, baseDef: 24 },
+    { name: 'Glacier Plate', rarity: 'Epic', level: 25, baseDef: 27 },
+    // Scorched Badlands tier
+    { name: 'Heatshield Vest', rarity: 'Uncommon', level: 28, baseDef: 28 },
+    { name: 'Volcanic Mail', rarity: 'Rare', level: 30, baseDef: 31 },
+    // Toxic Marshlands tier
+    { name: 'Sporeward Armor', rarity: 'Epic', level: 34, baseDef: 34 },
+    { name: 'Rot Carapace', rarity: 'Common', level: 38, baseDef: 36 },
+    // Abyssal Depths tier
+    { name: 'Abyssal Mail', rarity: 'Rare', level: 40, baseDef: 38 },
+    { name: 'Leviathan Plate', rarity: 'Legendary', level: 45, baseDef: 42, baseAtk: 2 },
+    // Celestial Highlands tier
+    { name: 'Starweave Raiment', rarity: 'Epic', level: 50, baseDef: 46 },
+    { name: 'Empyrean Battleplate', rarity: 'Rare', level: 55, baseDef: 50 },
+    // Void Nexus tier
+    { name: 'Rift Warden Suit', rarity: 'Legendary', level: 58, baseDef: 53 },
+    { name: 'Nullpoint Armor', rarity: 'Epic', level: 62, baseDef: 56 },
+    { name: 'Oblivion Mantle', rarity: 'Legendary', level: 65, baseDef: 60, baseAtk: 3 },
   ]),
   boots: createGearList('boots', 'boots', [
     { name: 'Cracked Sandals', rarity: 'Epic', level: 1, baseDef: 1 },
@@ -633,6 +1487,25 @@ export const ITEM_LIBRARY = {
     { name: 'Holo-Sprint Anklets', rarity: 'Legendary', level: 5, baseDef: 2, baseAtk: 2 },
     { name: 'Flickerstep Sandals', rarity: 'Epic', level: 3, baseDef: 2, baseAtk: 1 },
     { name: 'Patched Running Shoes', rarity: 'Uncommon', level: 16, baseDef: 7 },
+    // Frozen Wastes tier
+    { name: 'Frostmarch Boots', rarity: 'Rare', level: 22, baseDef: 11, baseAtk: 2 },
+    { name: 'Glacier Treads', rarity: 'Epic', level: 25, baseDef: 13, baseAtk: 2 },
+    // Scorched Badlands tier
+    { name: 'Magma Stompers', rarity: 'Uncommon', level: 28, baseDef: 14 },
+    { name: 'Volcanic Greaves', rarity: 'Rare', level: 30, baseDef: 15, baseAtk: 3 },
+    // Toxic Marshlands tier
+    { name: 'Bogwalker Boots', rarity: 'Epic', level: 34, baseDef: 16, baseAtk: 3 },
+    { name: 'Rot Striders', rarity: 'Common', level: 38, baseDef: 18 },
+    // Abyssal Depths tier
+    { name: 'Tidal Walkers', rarity: 'Rare', level: 40, baseDef: 19, baseAtk: 3 },
+    { name: 'Leviathan Sabatons', rarity: 'Legendary', level: 45, baseDef: 22, baseAtk: 4 },
+    // Celestial Highlands tier
+    { name: 'Starstrider Boots', rarity: 'Epic', level: 50, baseDef: 24, baseAtk: 4 },
+    { name: 'Empyrean Walkers', rarity: 'Rare', level: 55, baseDef: 26, baseAtk: 5 },
+    // Void Nexus tier
+    { name: 'Rift Step Boots', rarity: 'Legendary', level: 58, baseDef: 28, baseAtk: 5 },
+    { name: 'Nullpoint Treads', rarity: 'Epic', level: 62, baseDef: 30, baseAtk: 6 },
+    { name: 'Oblivion Marchers', rarity: 'Legendary', level: 65, baseDef: 33, baseAtk: 7 },
   ]),
   ring: createGearList('accessory', 'ring', [
     { name: 'Copper Ring', rarity: 'Legendary', level: 1, baseAtk: 1 },
@@ -685,6 +1558,25 @@ export const ITEM_LIBRARY = {
     { name: 'Recycled Coil Band', rarity: 'Rare', level: 16, baseAtk: 6, baseDef: 3 },
     { name: 'Jury-Rigged Scope', rarity: 'Uncommon', level: 15, baseAtk: 5, baseDef: 3 },
     { name: 'Cracked Data Chip', rarity: 'Uncommon', level: 18, baseAtk: 6, baseDef: 4 },
+    // Frozen Wastes tier
+    { name: 'Frostcore Pendant', rarity: 'Rare', level: 22, baseAtk: 12, baseDef: 6 },
+    { name: 'Glacier Heart Ring', rarity: 'Epic', level: 25, baseAtk: 14, baseDef: 7 },
+    // Scorched Badlands tier
+    { name: 'Ember Signet', rarity: 'Uncommon', level: 28, baseAtk: 15, baseDef: 7 },
+    { name: 'Volcanic Core Amulet', rarity: 'Rare', level: 30, baseAtk: 16, baseDef: 8 },
+    // Toxic Marshlands tier
+    { name: 'Toxin Ward Band', rarity: 'Epic', level: 34, baseAtk: 18, baseDef: 9 },
+    { name: 'Rot Charm', rarity: 'Common', level: 38, baseAtk: 19, baseDef: 10 },
+    // Abyssal Depths tier
+    { name: 'Tidal Charm', rarity: 'Rare', level: 40, baseAtk: 20, baseDef: 10 },
+    { name: 'Leviathan Eye Ring', rarity: 'Legendary', level: 45, baseAtk: 22, baseDef: 12 },
+    // Celestial Highlands tier
+    { name: 'Starfall Pendant', rarity: 'Epic', level: 50, baseAtk: 24, baseDef: 13 },
+    { name: 'Empyrean Sigil', rarity: 'Rare', level: 55, baseAtk: 26, baseDef: 14 },
+    // Void Nexus tier
+    { name: 'Rift Shard Locket', rarity: 'Legendary', level: 58, baseAtk: 28, baseDef: 15 },
+    { name: 'Nullpoint Ring', rarity: 'Epic', level: 62, baseAtk: 30, baseDef: 16 },
+    { name: 'Oblivion Halo', rarity: 'Legendary', level: 65, baseAtk: 33, baseDef: 18 },
   ]),
 };
 
@@ -808,5 +1700,47 @@ export const EXPLORE_TEXTS = {
     'Loose chains rattle as steam hisses from cracked pipes...',
     'Old forklifts rest like sleeping beasts in the dark...',
     'Puddles of toxic runoff glow faint green under the moon...',
+  ],
+  tundra: [
+    'Snow crunches under your boots as the wind bites through your gear...',
+    'Icicles hang like daggers from the frozen overhang above...',
+    'A distant howl echoes across the white emptiness...',
+    'Frost crystals form patterns on every exposed surface...',
+    'The temperature drops further as you push deeper into the wastes...',
+  ],
+  desert: [
+    'Heat shimmers rise from the cracked, sun-baked earth...',
+    'Sand swirls around your ankles in the scorching wind...',
+    'The air tastes like ash and sulfur this deep in the badlands...',
+    'Volcanic vents hiss steam into the burning sky...',
+    'Charred rock formations jut from the dunes like blackened teeth...',
+  ],
+  swamp: [
+    'Murky water bubbles with toxic gas as you wade forward...',
+    'Vines drip with corrosive sap, hissing where they touch stone...',
+    'Bioluminescent fungi cast an eerie green glow through the mist...',
+    'The stench of decay grows stronger with every step...',
+    'Something moves beneath the surface of the dark water...',
+  ],
+  ocean: [
+    'Bioluminescent creatures drift past in the crushing darkness...',
+    'The pressure makes your ears ring as you descend deeper...',
+    'Barnacle-encrusted ruins loom out of the murky water...',
+    'A current of freezing water pushes against you relentlessly...',
+    'Distant whale song reverberates through the deep trenches...',
+  ],
+  celestial: [
+    'Golden light bathes the floating pathway beneath your feet...',
+    'Stars wheel overhead in patterns that defy comprehension...',
+    'Wind chimes of crystal sing in harmonies that lift your spirit...',
+    'The clouds below glow with the reflected light of distant suns...',
+    'An aurora of impossible colors dances across the sky...',
+  ],
+  void: [
+    'Reality flickers like a dying screen at the edges of your vision...',
+    'The ground shifts beneath you, solid one moment, nothing the next...',
+    'Whispers in languages that have never existed fill the silence...',
+    'Your shadow moves independently, reaching toward the darkness...',
+    'Time stutters, seconds repeating themselves before lurching forward...',
   ],
 };

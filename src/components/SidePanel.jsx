@@ -39,7 +39,7 @@ export default function SidePanel({
       label: 'Explore',
       description: 'Pick a destination',
       onClick: onExplore,
-      active: screen === 'locations' || screen === 'explore',
+      active: screen === 'regions' || screen === 'locations' || screen === 'explore',
       disabled: navLocked,
     },
     {

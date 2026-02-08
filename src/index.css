@@ -1362,6 +1362,85 @@ body {
   margin-left: 8px;
 }
 
+/* ---- REGIONS SCREEN ---- */
+.screen-regions {
+  justify-content: flex-start;
+  padding-top: 55px;
+}
+
+.region-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 600px;
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.region-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(30, 30, 60, 0.9);
+  border: 2px solid #444;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Press Start 2P', monospace;
+  color: #e0e0e0;
+  text-align: left;
+  width: 100%;
+  touch-action: manipulation;
+  border-left: 4px solid #76ffdf;
+}
+
+.region-item:hover:not(:disabled) {
+  border-color: #888;
+  border-left-color: #76ffdf;
+  background: rgba(50, 50, 80, 0.9);
+  transform: translateY(-1px);
+}
+
+.region-item.locked, .region-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-left-color: #555;
+}
+
+.region-name {
+  font-size: 10px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.region-desc {
+  font-size: 7px;
+  color: #999;
+  line-height: 1.6;
+}
+
+.region-req {
+  font-size: 7px;
+  color: #ffb38a;
+  margin-top: 4px;
+}
+
+.region-progress {
+  font-size: 7px;
+  color: #76ffdf;
+  margin-top: 4px;
+}
+
+.region-level {
+  font-size: 8px;
+  color: #aaa;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
 .screen-profile,
 .screen-skills {
   padding-top: 55px;
@@ -2510,8 +2589,8 @@ body {
   .level-number { font-size: 12px; }
   .bar-text { min-width: 40px; font-size: 6px; }
   .equipment-grid { grid-template-columns: repeat(2, 1fr); }
-  .location-item { padding: 8px; }
-  .location-name { font-size: 8px; }
+  .location-item, .region-item { padding: 8px; }
+  .location-name, .region-name { font-size: 8px; }
   .battle-combatants { flex-direction: column; gap: 4px; }
   .battle-vs { display: none; }
   .battle-monster-side .stat-bar { flex-direction: row; }
