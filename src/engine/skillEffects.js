@@ -5,6 +5,8 @@
 // To add a new skill effect, simply add a new entry to EFFECT_HANDLERS.
 // No need to touch the reducer or battle logic.
 
+import { getBattleMaxMana } from './combat';
+
 const EFFECT_HANDLERS = {
   // ---- Recoil effects (self-damage) ----
   recoil_small: ({ player, log }) => {
@@ -200,13 +202,15 @@ const EFFECT_HANDLERS = {
 
   // ---- Mana effects ----
   heroic_mana: ({ player, log }) => {
-    player = { ...player, mana: Math.min(player.maxMana, player.mana + 5) };
+    const battleMana = getBattleMaxMana(player);
+    player = { ...player, mana: Math.min(battleMana, player.mana + 5) };
     log.push({ text: `Heroic Strike restores 5 mana!`, type: 'heal' });
     return { player, log };
   },
   mana_refund: ({ player, manaCost, log }) => {
     const refund = Math.floor(manaCost * 0.5);
-    player = { ...player, mana: Math.min(player.maxMana, player.mana + refund) };
+    const battleMana = getBattleMaxMana(player);
+    player = { ...player, mana: Math.min(battleMana, player.mana + refund) };
     log.push({ text: `Arcane Torrent refunds ${refund} mana!`, type: 'heal' });
     return { player, log };
   },

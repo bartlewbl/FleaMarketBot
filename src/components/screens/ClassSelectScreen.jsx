@@ -56,6 +56,9 @@ export default function ClassSelectScreen({ onSelectClass }) {
               <span>MP {cls.baseStats.maxMana}</span>
               <span>ATK {cls.baseStats.baseAtk}</span>
               <span>DEF {cls.baseStats.baseDef}</span>
+              <span>CHA {cls.baseStats.charisma}</span>
+              <span>WIS {cls.baseStats.wisdom}</span>
+              <span>ATH {cls.baseStats.athletics}</span>
             </div>
           </div>
 
