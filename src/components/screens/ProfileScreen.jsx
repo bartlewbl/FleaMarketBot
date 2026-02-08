@@ -8,6 +8,9 @@ export default function ProfileScreen({ player, onBack }) {
     { label: 'HP', value: `${player.hp}/${player.maxHp}` },
     { label: 'ATK', value: player.baseAtk },
     { label: 'DEF', value: player.baseDef },
+    { label: 'CHA', value: player.charisma || 0, hint: 'Better shop prices' },
+    { label: 'WIS', value: player.wisdom || 0, hint: 'More mana' },
+    { label: 'ATH', value: player.athletics || 0, hint: 'Dodge chance' },
     { label: 'EXP', value: `${player.exp}/${player.expToLevel}` },
     { label: 'Gold', value: player.gold },
   ];
@@ -25,7 +28,7 @@ export default function ProfileScreen({ player, onBack }) {
           <div className="profile-card-title">Core Stats</div>
           <div className="profile-stats">
             {stats.map(stat => (
-              <div key={stat.label} className="profile-stat">
+              <div key={stat.label} className="profile-stat" title={stat.hint || ''}>
                 <div className="profile-stat-label">{stat.label}</div>
                 <div className="profile-stat-value" style={stat.color ? { color: stat.color } : undefined}>{stat.value}</div>
               </div>

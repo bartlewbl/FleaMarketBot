@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { getPlayerPassiveSkills, getPlayerActiveSkills, getTreeSkill } from '../../data/skillTrees';
+import { getBattleMaxMana } from '../../engine/combat';
 
 // Animation durations (must match GameCanvas.jsx)
 const ANIM_MS = {
@@ -428,7 +429,7 @@ export default function BattleScreen({
 
       {/* Mana display */}
       <div className="battle-mana-display">
-        Mana: {player.mana}/{player.maxMana}
+        Mana: {player.mana}/{getBattleMaxMana(player)}
       </div>
     </div>
   );

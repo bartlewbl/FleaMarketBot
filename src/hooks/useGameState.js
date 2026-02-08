@@ -1,7 +1,7 @@
 import { useReducer, useCallback, useMemo, useEffect, useRef } from 'react';
 import { expForLevel, SKILLS, EXPLORE_TEXTS, CHARACTER_CLASSES, REGIONS } from '../data/gameData';
 import { SKILL_TREES, getTreeSkill } from '../data/skillTrees';
-import { calcDamage, getClassData, playerHasSkill, getEffectiveManaCost, getPlayerAtk, getPlayerDef, getPlayerDodgeChance, getBattleMaxHp, getSkillPassiveBonus, rollSpellEcho, getEffectiveDef, getExecuteMultiplier } from '../engine/combat';
+import { calcDamage, getClassData, playerHasSkill, getEffectiveManaCost, getPlayerAtk, getPlayerDef, getPlayerDodgeChance, getBattleMaxHp, getBattleMaxMana, getSkillPassiveBonus, rollSpellEcho, getEffectiveDef, getExecuteMultiplier, getCharismaPriceBonus } from '../engine/combat';
 import { applySkillEffect } from '../engine/skillEffects';
 import { applyAttackPassives, applySkillPassives, applyLifeTap, tryBladeDance, tryLuckyStrike, applyTurnStartPassives, applyDamageReduction, applyManaShield, checkDodge, applySurvivalPassives, applyCursedBlood } from '../engine/passives';
 import { scaleMonster, scaleBoss } from '../engine/scaling';
@@ -27,6 +27,9 @@ function createInitialPlayer() {
     mana: 30,
     baseAtk: 5,
     baseDef: 2,
+    charisma: 3,
+    wisdom: 3,
+    athletics: 3,
     gold: 30,
     equipment: { weapon: null, shield: null, helmet: null, armor: null, boots: null, accessory: null },
     inventory: [],
@@ -66,13 +69,19 @@ function processLevelUps(player) {
     const atkGain = (growth?.atk ?? 1) + Math.floor(Math.random() * (growth?.atkRand ?? 2));
     const defGain = (growth?.def ?? 1) + Math.floor(Math.random() * (growth?.defRand ?? 2));
     const manaGain = (growth?.mana ?? 4) + Math.floor(Math.random() * (growth?.manaRand ?? 3));
+    const charismaGain = (growth?.charisma ?? 0) + Math.floor(Math.random() * (growth?.charismaRand ?? 1));
+    const wisdomGain = (growth?.wisdom ?? 0) + Math.floor(Math.random() * (growth?.wisdomRand ?? 1));
+    const athleticsGain = (growth?.athletics ?? 0) + Math.floor(Math.random() * (growth?.athleticsRand ?? 1));
     p.maxHp += hpGain;
     p.hp = p.maxHp;
     p.maxMana += manaGain;
     p.mana = p.maxMana;
     p.baseAtk += atkGain;
     p.baseDef += defGain;
-    gains.push({ hpGain, atkGain, defGain, manaGain });
+    p.charisma = (p.charisma || 0) + charismaGain;
+    p.wisdom = (p.wisdom || 0) + wisdomGain;
+    p.athletics = (p.athletics || 0) + athleticsGain;
+    gains.push({ hpGain, atkGain, defGain, manaGain, charismaGain, wisdomGain, athleticsGain });
   }
   return { player: p, gains };
 }
@@ -166,6 +175,9 @@ function gameReducer(state, action) {
         mana: cls.baseStats.maxMana,
         baseAtk: cls.baseStats.baseAtk,
         baseDef: cls.baseStats.baseDef,
+        charisma: cls.baseStats.charisma,
+        wisdom: cls.baseStats.wisdom,
+        athletics: cls.baseStats.athletics,
       };
       return { ...state, screen: 'town', player: p };
     }
@@ -483,7 +495,8 @@ function gameReducer(state, action) {
       const log = [...state.battleLog, { text: 'You brace for impact!', type: 'info' }];
       // Arcane Barrier: defend restores 10 mana
       if (playerHasSkill(p, 'mag_t7a')) {
-        p = { ...p, mana: Math.min(p.maxMana, p.mana + 10) };
+        const battleMana = getBattleMaxMana(p);
+        p = { ...p, mana: Math.min(battleMana, p.mana + 10) };
         log.push({ text: 'Arcane Barrier restores 10 mana!', type: 'heal' });
       }
       return { ...state, player: p, battle: b, battleLog: log };
@@ -762,12 +775,14 @@ function gameReducer(state, action) {
 
     case 'SELL_ITEM': {
       const item = action.item;
+      const charismaBonus = getCharismaPriceBonus(state.player);
+      const adjustedSellPrice = Math.floor(item.sellPrice * (1 + charismaBonus));
       const p = {
         ...state.player,
-        gold: state.player.gold + item.sellPrice,
+        gold: state.player.gold + adjustedSellPrice,
         inventory: state.player.inventory.filter(i => i.id !== item.id),
       };
-      return { ...state, player: p, message: `Sold for ${item.sellPrice}g!` };
+      return { ...state, player: p, message: `Sold for ${adjustedSellPrice}g!` };
     }
 
     case 'REORDER_INVENTORY': {
@@ -789,16 +804,18 @@ function gameReducer(state, action) {
 
     case 'BUY_ITEM': {
       const item = action.item;
-      if (state.player.gold < item.buyPrice) return { ...state, message: 'Not enough gold!' };
+      const charismaBuyBonus = getCharismaPriceBonus(state.player);
+      const adjustedBuyPrice = Math.max(1, Math.floor(item.buyPrice * (1 - charismaBuyBonus)));
+      if (state.player.gold < adjustedBuyPrice) return { ...state, message: 'Not enough gold!' };
       if (state.player.inventory.length >= state.player.maxInventory) return { ...state, message: 'Inventory full!' };
       const newItem = { ...item, id: 'item_' + Date.now() + '_' + Math.random() };
       delete newItem.buyPrice;
       const p = {
         ...state.player,
-        gold: state.player.gold - item.buyPrice,
+        gold: state.player.gold - adjustedBuyPrice,
         inventory: [...state.player.inventory, newItem],
       };
-      return { ...state, player: p, message: `Purchased ${item.name}!` };
+      return { ...state, player: p, message: `Purchased ${item.name} for ${adjustedBuyPrice}g!` };
     }
 
     case 'CLEAR_MESSAGE':

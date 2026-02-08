@@ -1,7 +1,7 @@
 // Centralized passive skill application
 // Handles all passive triggers during: attacks, skill use, defense, potions, monster turns
 
-import { playerHasSkill, getBattleMaxHp } from './combat';
+import { playerHasSkill, getBattleMaxHp, getBattleMaxMana } from './combat';
 
 /**
  * Apply post-attack passives (after a normal attack deals damage).
@@ -31,7 +31,8 @@ export function applyAttackPassives({ player, monster, battle, log, dmg, cls }) 
   }
   // Soul Siphon: 25% chance to restore 5 mana
   if (playerHasSkill(p, 'nec_t1a') && Math.random() < 0.25) {
-    p = { ...p, mana: Math.min(p.maxMana, p.mana + 5) };
+    const battleMana = getBattleMaxMana(p);
+    p = { ...p, mana: Math.min(battleMana, p.mana + 5) };
     log.push({ text: `Soul Siphon restores 5 mana!`, type: 'heal' });
   }
   // Bloodlust: heal 20% of damage dealt when below 30% HP
@@ -46,7 +47,8 @@ export function applyAttackPassives({ player, monster, battle, log, dmg, cls }) 
   }
   // Adrenaline Rush: restore 3 mana on attack
   if (playerHasSkill(p, 'brs_t6a')) {
-    p = { ...p, mana: Math.min(p.maxMana, p.mana + 3) };
+    const battleMana = getBattleMaxMana(p);
+    p = { ...p, mana: Math.min(battleMana, p.mana + 3) };
   }
   // Necrotic Touch: reduce enemy DEF by 1
   if (playerHasSkill(p, 'nec_t5a') && m.def > 0) {
@@ -94,7 +96,8 @@ export function applySkillPassives({ player, log, dmg }) {
   }
   // Soul Siphon
   if (playerHasSkill(p, 'nec_t1a') && Math.random() < 0.25) {
-    p = { ...p, mana: Math.min(p.maxMana, p.mana + 5) };
+    const battleMana = getBattleMaxMana(p);
+    p = { ...p, mana: Math.min(battleMana, p.mana + 5) };
     log.push({ text: `Soul Siphon restores 5 mana!`, type: 'heal' });
   }
 
@@ -149,13 +152,15 @@ export function applyTurnStartPassives({ player, battle, log }) {
   }
   // Meditation: restore 4 mana
   if (playerHasSkill(p, 'mag_t5a')) {
-    p = { ...p, mana: Math.min(p.maxMana, p.mana + 4) };
+    const battleMana = getBattleMaxMana(p);
+    p = { ...p, mana: Math.min(battleMana, p.mana + 4) };
     log.push({ text: `Meditation restores 4 mana!`, type: 'heal' });
   }
-  // Mana Regeneration: restore 8% max mana
+  // Mana Regeneration: restore 8% max mana (uses wisdom-boosted max)
   if (playerHasSkill(p, 'mag_t9a')) {
-    const manaAmt = Math.floor(p.maxMana * 0.08);
-    p = { ...p, mana: Math.min(p.maxMana, p.mana + manaAmt) };
+    const battleMana = getBattleMaxMana(p);
+    const manaAmt = Math.floor(battleMana * 0.08);
+    p = { ...p, mana: Math.min(battleMana, p.mana + manaAmt) };
     log.push({ text: `Mana Regen restores ${manaAmt} mana!`, type: 'heal' });
   }
   // Dark Pact: sacrifice 5% HP per turn
@@ -228,6 +233,9 @@ export function checkDodge(player, battle, log) {
   }
   const dodgeChance = (() => {
     let chance = 0;
+    // Athletics: each point gives +0.5% dodge chance
+    const athletics = player.athletics || 0;
+    chance += athletics * 0.005;
     if (playerHasSkill(player, 'thf_t1a')) chance += 0.15;
     if (playerHasSkill(player, 'thf_t3a')) chance += 0.10;
     return chance;
