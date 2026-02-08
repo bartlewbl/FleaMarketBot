@@ -102,6 +102,33 @@ export async function declineInvite(inviteId) {
   return apiFetch(`/invites/${inviteId}/decline`, { method: 'POST' });
 }
 
+// Trades API
+export async function sendTrade(toUserId, offerItems, offerGold) {
+  return apiFetch('/trades/send', {
+    method: 'POST',
+    body: JSON.stringify({ toUserId, offerItems, offerGold }),
+  });
+}
+
+export async function getTrades() {
+  return apiFetch('/trades');
+}
+
+export async function acceptTrade(tradeId, returnItems, returnGold) {
+  return apiFetch(`/trades/${tradeId}/accept`, {
+    method: 'POST',
+    body: JSON.stringify({ returnItems, returnGold }),
+  });
+}
+
+export async function declineTrade(tradeId) {
+  return apiFetch(`/trades/${tradeId}/decline`, { method: 'POST' });
+}
+
+export async function cancelTrade(tradeId) {
+  return apiFetch(`/trades/${tradeId}/cancel`, { method: 'POST' });
+}
+
 // Daily Rewards API
 export async function getDailyRewardStatus() {
   return apiFetch('/daily-rewards');

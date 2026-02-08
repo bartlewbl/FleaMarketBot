@@ -40,7 +40,7 @@ export default function BattleResultScreen({ result, onContinue }) {
         <div className="result-levelup">
           LEVEL UP! Lv.{result.newLevel}
           {result.levelUps.map((g, i) => (
-            <div key={i}>HP+{g.hpGain} MP+{g.manaGain} ATK+{g.atkGain} DEF+{g.defGain}</div>
+            <div key={i}>HP+{g.hpGain} MP+{g.manaGain} ATK+{g.atkGain} DEF+{g.defGain}{g.charismaGain > 0 ? ` CHA+${g.charismaGain}` : ''}{g.wisdomGain > 0 ? ` WIS+${g.wisdomGain}` : ''}{g.athleticsGain > 0 ? ` ATH+${g.athleticsGain}` : ''}</div>
           ))}
         </div>
       )}

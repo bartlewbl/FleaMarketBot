@@ -109,6 +109,9 @@ export function getPlayerDef(player, battle) {
 
 export function getPlayerDodgeChance(player) {
   let chance = 0;
+  // Athletics: each point gives +0.5% dodge chance
+  const athletics = player.athletics || 0;
+  chance += athletics * 0.005;
   if (playerHasSkill(player, 'thf_t1a')) chance += 0.15;
   if (playerHasSkill(player, 'thf_t3a')) chance += 0.10;
   return chance;
@@ -119,6 +122,13 @@ export function getBattleMaxHp(player) {
   if (playerHasSkill(player, 'war_t3a')) maxHp = Math.floor(maxHp * 1.15);
   if (playerHasSkill(player, 'nec_t7a')) maxHp = Math.floor(maxHp * 1.1);
   return maxHp;
+}
+
+// Wisdom bonus: each point gives +2% max mana
+export function getBattleMaxMana(player) {
+  const wisdom = player.wisdom || 0;
+  const wisdomBonus = 1 + wisdom * 0.02;
+  return Math.floor(player.maxMana * wisdomBonus);
 }
 
 // Compute passive skill damage bonus for class skills and tree skills
@@ -145,6 +155,12 @@ export function getEffectiveDef(monsterDef, effect) {
   if (effect === 'pierce_50') return Math.floor(monsterDef * 0.5);
   if (effect === 'pierce') return Math.floor(monsterDef * 0.5);
   return monsterDef;
+}
+
+// Charisma price modifier: each point gives 1% better prices (capped at 25%)
+export function getCharismaPriceBonus(player) {
+  const charisma = player.charisma || 0;
+  return Math.min(0.25, charisma * 0.01);
 }
 
 // Check execute multiplier for conditional damage skills

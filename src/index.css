@@ -3341,6 +3341,291 @@ body {
   line-height: 1.8;
 }
 
+/* ===== BARTER SYSTEM ===== */
+
+/* Tab Switcher */
+.barter-tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.barter-tab {
+  flex: 1;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 6px 4px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: #6e6e9a;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.barter-tab:hover {
+  color: #b0b0d0;
+}
+
+.barter-tab.active {
+  background: rgba(118, 255, 223, 0.12);
+  color: #76ffdf;
+}
+
+/* Trade button on friend card */
+.barter-friend-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  background: rgba(80, 60, 0, 0.5);
+  color: #ffd700;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.barter-friend-btn:hover {
+  background: rgba(120, 90, 0, 0.7);
+  border-color: #ffd700;
+}
+
+/* Create trade section */
+.barter-create-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(14, 14, 32, 0.9);
+  border: 1px solid #27274f;
+  border-radius: 4px;
+}
+
+.barter-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.barter-close-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 67, 54, 0.4);
+  background: rgba(90, 26, 26, 0.5);
+  color: #ff6666;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barter-close-btn:hover {
+  background: rgba(120, 36, 36, 0.7);
+  border-color: #f44336;
+}
+
+.barter-pick-label {
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+/* Item selection grid */
+.barter-item-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.barter-item-badge {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid #27274f;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: left;
+}
+
+.barter-item-badge:hover {
+  background: rgba(30, 30, 60, 0.6);
+}
+
+.barter-item-badge.selected {
+  background: rgba(118, 255, 223, 0.08);
+  box-shadow: 0 0 6px rgba(118, 255, 223, 0.15);
+}
+
+.barter-item-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Gold input */
+.barter-gold-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.barter-gold-label {
+  font-size: 7px;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.barter-gold-input {
+  width: 60px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #2e2e4a;
+  color: #ffd700;
+  outline: none;
+  border-radius: 3px;
+}
+
+.barter-gold-input:focus {
+  border-color: #ffd700;
+}
+
+.barter-gold-avail {
+  font-size: 6px;
+  color: #6e6e9a;
+}
+
+.barter-summary {
+  font-size: 7px;
+  color: #76ffdf;
+  padding: 4px 0;
+}
+
+.barter-send-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 8px 12px;
+  background: rgba(26, 90, 26, 0.7);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  color: #7fff7f;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.barter-send-btn:hover:not(:disabled) {
+  background: rgba(36, 120, 36, 0.85);
+  border-color: #4caf50;
+}
+
+.barter-send-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Trade cards */
+.barter-trade-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(14, 14, 32, 0.9);
+  border: 1px solid #27274f;
+  border-left: 3px solid #ffa726;
+}
+
+.barter-trade-from {
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+.barter-trade-from strong {
+  color: #f0f0ff;
+}
+
+.barter-trade-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.barter-trade-items-label {
+  font-size: 6px;
+  color: #6e6e9a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.barter-trade-item {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 3px 6px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 2px solid #27274f;
+}
+
+.barter-trade-gold {
+  font-size: 7px;
+  color: #ffd700;
+}
+
+.barter-cancel-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(244, 67, 54, 0.4);
+  background: rgba(90, 26, 26, 0.5);
+  color: #ff6666;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.barter-cancel-btn:hover {
+  background: rgba(120, 36, 36, 0.7);
+  border-color: #f44336;
+}
+
+/* Accept trade section */
+.barter-accept-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #1e1e3c;
+}
+
+.barter-accept-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.barter-confirm-btn {
+  width: auto !important;
+  border-radius: 3px !important;
+  padding: 4px 10px;
+  font-size: 7px;
+}
+
 /* Safe area for notched phones */
 @supports (padding: env(safe-area-inset-top)) {
   .battle-actions, .explore-actions {

@@ -56,6 +56,20 @@ db.exec(`
     FOREIGN KEY (to_user_id) REFERENCES users(id),
     UNIQUE(from_user_id, to_user_id)
   );
+
+  CREATE TABLE IF NOT EXISTS trades (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    from_user_id INTEGER NOT NULL,
+    to_user_id INTEGER NOT NULL,
+    offer_items TEXT NOT NULL DEFAULT '[]',
+    offer_gold INTEGER NOT NULL DEFAULT 0,
+    return_items TEXT NOT NULL DEFAULT '[]',
+    return_gold INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (from_user_id) REFERENCES users(id),
+    FOREIGN KEY (to_user_id) REFERENCES users(id)
+  );
 `);
 
 export default db;
