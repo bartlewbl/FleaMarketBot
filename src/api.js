@@ -101,3 +101,12 @@ export async function acceptInvite(inviteId) {
 export async function declineInvite(inviteId) {
   return apiFetch(`/invites/${inviteId}/decline`, { method: 'POST' });
 }
+
+// Daily Rewards API
+export async function getDailyRewardStatus() {
+  return apiFetch('/daily-rewards');
+}
+
+export async function claimDailyReward() {
+  return apiFetch('/daily-rewards/claim', { method: 'POST' });
+}

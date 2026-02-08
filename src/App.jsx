@@ -215,6 +215,7 @@ export default function App() {
                 onEnterLocation={actions.enterLocation}
                 onBuy={actions.buyItem}
                 canRest={canRest}
+                onClaimDailyReward={actions.claimDailyReward}
               />
             )}
 

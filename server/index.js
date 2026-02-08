@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import authRouter from './routes/auth.js';
 import saveRouter from './routes/save.js';
 import invitesRouter from './routes/invites.js';
+import dailyRewardsRouter from './routes/dailyRewards.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/api/auth', authRouter);
 app.use('/api/save', saveRouter);
 app.use('/api/invites', invitesRouter);
+app.use('/api/daily-rewards', dailyRewardsRouter);
 
 // Serve static frontend in production
 const distPath = join(__dirname, '..', 'dist');
