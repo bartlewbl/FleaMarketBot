@@ -169,6 +169,7 @@ export default function App() {
   }
 
   const navLocked = state.screen === 'battle' || state.screen === 'battle-result' || state.screen === 'boss-confirm';
+  const hidePanels = navLocked;
   const canRest = !navLocked && (state.screen === 'town' || state.screen === 'locations' || state.screen === 'regions');
 
   return (
@@ -183,34 +184,38 @@ export default function App() {
 
       <div className="ui-overlay">
         <div className="ui-main">
-          <SidePanel
-            collapsed={isMenuCollapsed}
-            onToggle={() => setIsMenuCollapsed(v => !v)}
-            screen={state.screen}
-            currentLocation={state.currentLocation}
-            energy={state.energy}
-            energyMax={ENERGY_MAX}
-            energyCost={ENERGY_COST_PER_TRIP}
-            hp={state.player.hp}
-            maxHp={state.player.maxHp}
-            mana={state.player.mana}
-            maxMana={state.player.maxMana}
-            playerName={state.player.name}
-            playerLevel={state.player.level}
-            onGoToTown={actions.goToTown}
-            onExplore={() => actions.showScreen('regions')}
-            onInventory={() => actions.showScreen('inventory')}
-            onShop={() => actions.showScreen('shop')}
-            onMarket={() => actions.showScreen('market')}
-            onBase={() => actions.showScreen('base')}
-            onJournal={() => actions.showScreen('journal')}
-            onRest={actions.restAtInn}
-            navLocked={navLocked}
-            gold={state.player.gold}
-            onProfile={() => actions.showScreen('profile')}
-            onSkills={() => actions.showScreen('skills')}
-            canRest={canRest}
-          />
+          {!hidePanels && (
+            <SidePanel
+              collapsed={isMenuCollapsed}
+              onToggle={() => setIsMenuCollapsed(v => !v)}
+              screen={state.screen}
+              currentLocation={state.currentLocation}
+              energy={state.energy}
+              energyMax={ENERGY_MAX}
+              energyCost={ENERGY_COST_PER_TRIP}
+              exp={state.player.exp}
+              expToLevel={state.player.expToLevel}
+              hp={state.player.hp}
+              maxHp={state.player.maxHp}
+              mana={state.player.mana}
+              maxMana={state.player.maxMana}
+              playerName={state.player.name}
+              playerLevel={state.player.level}
+              onGoToTown={actions.goToTown}
+              onExplore={() => actions.showScreen('regions')}
+              onInventory={() => actions.showScreen('inventory')}
+              onShop={() => actions.showScreen('shop')}
+              onMarket={() => actions.showScreen('market')}
+              onBase={() => actions.showScreen('base')}
+              onJournal={() => actions.showScreen('journal')}
+              onRest={actions.restAtInn}
+              navLocked={navLocked}
+              gold={state.player.gold}
+              onProfile={() => actions.showScreen('profile')}
+              onSkills={() => actions.showScreen('skills')}
+              canRest={canRest}
+            />
+          )}
 
           <div className="screen-stage">
             {state.screen === 'town' && (
@@ -378,12 +383,14 @@ export default function App() {
             )}
           </div>
 
-          <RightPanel
-            collapsed={isRightPanelCollapsed}
-            onToggle={() => setIsRightPanelCollapsed(v => !v)}
-            player={state.player}
-            onTradeComplete={actions.applyTrade}
-          />
+          {!hidePanels && (
+            <RightPanel
+              collapsed={isRightPanelCollapsed}
+              onToggle={() => setIsRightPanelCollapsed(v => !v)}
+              player={state.player}
+              onTradeComplete={actions.applyTrade}
+            />
+          )}
         </div>
 
         {state.message && (

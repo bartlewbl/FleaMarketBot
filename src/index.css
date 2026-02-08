@@ -316,6 +316,62 @@ body {
   color: #a2b6ff;
 }
 
+.dock-wheels {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.dock-wheel-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.wheel-label {
+  font-size: 7px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.wheel-label.energy-label {
+  color: #76ffdf;
+}
+
+.wheel-label.level-label {
+  color: #ffd700;
+}
+
+.level-ring {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(#ffd700 0%, rgba(255, 215, 0, 0.15) 0% 100%);
+}
+
+.level-core {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(8, 18, 32, 0.95) 0%, rgba(6, 12, 20, 0.95) 60%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #ffd700;
+}
+
+.level-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .energy-wheel {
   display: flex;
   align-items: center;

@@ -4,6 +4,8 @@ export default function CharacterDock({
   energy,
   energyMax,
   energyCost,
+  exp,
+  expToLevel,
   hp,
   maxHp,
   mana,
@@ -22,6 +24,14 @@ export default function CharacterDock({
   const strokeStyle = {
     background: `conic-gradient(#76ffdf ${pct}%, rgba(118, 255, 223, 0.15) ${pct}% 100%)`,
   };
+
+  const safeExpToLevel = expToLevel ?? 1;
+  const currentExp = Math.max(0, Math.min(exp ?? 0, safeExpToLevel));
+  const expPct = (currentExp / safeExpToLevel) * 100;
+  const levelStrokeStyle = {
+    background: `conic-gradient(#ffd700 ${expPct}%, rgba(255, 215, 0, 0.15) ${expPct}% 100%)`,
+  };
+
   const heroName = playerName || 'Hero';
   const heroLevel = playerLevel ?? 1;
   const hpValue = `${Math.max(0, hp ?? 0)}/${Math.max(1, maxHp ?? 1)}`;
@@ -42,16 +52,24 @@ export default function CharacterDock({
         <div className="dock-hero-meta">Gold: {goldValue}</div>
       </div>
 
-      <div className="energy-wheel">
-        <div className="energy-ring" style={strokeStyle}>
-          <div className="energy-core">
-            <div className="energy-value">{current}</div>
-            <div className="energy-max">/ {safeMax}</div>
+      <div className="dock-wheels">
+        <div className="dock-wheel-item">
+          <div className="energy-ring" style={strokeStyle}>
+            <div className="energy-core">
+              <div className="energy-value">{current}</div>
+              <div className="energy-max">/ {safeMax}</div>
+            </div>
           </div>
+          <div className="wheel-label energy-label">Energy</div>
         </div>
-        <div className="energy-meta">
-          <div className="energy-label">Energy</div>
-          <div className="energy-cost">-{energyCost ?? 0} per route</div>
+
+        <div className="dock-wheel-item">
+          <div className="level-ring" style={levelStrokeStyle}>
+            <div className="level-core">
+              <div className="level-value">{heroLevel}</div>
+            </div>
+          </div>
+          <div className="wheel-label level-label">Level</div>
         </div>
       </div>
 

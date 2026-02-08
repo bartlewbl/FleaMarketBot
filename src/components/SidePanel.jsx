@@ -8,6 +8,8 @@ export default function SidePanel({
   energy,
   energyMax,
   energyCost,
+  exp,
+  expToLevel,
   hp,
   maxHp,
   mana,
@@ -137,6 +139,8 @@ export default function SidePanel({
             energy={energy}
             energyMax={energyMax}
             energyCost={energyCost}
+            exp={exp}
+            expToLevel={expToLevel}
             hp={hp}
             maxHp={maxHp}
             mana={mana}
