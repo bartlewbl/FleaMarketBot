@@ -3846,3 +3846,953 @@ body {
   padding: 20px;
   text-align: center;
 }
+
+/* ============================================================
+   FLEA MARKET
+   ============================================================ */
+.screen-market {
+  justify-content: flex-start;
+  padding-top: 45px;
+  gap: 0;
+  max-width: 640px;
+  width: auto;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+/* Header */
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 4px 8px;
+}
+
+.market-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.market-title {
+  font-size: 14px;
+  color: #ffd700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+}
+
+.market-subtitle {
+  font-size: 7px;
+  color: #6e6e9a;
+}
+
+.market-wallet {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.market-wallet-gold {
+  font-size: 11px;
+  color: #ffd700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.25);
+}
+
+.market-wallet-inv {
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+/* Fee Info Banner */
+.market-fee-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  background: rgba(40, 35, 10, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-radius: 3px;
+  font-size: 6px;
+  color: #b0a060;
+  margin-bottom: 8px;
+}
+
+.market-fee-divider {
+  color: #555;
+}
+
+/* Tabs */
+.market-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid #2a2a4a;
+  margin-bottom: 8px;
+}
+
+.market-tab {
+  flex: 1;
+  padding: 10px 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6e6e9a;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -2px;
+}
+
+.market-tab:hover {
+  color: #b0b0d0;
+}
+
+.market-tab.active {
+  color: #ffd700;
+  border-bottom-color: #ffd700;
+}
+
+/* Messages */
+.market-message {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 7px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeIn 0.2s;
+}
+
+.market-error {
+  background: rgba(80, 20, 20, 0.7);
+  border: 1px solid rgba(255, 80, 80, 0.4);
+  color: #ff8888;
+}
+
+.market-success {
+  background: rgba(20, 60, 20, 0.7);
+  border: 1px solid rgba(80, 200, 80, 0.4);
+  color: #88ff88;
+}
+
+.market-msg-dismiss {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 0 4px;
+  opacity: 0.6;
+}
+
+.market-msg-dismiss:hover {
+  opacity: 1;
+}
+
+/* Category Bar */
+.market-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+  padding: 0 2px 8px;
+}
+
+.market-cat-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  color: #7e7ea0;
+  background: rgba(20, 20, 40, 0.8);
+  border: 1px solid #2a2a4a;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-cat-btn:hover {
+  color: #b0b0d0;
+  border-color: #4a4a6a;
+  background: rgba(30, 30, 55, 0.9);
+}
+
+.market-cat-btn.active {
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(60, 50, 15, 0.5);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.1);
+}
+
+.market-cat-icon {
+  font-size: 8px;
+}
+
+.market-cat-label {
+  white-space: nowrap;
+}
+
+/* Search & Sort Toolbar */
+.market-toolbar {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  padding: 0 2px 8px;
+  align-items: center;
+}
+
+.market-search-form {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+}
+
+.market-search-input {
+  flex: 1;
+  padding: 7px 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  background: rgba(10, 10, 25, 0.9);
+  border: 1px solid #2a2a4a;
+  border-radius: 3px;
+  color: #e0e0e0;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.market-search-input:focus {
+  border-color: #ffd700;
+}
+
+.market-search-input::placeholder {
+  color: #4a4a6a;
+}
+
+.market-search-btn,
+.market-clear-btn {
+  padding: 7px 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  text-transform: uppercase;
+  background: rgba(26, 26, 60, 0.9);
+  border: 1px solid #3a3a5a;
+  border-radius: 3px;
+  color: #b0b0d0;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-search-btn:hover,
+.market-clear-btn:hover {
+  background: rgba(36, 36, 75, 0.95);
+  border-color: #5a5a8a;
+}
+
+.market-sort-select {
+  padding: 7px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  background: rgba(10, 10, 25, 0.9);
+  border: 1px solid #2a2a4a;
+  border-radius: 3px;
+  color: #b0b0d0;
+  cursor: pointer;
+  outline: none;
+}
+
+.market-sort-select:focus {
+  border-color: #ffd700;
+}
+
+/* Listings Grid */
+.market-listings {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.market-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  font-size: 8px;
+  color: #6e6e9a;
+}
+
+.market-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 8px;
+}
+
+.market-empty-text {
+  font-size: 9px;
+  color: #6e6e9a;
+}
+
+.market-empty-hint {
+  font-size: 7px;
+  color: #4a4a6a;
+}
+
+.market-results-count {
+  text-align: center;
+  font-size: 6px;
+  color: #5e5e8a;
+  padding: 8px 0 4px;
+}
+
+/* Market Cards */
+.market-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(14, 14, 32, 0.9);
+  border: 1px solid #2a2a4a;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 10px 12px;
+  gap: 10px;
+  transition: border-color 0.15s, background 0.15s, opacity 0.15s;
+}
+
+.market-card:hover {
+  background: rgba(22, 22, 48, 0.95);
+}
+
+.market-card.unaffordable {
+  opacity: 0.5;
+}
+
+/* Rarity left-border colors on market cards */
+.market-card.rarity-common { border-left-color: #888; }
+.market-card.rarity-uncommon { border-left-color: #4fc3f7; }
+.market-card.rarity-rare { border-left-color: #ab47bc; }
+.market-card.rarity-epic { border-left-color: #ffa726; }
+.market-card.rarity-legendary {
+  border-left-color: #ffd700;
+  box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.06);
+}
+
+.market-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.market-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.market-card-category {
+  font-size: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #5e5e8a;
+}
+
+.market-card-level {
+  font-size: 6px;
+  color: #8e8eb2;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.market-card-name {
+  font-size: 9px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.market-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.market-rarity-badge {
+  font-size: 6px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.market-rarity-badge.rarity-uncommon { border-color: rgba(79, 195, 247, 0.3); }
+.market-rarity-badge.rarity-rare { border-color: rgba(171, 71, 188, 0.3); }
+.market-rarity-badge.rarity-epic { border-color: rgba(255, 167, 38, 0.3); }
+.market-rarity-badge.rarity-legendary {
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.market-card-stats {
+  font-size: 7px;
+  color: #7cfc7c;
+}
+
+.market-card-seller {
+  font-size: 6px;
+  color: #5e5e8a;
+}
+
+.market-card-seller strong {
+  color: #8e8eb2;
+}
+
+.market-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.market-card-price {
+  font-size: 11px;
+  color: #ffd700;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.2);
+}
+
+.market-buy-btn {
+  padding: 7px 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  text-transform: uppercase;
+  background: rgba(26, 90, 26, 0.7);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 4px;
+  color: #7fff7f;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-buy-btn:hover:not(:disabled) {
+  background: rgba(36, 120, 36, 0.85);
+  border-color: #4caf50;
+}
+
+.market-buy-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.market-buy-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Confirm buy inline */
+.market-confirm-row {
+  display: flex;
+  gap: 4px;
+}
+
+.market-confirm-btn {
+  padding: 6px 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  background: rgba(26, 90, 26, 0.8);
+  border: 1px solid #4caf50;
+  border-radius: 3px;
+  color: #7fff7f;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-confirm-btn:hover {
+  background: rgba(36, 120, 36, 0.9);
+}
+
+.market-cancel-confirm-btn {
+  padding: 6px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  background: rgba(60, 20, 20, 0.8);
+  border: 1px solid rgba(200, 60, 60, 0.5);
+  border-radius: 3px;
+  color: #ff8888;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-cancel-confirm-btn:hover {
+  background: rgba(80, 30, 30, 0.9);
+}
+
+/* Cancel listing button */
+.market-cancel-btn {
+  padding: 6px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  text-transform: uppercase;
+  background: rgba(60, 30, 20, 0.7);
+  border: 1px solid rgba(200, 100, 60, 0.4);
+  border-radius: 3px;
+  color: #ffaa77;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-cancel-btn:hover:not(:disabled) {
+  background: rgba(80, 40, 25, 0.85);
+  border-color: rgba(200, 100, 60, 0.7);
+}
+
+.market-cancel-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Card status badges */
+.market-card-status {
+  font-size: 6px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.market-card-status.active {
+  background: rgba(26, 90, 26, 0.4);
+  border: 1px solid rgba(76, 175, 80, 0.4);
+  color: #7fff7f;
+}
+
+.market-card-status.sold {
+  background: rgba(90, 70, 26, 0.4);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #ffd700;
+}
+
+.market-card-sold-info {
+  font-size: 6px;
+  color: #5e5e8a;
+}
+
+.market-card-sold-info strong {
+  color: #8e8eb2;
+}
+
+.market-card-proceeds {
+  font-size: 6px;
+  color: #7cfc7c;
+}
+
+/* My Listings section titles */
+.market-section {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.market-section-title {
+  font-size: 9px;
+  color: #b0b0d0;
+  padding: 8px 4px;
+  border-bottom: 1px solid #2a2a4a;
+  margin-bottom: 8px;
+}
+
+.market-my-listings {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.market-my-card {
+  background: rgba(18, 18, 38, 0.9);
+}
+
+.market-sold-card {
+  opacity: 0.7;
+  background: rgba(14, 14, 28, 0.8);
+}
+
+/* ---- Sell Tab ---- */
+.market-sell {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 2px;
+}
+
+.market-sell-header {
+  padding: 8px 4px 12px;
+}
+
+.market-sell-title {
+  font-size: 9px;
+  color: #b0b0d0;
+}
+
+.market-sell-hint {
+  font-size: 7px;
+  color: #5e5e8a;
+  margin-top: 3px;
+}
+
+/* Sell Inventory List */
+.market-sell-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.market-sell-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(14, 14, 32, 0.85);
+  border: 1px solid #2a2a4a;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  gap: 8px;
+}
+
+.market-sell-row:hover {
+  background: rgba(25, 25, 55, 0.95);
+  border-color: #3a3a5a;
+}
+
+/* Rarity border on sell rows */
+.market-sell-row.rarity-common { border-left-color: #888; }
+.market-sell-row.rarity-uncommon { border-left-color: #4fc3f7; }
+.market-sell-row.rarity-rare { border-left-color: #ab47bc; }
+.market-sell-row.rarity-epic { border-left-color: #ffa726; }
+.market-sell-row.rarity-legendary {
+  border-left-color: #ffd700;
+  box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.05);
+}
+
+.market-sell-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.market-sell-row-name {
+  font-size: 8px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.market-sell-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 6px;
+  color: #8e8eb2;
+}
+
+.market-sell-row-stats {
+  color: #7cfc7c;
+}
+
+.market-sell-row-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.market-sell-row-npc {
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+.market-sell-row-arrow {
+  font-size: 10px;
+  color: #ffd700;
+}
+
+/* Sell Form */
+.market-sell-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px;
+}
+
+.market-sell-preview-header {
+  font-size: 8px;
+  color: #8e8eb2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.market-sell-item-card {
+  background: rgba(18, 18, 40, 0.9);
+  border: 1px solid #2a2a4a;
+  border-left: 3px solid #555;
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.market-sell-item-card.rarity-common { border-left-color: #888; }
+.market-sell-item-card.rarity-uncommon { border-left-color: #4fc3f7; }
+.market-sell-item-card.rarity-rare { border-left-color: #ab47bc; }
+.market-sell-item-card.rarity-epic { border-left-color: #ffa726; }
+.market-sell-item-card.rarity-legendary {
+  border-left-color: #ffd700;
+  box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.06);
+}
+
+.market-sell-item-name {
+  font-size: 10px;
+  color: #fff;
+}
+
+.market-sell-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+.market-sell-item-category {
+  font-size: 7px;
+  color: #6e6e9a;
+}
+
+.market-sell-item-suggested {
+  font-size: 7px;
+  color: #8e8e70;
+}
+
+/* Pricing Section */
+.market-sell-pricing {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.market-sell-label {
+  font-size: 8px;
+  color: #b0b0d0;
+}
+
+.market-price-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.market-price-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  background: rgba(10, 10, 25, 0.95);
+  border: 2px solid #2a2a4a;
+  border-radius: 3px;
+  color: #ffd700;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.market-price-input:focus {
+  border-color: #ffd700;
+}
+
+.market-price-suffix {
+  font-size: 8px;
+  color: #8e8eb2;
+}
+
+/* Price Breakdown */
+.market-price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(10, 10, 25, 0.7);
+  border: 1px solid #1e1e3e;
+  border-radius: 3px;
+  padding: 10px;
+}
+
+.market-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7px;
+  color: #8e8eb2;
+}
+
+.market-price-row.market-price-total {
+  border-top: 1px solid #2a2a4a;
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
+.market-price-cost {
+  color: #ff8888;
+}
+
+.market-price-earn {
+  color: #7cfc7c;
+  font-size: 8px;
+}
+
+/* Sell Buttons */
+.market-sell-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.market-list-btn {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  background: rgba(26, 90, 26, 0.7);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 4px;
+  color: #7fff7f;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-list-btn:hover:not(:disabled) {
+  background: rgba(36, 120, 36, 0.85);
+  border-color: #4caf50;
+}
+
+.market-list-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.market-list-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.market-sell-cancel-btn {
+  padding: 10px 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  background: rgba(40, 20, 20, 0.7);
+  border: 1px solid rgba(200, 80, 80, 0.4);
+  border-radius: 4px;
+  color: #ff9999;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.market-sell-cancel-btn:hover {
+  background: rgba(60, 30, 30, 0.85);
+  border-color: rgba(200, 80, 80, 0.6);
+}
+
+/* Market Sell Inventory */
+.market-sell-inventory {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Footer */
+.market-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding-top: 10px;
+}
+
+.market-refresh-btn {
+  font-size: 8px;
+  padding: 10px 16px;
+}
+
+/* Locked state */
+.market-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 12px;
+  text-align: center;
+}
+
+.market-locked-icon {
+  font-size: 32px;
+  opacity: 0.5;
+}
+
+.market-locked-title {
+  font-size: 12px;
+  color: #8e8eb2;
+}
+
+.market-locked-desc {
+  font-size: 8px;
+  color: #6e6e9a;
+  line-height: 1.8;
+}
+
+.market-locked-desc strong {
+  color: #ffd700;
+}
+
+/* Browse section */
+.market-browse {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+}
