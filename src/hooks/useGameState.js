@@ -301,6 +301,23 @@ function gameReducer(state, action) {
     case 'EXPLORE_STEP': {
       const loc = state.currentLocation;
       if (!loc) return state;
+
+      // Drain energy each time the player continues exploring
+      const nowExplore = Date.now();
+      const exploreRegen = regenEnergy(state.energy, state.lastEnergyUpdate, nowExplore);
+      if (exploreRegen.energy < ENERGY_COST_PER_TRIP) {
+        return {
+          ...state,
+          energy: exploreRegen.energy,
+          lastEnergyUpdate: exploreRegen.lastEnergyUpdate,
+          screen: 'town',
+          currentLocation: null,
+          message: 'Too exhausted to continue. Wait for energy to recover.',
+        };
+      }
+      const exploreEnergy = exploreRegen.energy - ENERGY_COST_PER_TRIP;
+      const exploreLastUpdate = exploreRegen.lastEnergyUpdate;
+
       const texts = EXPLORE_TEXTS[loc.bgKey] || EXPLORE_TEXTS.street;
       const text = texts[Math.floor(Math.random() * texts.length)];
 
@@ -312,6 +329,8 @@ function gameReducer(state, action) {
             ...state, screen: 'boss-confirm',
             exploreText: text,
             pendingBoss: boss,
+            energy: exploreEnergy,
+            lastEnergyUpdate: exploreLastUpdate,
           };
         }
       }
@@ -322,6 +341,8 @@ function gameReducer(state, action) {
         return {
           ...state, screen: 'battle',
           exploreText: text,
+          energy: exploreEnergy,
+          lastEnergyUpdate: exploreLastUpdate,
           battle: {
             monster, isPlayerTurn: true, defending: false,
             poisonTurns: 0, atkDebuff: 0, defDebuff: 0, animating: false,
@@ -370,7 +391,7 @@ function gameReducer(state, action) {
         newStats = addStat(newStats, 'goldEarned', goldFound);
         newTasks = incrementTaskProgress(newTasks, 'goldEarned', goldFound);
       }
-      return { ...state, exploreText: newText, player: newPlayer, stats: newStats, tasks: newTasks };
+      return { ...state, exploreText: newText, player: newPlayer, stats: newStats, tasks: newTasks, energy: exploreEnergy, lastEnergyUpdate: exploreLastUpdate };
     }
 
     case 'BATTLE_PLAYER_ATTACK': {
