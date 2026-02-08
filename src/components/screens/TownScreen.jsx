@@ -37,7 +37,7 @@ const statLine = (item) => {
   return stats.length ? stats.join(' ') : 'No bonuses';
 };
 
-export default function TownScreen({ player, energy, energyCost, onRest, onEnterLocation, onBuy, canRest, onClaimDailyReward }) {
+export default function TownScreen({ player, energy, energyCost, onRest, onEnterLocation, onBuy, canRest, onClaimDailyReward, onGoToBase }) {
   const equipment = player?.equipment || {};
   const atkBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.atk || 0), 0);
   const defBonus = Object.values(equipment).reduce((sum, item) => sum + (item?.def || 0), 0);
@@ -173,6 +173,18 @@ export default function TownScreen({ player, energy, energyCost, onRest, onEnter
                   ? `Restore HP & Mana \u00b7 10g`
                   : 'No healing needed'}
               </div>
+            </div>
+          </button>
+
+          {/* Base access */}
+          <button
+            className="town-quick-action town-quick-base"
+            onClick={onGoToBase}
+          >
+            <div className="town-quick-icon base-icon">&#9961;</div>
+            <div className="town-quick-info">
+              <div className="town-quick-label">My Base</div>
+              <div className="town-quick-desc">Build, craft, and manage your base</div>
             </div>
           </button>
         </section>

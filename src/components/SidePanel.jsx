@@ -20,6 +20,7 @@ export default function SidePanel({
   onInventory,
   onShop,
   onMarket,
+  onBase,
   onJournal,
   onRest,
   navLocked,
@@ -66,6 +67,14 @@ export default function SidePanel({
       description: 'Player trading hub',
       onClick: onMarket,
       active: screen === 'market',
+      disabled: navLocked,
+    },
+    {
+      id: 'base',
+      label: 'Base',
+      description: 'Build and manage your base',
+      onClick: onBase,
+      active: screen === 'base',
       disabled: navLocked,
     },
     {

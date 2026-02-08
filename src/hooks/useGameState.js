@@ -5,7 +5,8 @@ import { calcDamage, getClassData, playerHasSkill, getEffectiveManaCost, getPlay
 import { applySkillEffect } from '../engine/skillEffects';
 import { applyAttackPassives, applySkillPassives, applyLifeTap, tryBladeDance, tryLuckyStrike, applyTurnStartPassives, applyDamageReduction, applyManaShield, checkDodge, applySurvivalPassives, applyCursedBlood } from '../engine/passives';
 import { scaleMonster, scaleBoss } from '../engine/scaling';
-import { rollDrop, generateItem, generateRewardItem } from '../engine/loot';
+import { rollDrop, generateItem, generateRewardItem, rollMaterialDrop, generateCraftedItem, generateCampLoot } from '../engine/loot';
+import { createInitialBase, BUILDINGS, BREWERY_RECIPES, SMELTER_RECIPES, WORKSHOP_RECIPES, BUILDING_MATERIALS, FUEL_ITEMS, getChamberBuffs, getInnExpBonus, createMaterialItem, SPARRING_DUMMIES } from '../data/baseData';
 import { saveGame } from '../api';
 import {
   createInitialStats, createInitialTaskProgress,
@@ -61,6 +62,7 @@ function createInitialState() {
     pendingBoss: null,
     stats: createInitialStats(),
     tasks: createInitialTaskProgress(),
+    base: createInitialBase(),
   };
 }
 
@@ -180,6 +182,7 @@ function extractSaveData(state) {
     currentRegionId: state.currentRegion?.id || null,
     stats: state.stats,
     tasks: state.tasks,
+    base: state.base,
   };
 }
 
@@ -187,13 +190,13 @@ function extractSaveData(state) {
 function gameReducer(state, action) {
   switch (action.type) {
     case 'LOAD_SAVE': {
-      const { player, screen, energy, lastEnergyUpdate, currentRegionId, stats, tasks } = action.saveData || {};
-      const base = createInitialState();
+      const { player, screen, energy, lastEnergyUpdate, currentRegionId, stats, tasks, base: savedBase } = action.saveData || {};
+      const baseState = createInitialState();
       const regen = regenEnergy(
-        energy ?? base.energy,
-        lastEnergyUpdate ?? base.lastEnergyUpdate,
+        energy ?? baseState.energy,
+        lastEnergyUpdate ?? baseState.lastEnergyUpdate,
       );
-      const mergedPlayer = { ...base.player, ...player };
+      const mergedPlayer = { ...baseState.player, ...player };
       // If the player has no custom name, send them to username entry
       // If they have a name but no class, send them to class select
       let resolvedScreen = screen || 'town';
@@ -202,8 +205,9 @@ function gameReducer(state, action) {
       const savedRegion = currentRegionId ? REGIONS.find(r => r.id === currentRegionId) : null;
       const mergedStats = { ...createInitialStats(), ...stats };
       const mergedTasks = refreshTaskCycles({ ...createInitialTaskProgress(), ...tasks });
+      const mergedBase = { ...createInitialBase(), ...savedBase };
       return {
-        ...base,
+        ...baseState,
         screen: resolvedScreen,
         player: mergedPlayer,
         energy: regen.energy,
@@ -211,6 +215,7 @@ function gameReducer(state, action) {
         currentRegion: savedRegion,
         stats: mergedStats,
         tasks: mergedTasks,
+        base: mergedBase,
       };
     }
 
@@ -809,15 +814,19 @@ function gameReducer(state, action) {
 
     case 'REST_AT_INN': {
       if (state.player.gold < 10) return { ...state, message: 'Not enough gold! (10g needed)' };
+      const chamberBuffs = getChamberBuffs(state.base);
+      const healBonus = chamberBuffs.healBonus || 0;
       const newStats = addStat(state.stats, 'goldSpent', 10);
+      const maxHpWithBuff = state.player.maxHp + (chamberBuffs.hpBuff || 0);
+      const maxManaWithBuff = state.player.maxMana + (chamberBuffs.manaBuff || 0);
       return {
-        ...state, message: 'HP restored!',
+        ...state, message: healBonus > 0 ? `HP restored! (+${Math.round(healBonus * 100)}% chamber bonus)` : 'HP restored!',
         stats: newStats,
         player: {
           ...state.player,
           gold: state.player.gold - 10,
-          hp: state.player.maxHp,
-          mana: state.player.maxMana,
+          hp: maxHpWithBuff,
+          mana: maxManaWithBuff,
         },
       };
     }
@@ -876,6 +885,20 @@ function gameReducer(state, action) {
           energy: currentEnergy + restored,
           lastEnergyUpdate: now,
           message: `Restored ${restored} energy!`,
+        };
+      }
+      // Material items: "use" stores them in base
+      if (item.type === 'material') {
+        const matId = item.materialId;
+        const qty = item.stackQuantity || 1;
+        const mats = { ...state.base.materials };
+        mats[matId] = (mats[matId] || 0) + qty;
+        const p = { ...state.player, inventory: state.player.inventory.filter(i => i.id !== item.id) };
+        return {
+          ...state,
+          player: p,
+          base: { ...state.base, materials: mats },
+          message: `Stored ${qty}x ${item.name} in base.`,
         };
       }
       return state;
@@ -1057,6 +1080,580 @@ function gameReducer(state, action) {
       return { ...state, energy, lastEnergyUpdate };
     }
 
+    // ========== BASE BUILDING SYSTEM ==========
+
+    case 'BASE_BUILD': {
+      const buildingDef = BUILDINGS[action.buildingId];
+      if (!buildingDef) return state;
+      if (state.base.buildings[action.buildingId]?.built) return { ...state, message: 'Already built!' };
+      if (state.player.level < buildingDef.levelReq) return { ...state, message: `Requires level ${buildingDef.levelReq}!` };
+
+      const cost = buildingDef.buildCost;
+      if (state.player.gold < cost.gold) return { ...state, message: `Need ${cost.gold}g! (have ${state.player.gold}g)` };
+
+      const mats = { ...state.base.materials };
+      for (const [matId, qty] of Object.entries(cost.materials || {})) {
+        if ((mats[matId] || 0) < qty) {
+          const matName = BUILDING_MATERIALS[matId]?.name || matId;
+          return { ...state, message: `Need ${qty}x ${matName}! (have ${mats[matId] || 0})` };
+        }
+      }
+
+      // Deduct costs
+      for (const [matId, qty] of Object.entries(cost.materials || {})) {
+        mats[matId] = (mats[matId] || 0) - qty;
+      }
+
+      const newBase = {
+        ...state.base,
+        materials: mats,
+        buildings: { ...state.base.buildings, [action.buildingId]: { built: true, level: 1 } },
+      };
+
+      return {
+        ...state,
+        base: newBase,
+        player: { ...state.player, gold: state.player.gold - cost.gold },
+        message: `${buildingDef.name} constructed!`,
+      };
+    }
+
+    case 'BASE_ADD_FUEL': {
+      const item = action.item;
+      if (!item || item.type !== 'material' || !item.isFuel) return { ...state, message: 'This item cannot be used as fuel!' };
+      const fuelData = FUEL_ITEMS[item.materialId];
+      if (!fuelData) return { ...state, message: 'Not a valid fuel!' };
+
+      const p = { ...state.player, inventory: state.player.inventory.filter(i => i.id !== item.id) };
+      const now = Date.now();
+      let currentFuel = state.base.fuel || 0;
+      // Recalculate elapsed fuel
+      if (state.base.fuelLastUpdate) {
+        const elapsed = (now - state.base.fuelLastUpdate) / 60000; // minutes
+        currentFuel = Math.max(0, currentFuel - elapsed);
+      }
+
+      return {
+        ...state,
+        player: p,
+        base: {
+          ...state.base,
+          fuel: currentFuel + fuelData.burnTime,
+          fuelLastUpdate: now,
+        },
+        message: `Added ${fuelData.name}! +${fuelData.burnTime} min fuel.`,
+      };
+    }
+
+    case 'BASE_ADD_FUEL_FROM_STORAGE': {
+      const matId = action.materialId;
+      const fuelData = FUEL_ITEMS[matId];
+      if (!fuelData) return { ...state, message: 'Not a valid fuel!' };
+      const mats = { ...state.base.materials };
+      if ((mats[matId] || 0) < 1) return { ...state, message: 'No fuel materials in storage!' };
+      mats[matId] = (mats[matId] || 0) - 1;
+
+      const now = Date.now();
+      let currentFuel = state.base.fuel || 0;
+      if (state.base.fuelLastUpdate) {
+        const elapsed = (now - state.base.fuelLastUpdate) / 60000;
+        currentFuel = Math.max(0, currentFuel - elapsed);
+      }
+
+      return {
+        ...state,
+        base: { ...state.base, materials: mats, fuel: currentFuel + fuelData.burnTime, fuelLastUpdate: now },
+        message: `Burned ${fuelData.name}! +${fuelData.burnTime} min fuel.`,
+      };
+    }
+
+    case 'BASE_STORE_MATERIAL': {
+      const item = action.item;
+      if (!item || item.type !== 'material') return state;
+      const matId = item.materialId;
+      const qty = item.stackQuantity || 1;
+      const mats = { ...state.base.materials };
+      mats[matId] = (mats[matId] || 0) + qty;
+      const p = { ...state.player, inventory: state.player.inventory.filter(i => i.id !== item.id) };
+      return {
+        ...state,
+        player: p,
+        base: { ...state.base, materials: mats },
+        message: `Stored ${qty}x ${item.name}.`,
+      };
+    }
+
+    case 'BASE_BREW': {
+      if (!state.base.buildings.brewery?.built) return { ...state, message: 'Build a Brewery first!' };
+      if (state.base.craftingQueue) return { ...state, message: 'Already crafting something!' };
+
+      // Check fuel
+      const now = Date.now();
+      let currentFuel = state.base.fuel || 0;
+      if (state.base.fuelLastUpdate) {
+        const elapsed = (now - state.base.fuelLastUpdate) / 60000;
+        currentFuel = Math.max(0, currentFuel - elapsed);
+      }
+      if (currentFuel <= 0) return { ...state, message: 'No fuel! Add wood, charcoal, or other fuel.' };
+
+      const recipe = BREWERY_RECIPES.find(r => r.id === action.recipeId);
+      if (!recipe) return state;
+
+      const mats = { ...state.base.materials };
+      for (const [matId, qty] of Object.entries(recipe.materials)) {
+        if ((mats[matId] || 0) < qty) {
+          const matName = BUILDING_MATERIALS[matId]?.name || matId;
+          return { ...state, message: `Need ${qty}x ${matName}!` };
+        }
+      }
+      for (const [matId, qty] of Object.entries(recipe.materials)) {
+        mats[matId] -= qty;
+      }
+
+      return {
+        ...state,
+        base: {
+          ...state.base,
+          materials: mats,
+          fuel: currentFuel,
+          fuelLastUpdate: now,
+          craftingQueue: { recipeId: recipe.id, building: 'brewery', startTime: now, craftTime: recipe.craftTime },
+        },
+        message: `Brewing ${recipe.name}...`,
+      };
+    }
+
+    case 'BASE_SMELT': {
+      if (!state.base.buildings.smelter?.built) return { ...state, message: 'Build a Smelter first!' };
+      if (state.base.craftingQueue) return { ...state, message: 'Already crafting something!' };
+
+      const now = Date.now();
+      let currentFuel = state.base.fuel || 0;
+      if (state.base.fuelLastUpdate) {
+        const elapsed = (now - state.base.fuelLastUpdate) / 60000;
+        currentFuel = Math.max(0, currentFuel - elapsed);
+      }
+      if (currentFuel <= 0) return { ...state, message: 'No fuel! Add wood, charcoal, or other fuel.' };
+
+      const recipe = SMELTER_RECIPES.find(r => r.id === action.recipeId);
+      if (!recipe) return state;
+
+      const mats = { ...state.base.materials };
+      if (recipe.materials) {
+        for (const [matId, qty] of Object.entries(recipe.materials)) {
+          if ((mats[matId] || 0) < qty) {
+            const matName = BUILDING_MATERIALS[matId]?.name || matId;
+            return { ...state, message: `Need ${qty}x ${matName}!` };
+          }
+        }
+        for (const [matId, qty] of Object.entries(recipe.materials)) {
+          mats[matId] -= qty;
+        }
+      }
+
+      // Handle salvage gear (smelt equipment from inventory)
+      let p = state.player;
+      if (recipe.salvageGear) {
+        const gearItem = action.gearItem;
+        if (!gearItem || !gearItem.slot) return { ...state, message: 'Select an equipment item to salvage!' };
+        p = { ...state.player, inventory: state.player.inventory.filter(i => i.id !== gearItem.id) };
+      }
+
+      return {
+        ...state,
+        player: p,
+        base: {
+          ...state.base,
+          materials: mats,
+          fuel: currentFuel,
+          fuelLastUpdate: now,
+          craftingQueue: { recipeId: recipe.id, building: 'smelter', startTime: now, craftTime: recipe.craftTime },
+        },
+        message: `Smelting ${recipe.name}...`,
+      };
+    }
+
+    case 'BASE_CRAFT': {
+      if (!state.base.buildings.workshop?.built) return { ...state, message: 'Build a Workshop first!' };
+      if (state.base.craftingQueue) return { ...state, message: 'Already crafting something!' };
+
+      const now = Date.now();
+      let currentFuel = state.base.fuel || 0;
+      if (state.base.fuelLastUpdate) {
+        const elapsed = (now - state.base.fuelLastUpdate) / 60000;
+        currentFuel = Math.max(0, currentFuel - elapsed);
+      }
+      if (currentFuel <= 0) return { ...state, message: 'No fuel! Add wood, charcoal, or other fuel.' };
+
+      const recipe = WORKSHOP_RECIPES.find(r => r.id === action.recipeId);
+      if (!recipe) return state;
+
+      const mats = { ...state.base.materials };
+      for (const [matId, qty] of Object.entries(recipe.materials)) {
+        if ((mats[matId] || 0) < qty) {
+          const matName = BUILDING_MATERIALS[matId]?.name || matId;
+          return { ...state, message: `Need ${qty}x ${matName}!` };
+        }
+      }
+      for (const [matId, qty] of Object.entries(recipe.materials)) {
+        mats[matId] -= qty;
+      }
+
+      return {
+        ...state,
+        base: {
+          ...state.base,
+          materials: mats,
+          fuel: currentFuel,
+          fuelLastUpdate: now,
+          craftingQueue: { recipeId: recipe.id, building: 'workshop', startTime: now, craftTime: recipe.craftTime },
+        },
+        message: `Crafting ${recipe.name}...`,
+      };
+    }
+
+    case 'BASE_COLLECT_CRAFT': {
+      const queue = state.base.craftingQueue;
+      if (!queue) return { ...state, message: 'Nothing is being crafted!' };
+      const now = Date.now();
+      if (now - queue.startTime < queue.craftTime) return { ...state, message: 'Still crafting...' };
+
+      let p = { ...state.player, inventory: [...state.player.inventory] };
+      let msg = 'Collected!';
+
+      if (queue.building === 'brewery') {
+        const recipe = BREWERY_RECIPES.find(r => r.id === queue.recipeId);
+        if (recipe) {
+          const item = generateItem(recipe.result.type, Math.max(1, state.player.level));
+          if (item && p.inventory.length < p.maxInventory) {
+            p.inventory.push(item);
+            msg = `Brewed ${item.name}!`;
+          } else {
+            return { ...state, message: 'Inventory full!' };
+          }
+        }
+      } else if (queue.building === 'smelter') {
+        const recipe = SMELTER_RECIPES.find(r => r.id === queue.recipeId);
+        if (recipe?.result) {
+          const mats = { ...state.base.materials };
+          mats[recipe.result.materialId] = (mats[recipe.result.materialId] || 0) + recipe.result.quantity;
+          const matName = BUILDING_MATERIALS[recipe.result.materialId]?.name || recipe.result.materialId;
+          msg = `Smelted ${recipe.result.quantity}x ${matName}!`;
+          return {
+            ...state,
+            player: p,
+            base: { ...state.base, materials: mats, craftingQueue: null },
+            message: msg,
+          };
+        }
+      } else if (queue.building === 'workshop') {
+        const recipe = WORKSHOP_RECIPES.find(r => r.id === queue.recipeId);
+        if (recipe?.result?.template) {
+          const item = generateCraftedItem(recipe.result.template, state.player.level);
+          if (item && p.inventory.length < p.maxInventory) {
+            p.inventory.push(item);
+            msg = `Crafted ${item.name}!`;
+          } else {
+            return { ...state, message: 'Inventory full!' };
+          }
+        }
+      }
+
+      return {
+        ...state,
+        player: p,
+        base: { ...state.base, craftingQueue: null },
+        message: msg,
+      };
+    }
+
+    case 'BASE_UPGRADE_INN': {
+      if (!state.base.buildings.inn?.built) return { ...state, message: 'Build an Inn first!' };
+      const currentLevel = state.base.innLevel || 1;
+      const nextUpgrade = BUILDINGS.inn.upgrades.find(u => u.level === currentLevel + 1);
+      if (!nextUpgrade) return { ...state, message: 'Inn is at max level!' };
+      const cost = nextUpgrade.upgradeCost;
+      if (!cost) return state;
+      if (state.player.gold < cost.gold) return { ...state, message: `Need ${cost.gold}g!` };
+
+      const mats = { ...state.base.materials };
+      for (const [matId, qty] of Object.entries(cost.materials || {})) {
+        if ((mats[matId] || 0) < qty) {
+          const matName = BUILDING_MATERIALS[matId]?.name || matId;
+          return { ...state, message: `Need ${qty}x ${matName}!` };
+        }
+      }
+      for (const [matId, qty] of Object.entries(cost.materials || {})) {
+        mats[matId] -= qty;
+      }
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold - cost.gold },
+        base: { ...state.base, materials: mats, innLevel: currentLevel + 1 },
+        message: `Inn upgraded to ${nextUpgrade.name}! ${nextUpgrade.desc}`,
+      };
+    }
+
+    case 'BASE_UPGRADE_CHAMBER': {
+      if (!state.base.buildings.chamber?.built) return { ...state, message: 'Build a Chamber first!' };
+      const subId = action.subUpgradeId; // 'bed', 'kitchen', 'study'
+      const subDef = BUILDINGS.chamber.subUpgrades[subId];
+      if (!subDef) return state;
+
+      const currentLevel = (state.base.chamberUpgrades || {})[subId] || 0;
+      const nextLevel = subDef.levels[currentLevel]; // 0-indexed, currentLevel is next to unlock
+      if (!nextLevel) return { ...state, message: `${subDef.name} is at max level!` };
+
+      const cost = nextLevel.cost;
+      if (state.player.gold < cost.gold) return { ...state, message: `Need ${cost.gold}g!` };
+
+      const mats = { ...state.base.materials };
+      for (const [matId, qty] of Object.entries(cost.materials || {})) {
+        if ((mats[matId] || 0) < qty) {
+          const matName = BUILDING_MATERIALS[matId]?.name || matId;
+          return { ...state, message: `Need ${qty}x ${matName}!` };
+        }
+      }
+      for (const [matId, qty] of Object.entries(cost.materials || {})) {
+        mats[matId] -= qty;
+      }
+
+      const chamberUpgrades = { ...state.base.chamberUpgrades, [subId]: currentLevel + 1 };
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold - cost.gold },
+        base: { ...state.base, materials: mats, chamberUpgrades },
+        message: `${nextLevel.name} installed! ${nextLevel.desc}`,
+      };
+    }
+
+    case 'BASE_SEND_MISSION': {
+      if (!state.base.buildings.adventureCamp?.built) return { ...state, message: 'Build an Adventure Camp first!' };
+      if (state.base.activeMission) return { ...state, message: 'A squad is already out!' };
+      const mission = BUILDINGS.adventureCamp.missions.find(m => m.id === action.missionId);
+      if (!mission) return state;
+
+      return {
+        ...state,
+        base: {
+          ...state.base,
+          activeMission: { missionId: mission.id, startTime: Date.now(), duration: mission.duration },
+        },
+        message: `Squad sent on ${mission.name}! Returns in ${mission.desc.split(' - ')[0]}.`,
+      };
+    }
+
+    case 'BASE_COLLECT_MISSION': {
+      const mission = state.base.activeMission;
+      if (!mission) return { ...state, message: 'No active mission!' };
+      const now = Date.now();
+      if (now - mission.startTime < mission.duration) {
+        const remaining = Math.ceil((mission.duration - (now - mission.startTime)) / 60000);
+        return { ...state, message: `Squad returns in ${remaining} min!` };
+      }
+
+      const missionDef = BUILDINGS.adventureCamp.missions.find(m => m.id === mission.missionId);
+      if (!missionDef) return state;
+
+      // Generate gold
+      const goldMin = missionDef.goldRange[0];
+      const goldMax = missionDef.goldRange[1];
+      const goldReward = goldMin + Math.floor(Math.random() * (goldMax - goldMin + 1));
+
+      // Generate loot
+      const lootItems = generateCampLoot(missionDef.lootTier, state.player.level);
+
+      let p = { ...state.player, gold: state.player.gold + goldReward, inventory: [...state.player.inventory] };
+      const mats = { ...state.base.materials };
+      const addedNames = [];
+
+      for (const item of lootItems) {
+        if (item.type === 'material') {
+          const matId = item.materialId;
+          const qty = item.stackQuantity || 1;
+          mats[matId] = (mats[matId] || 0) + qty;
+          addedNames.push(`${qty}x ${item.name}`);
+        } else if (p.inventory.length < p.maxInventory) {
+          p.inventory.push(item);
+          addedNames.push(item.name);
+        }
+      }
+
+      const lootMsg = addedNames.length > 0 ? ` Loot: ${addedNames.join(', ')}` : '';
+
+      return {
+        ...state,
+        player: p,
+        base: { ...state.base, materials: mats, activeMission: null },
+        message: `Squad returned! +${goldReward}g.${lootMsg}`,
+      };
+    }
+
+    case 'BASE_BANK_DEPOSIT': {
+      if (!state.base.buildings.bank?.built) return { ...state, message: 'Build a Bank first!' };
+      const amount = Math.floor(action.amount || 0);
+      if (amount <= 0) return state;
+      if (state.player.gold < amount) return { ...state, message: 'Not enough gold!' };
+      const fee = Math.floor(amount * BUILDINGS.bank.depositFee);
+      const deposited = amount - fee;
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold - amount },
+        base: { ...state.base, bankDeposit: (state.base.bankDeposit || 0) + deposited },
+        message: `Deposited ${deposited}g (${fee}g fee). Safe balance: ${(state.base.bankDeposit || 0) + deposited}g`,
+      };
+    }
+
+    case 'BASE_BANK_WITHDRAW': {
+      if (!state.base.buildings.bank?.built) return { ...state, message: 'Build a Bank first!' };
+      const amount = Math.floor(action.amount || 0);
+      if (amount <= 0) return state;
+      if ((state.base.bankDeposit || 0) < amount) return { ...state, message: 'Not enough in deposit!' };
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold + amount },
+        base: { ...state.base, bankDeposit: (state.base.bankDeposit || 0) - amount },
+        message: `Withdrew ${amount}g. Wallet: ${state.player.gold + amount}g`,
+      };
+    }
+
+    case 'BASE_BANK_FREEZE': {
+      if (!state.base.buildings.bank?.built) return { ...state, message: 'Build a Bank first!' };
+      if (state.base.frozenGold) return { ...state, message: 'Already have frozen gold!' };
+      const amount = Math.floor(action.amount || 0);
+      const option = BUILDINGS.bank.freezeOptions.find(o => o.id === action.freezeOptionId);
+      if (!option) return state;
+      if (amount <= 0 || amount > BUILDINGS.bank.maxFreezeAmount) return { ...state, message: `Freeze limit: 1-${BUILDINGS.bank.maxFreezeAmount}g` };
+      if ((state.base.bankDeposit || 0) < amount) return { ...state, message: 'Not enough in deposit!' };
+
+      return {
+        ...state,
+        base: {
+          ...state.base,
+          bankDeposit: (state.base.bankDeposit || 0) - amount,
+          frozenGold: {
+            amount,
+            startTime: Date.now(),
+            duration: option.days * 24 * 60 * 60 * 1000,
+            interestRate: option.interestRate,
+            optionDesc: option.desc,
+          },
+        },
+        message: `Froze ${amount}g for ${option.days} days at ${option.interestRate * 100}% interest.`,
+      };
+    }
+
+    case 'BASE_BANK_COLLECT_FROZEN': {
+      if (!state.base.frozenGold) return { ...state, message: 'No frozen gold!' };
+      const frozen = state.base.frozenGold;
+      const now = Date.now();
+      if (now - frozen.startTime < frozen.duration) {
+        const daysLeft = Math.ceil((frozen.duration - (now - frozen.startTime)) / (24 * 60 * 60 * 1000));
+        return { ...state, message: `${daysLeft} day(s) remaining before unfreezing.` };
+      }
+      const interest = Math.floor(frozen.amount * frozen.interestRate);
+      const total = frozen.amount + interest;
+
+      return {
+        ...state,
+        base: {
+          ...state.base,
+          bankDeposit: (state.base.bankDeposit || 0) + total,
+          frozenGold: null,
+        },
+        message: `Unfroze ${frozen.amount}g + ${interest}g interest = ${total}g!`,
+      };
+    }
+
+    case 'BASE_BANK_LOAN': {
+      if (!state.base.buildings.bank?.built) return { ...state, message: 'Build a Bank first!' };
+      if (state.base.loan) return { ...state, message: 'Already have an active loan!' };
+      const amount = Math.floor(action.amount || 0);
+      if (amount <= 0 || amount > BUILDINGS.bank.maxLoanAmount) return { ...state, message: `Loan limit: 1-${BUILDINGS.bank.maxLoanAmount}g` };
+
+      // Loan due in 7 days with 15% interest
+      const dueTime = Date.now() + 7 * 24 * 60 * 60 * 1000;
+      const repayAmount = Math.floor(amount * 1.15);
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold + amount },
+        base: { ...state.base, loan: { amount: repayAmount, dueTime } },
+        message: `Borrowed ${amount}g. Repay ${repayAmount}g within 7 days.`,
+      };
+    }
+
+    case 'BASE_BANK_REPAY': {
+      if (!state.base.loan) return { ...state, message: 'No active loan!' };
+      const owed = state.base.loan.amount;
+      if (state.player.gold < owed) return { ...state, message: `Need ${owed}g to repay! (have ${state.player.gold}g)` };
+
+      return {
+        ...state,
+        player: { ...state.player, gold: state.player.gold - owed },
+        base: { ...state.base, loan: null },
+        message: `Loan repaid! (${owed}g)`,
+      };
+    }
+
+    case 'BASE_START_SPAR': {
+      if (!state.base.buildings.sparringRange?.built) return { ...state, message: 'Build a Sparring Range first!' };
+      const dummy = SPARRING_DUMMIES.find(d => d.id === action.dummyId);
+      if (!dummy) return state;
+      return {
+        ...state,
+        base: { ...state.base, sparringDummy: dummy, sparringHp: dummy.hp },
+      };
+    }
+
+    case 'BASE_SPAR_ATTACK': {
+      if (!state.base.sparringDummy) return state;
+      const dummy = state.base.sparringDummy;
+      const p = state.player;
+      const atkBonus = Object.values(p.equipment || {}).reduce((sum, item) => sum + (item?.atk || 0), 0);
+      const chamberBuffs = getChamberBuffs(state.base);
+      const totalAtk = p.baseAtk + atkBonus + (chamberBuffs.atkBuff || 0);
+      const dmg = Math.max(1, totalAtk - dummy.def + Math.floor(Math.random() * 5));
+      const newHp = Math.max(0, (state.base.sparringHp || 0) - dmg);
+
+      return {
+        ...state,
+        base: { ...state.base, sparringHp: newHp },
+        message: newHp <= 0 ? `Dummy destroyed! You dealt ${dmg} damage.` : `Hit for ${dmg}! Dummy HP: ${newHp}/${dummy.hp}`,
+      };
+    }
+
+    case 'BASE_SPAR_SKILL': {
+      if (!state.base.sparringDummy) return state;
+      const dummy = state.base.sparringDummy;
+      const p = state.player;
+      const cls = getClassData(p);
+      const skillMult = cls?.skillMultiplier || 1.5;
+      const atkBonus = Object.values(p.equipment || {}).reduce((sum, item) => sum + (item?.atk || 0), 0);
+      const chamberBuffs = getChamberBuffs(state.base);
+      const totalAtk = p.baseAtk + atkBonus + (chamberBuffs.atkBuff || 0);
+      const rawDmg = Math.floor(totalAtk * skillMult);
+      const dmg = Math.max(1, rawDmg - dummy.def + Math.floor(Math.random() * 5));
+      const newHp = Math.max(0, (state.base.sparringHp || 0) - dmg);
+
+      return {
+        ...state,
+        base: { ...state.base, sparringHp: newHp },
+        message: newHp <= 0 ? `Dummy destroyed! Skill dealt ${dmg} damage.` : `Skill hit for ${dmg}! Dummy HP: ${newHp}/${dummy.hp}`,
+      };
+    }
+
+    case 'BASE_RESET_SPAR': {
+      return {
+        ...state,
+        base: { ...state.base, sparringDummy: null, sparringHp: 0 },
+      };
+    }
+
     default:
       return state;
   }
@@ -1064,7 +1661,8 @@ function gameReducer(state, action) {
 
 function handleVictory(state) {
   const m = state.battle.monster;
-  const expGain = m.exp;
+  const innBonus = getInnExpBonus(state.base);
+  const expGain = Math.floor(m.exp * (1 + innBonus));
   const cls = getClassData(state.player);
   let goldMult = 1.0;
   if (cls?.passive === 'Greed') goldMult *= 1.25;
@@ -1072,6 +1670,18 @@ function handleVictory(state) {
   const goldGain = Math.floor(m.gold * goldMult);
 
   let p = { ...state.player, exp: state.player.exp + expGain, gold: state.player.gold + goldGain };
+
+  // Roll for building material drop based on region
+  let materialDrop = null;
+  const regionId = state.currentRegion?.id;
+  if (regionId) {
+    materialDrop = rollMaterialDrop(regionId);
+    if (materialDrop && p.inventory.length < p.maxInventory) {
+      p.inventory = [...p.inventory, materialDrop];
+    } else if (materialDrop) {
+      materialDrop = null; // inventory full
+    }
+  }
 
   const droppedItem = rollDrop(m.dropTable, m.level);
   let lootAdded = false;
@@ -1119,11 +1729,13 @@ function handleVictory(state) {
     battleResult: {
       victory: true, expGain, goldGain,
       droppedItem: lootAdded ? droppedItem : null,
+      materialDrop: materialDrop || null,
       lostItemName,
       levelUps: gains,
       newLevel: leveledPlayer.level,
       isBoss: !!m.isBoss,
       bossName: m.isBoss ? m.name : null,
+      innBonus: innBonus > 0 ? innBonus : null,
     },
   };
 }
@@ -1187,7 +1799,7 @@ export function useGameState(isLoggedIn) {
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
-  }, [state.player, state.screen, state.energy, state.lastEnergyUpdate, state.stats, state.tasks, isLoggedIn]);
+  }, [state.player, state.screen, state.energy, state.lastEnergyUpdate, state.stats, state.tasks, state.base, isLoggedIn]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1231,6 +1843,29 @@ export function useGameState(isLoggedIn) {
     applyMarketTransaction: (transaction) => dispatch({ type: 'MARKET_TRANSACTION', transaction }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),
+    // Base building actions
+    baseBuild: (buildingId) => dispatch({ type: 'BASE_BUILD', buildingId }),
+    baseAddFuel: (item) => dispatch({ type: 'BASE_ADD_FUEL', item }),
+    baseAddFuelFromStorage: (materialId) => dispatch({ type: 'BASE_ADD_FUEL_FROM_STORAGE', materialId }),
+    baseStoreMaterial: (item) => dispatch({ type: 'BASE_STORE_MATERIAL', item }),
+    baseBrew: (recipeId) => dispatch({ type: 'BASE_BREW', recipeId }),
+    baseSmelt: (recipeId, gearItem) => dispatch({ type: 'BASE_SMELT', recipeId, gearItem }),
+    baseCraft: (recipeId) => dispatch({ type: 'BASE_CRAFT', recipeId }),
+    baseCollectCraft: () => dispatch({ type: 'BASE_COLLECT_CRAFT' }),
+    baseUpgradeInn: () => dispatch({ type: 'BASE_UPGRADE_INN' }),
+    baseUpgradeChamber: (subUpgradeId) => dispatch({ type: 'BASE_UPGRADE_CHAMBER', subUpgradeId }),
+    baseSendMission: (missionId) => dispatch({ type: 'BASE_SEND_MISSION', missionId }),
+    baseCollectMission: () => dispatch({ type: 'BASE_COLLECT_MISSION' }),
+    baseBankDeposit: (amount) => dispatch({ type: 'BASE_BANK_DEPOSIT', amount }),
+    baseBankWithdraw: (amount) => dispatch({ type: 'BASE_BANK_WITHDRAW', amount }),
+    baseBankFreeze: (amount, freezeOptionId) => dispatch({ type: 'BASE_BANK_FREEZE', amount, freezeOptionId }),
+    baseBankCollectFrozen: () => dispatch({ type: 'BASE_BANK_COLLECT_FROZEN' }),
+    baseBankLoan: (amount) => dispatch({ type: 'BASE_BANK_LOAN', amount }),
+    baseBankRepay: () => dispatch({ type: 'BASE_BANK_REPAY' }),
+    baseStartSpar: (dummyId) => dispatch({ type: 'BASE_START_SPAR', dummyId }),
+    baseSparAttack: () => dispatch({ type: 'BASE_SPAR_ATTACK' }),
+    baseSparSkill: () => dispatch({ type: 'BASE_SPAR_SKILL' }),
+    baseResetSpar: () => dispatch({ type: 'BASE_RESET_SPAR' }),
   }), []);
 
   return { state, actions, playerAtk, playerDef };

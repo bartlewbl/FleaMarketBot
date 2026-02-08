@@ -2,6 +2,7 @@
 // All item creation logic extracted from gameData.js
 
 import { RARITIES, RARITY_LOOKUP, ITEM_LIBRARY, POTION_TIERS, ENERGY_DRINK_TIERS } from '../data/gameData';
+import { MATERIAL_DROP_CONFIG, BUILDING_MATERIALS, CRAFTED_ITEMS, CAMP_LOOT_TABLES, createMaterialItem } from '../data/baseData';
 import { uid, pickWeighted, seededRandom, seededPickWeighted } from './utils';
 
 function pickFromLibrary(pool, targetLevel) {
@@ -257,4 +258,86 @@ export function getDailyFeaturedItems(playerLevel) {
   }
 
   return featured;
+}
+
+// ---- BASE BUILDING: Material drops ----
+
+// Roll for a material drop based on the region the player is in
+export function rollMaterialDrop(regionId) {
+  const config = MATERIAL_DROP_CONFIG[regionId];
+  if (!config) return null;
+  if (Math.random() > config.dropRate) return null;
+
+  const totalWeight = config.materials.reduce((s, m) => s + m.weight, 0);
+  let roll = Math.random() * totalWeight;
+  for (const mat of config.materials) {
+    roll -= mat.weight;
+    if (roll <= 0) {
+      return createMaterialItem(mat.id, 1);
+    }
+  }
+  return createMaterialItem(config.materials[config.materials.length - 1].id, 1);
+}
+
+// Generate a crafted item from workshop template
+export function generateCraftedItem(templateId, playerLevel) {
+  const template = CRAFTED_ITEMS[templateId];
+  if (!template) return null;
+
+  const rarityData = RARITY_LOOKUP[template.rarity] || RARITIES[0];
+  const levelFactor = 1 + Math.max(template.baseLevel, playerLevel) * 0.05;
+  const atk = template.baseAtk > 0
+    ? Math.max(0, Math.round(template.baseAtk * levelFactor * rarityData.multiplier))
+    : 0;
+  const def = template.baseDef > 0
+    ? Math.max(0, Math.round(template.baseDef * levelFactor * rarityData.multiplier))
+    : 0;
+  const effectiveLevel = Math.max(template.baseLevel, playerLevel);
+
+  return {
+    id: uid(),
+    name: template.name,
+    type: template.slot === 'accessory' ? 'ring' : template.slot === 'weapon' ? 'sword' : template.slot,
+    slot: template.slot,
+    level: effectiveLevel,
+    rarity: template.rarity,
+    rarityClass: rarityData.cssClass,
+    rarityColor: rarityData.color,
+    atk,
+    def,
+    icon: template.slot,
+    sellPrice: Math.max(10, Math.floor((atk + def) * 4 + effectiveLevel * 3 + rarityData.multiplier * 10)),
+  };
+}
+
+// Generate loot from adventure camp mission
+export function generateCampLoot(lootTier, playerLevel) {
+  const table = CAMP_LOOT_TABLES[lootTier];
+  if (!table) return { items: [], gold: 0 };
+
+  const mission = table;
+  const results = [];
+  const usedIds = new Set();
+
+  for (let i = 0; i < mission.maxItems; i++) {
+    const totalWeight = mission.items.reduce((s, item) => s + item.weight, 0);
+    let roll = Math.random() * totalWeight;
+    for (const entry of mission.items) {
+      roll -= entry.weight;
+      if (roll <= 0) {
+        if (entry.type === 'material') {
+          const qty = entry.qtyRange
+            ? entry.qtyRange[0] + Math.floor(Math.random() * (entry.qtyRange[1] - entry.qtyRange[0] + 1))
+            : 1;
+          results.push(createMaterialItem(entry.id, qty));
+        } else if (entry.type === 'gear') {
+          const item = generateItem(entry.gearType, playerLevel);
+          if (item) results.push(item);
+        }
+        break;
+      }
+    }
+  }
+
+  return results;
 }

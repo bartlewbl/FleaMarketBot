@@ -18,6 +18,7 @@ import UsernameScreen from './components/screens/UsernameScreen';
 import RegionsScreen from './components/screens/RegionsScreen';
 import JournalScreen from './components/screens/JournalScreen';
 import MarketScreen from './components/screens/MarketScreen';
+import BaseScreen from './components/screens/BaseScreen';
 import SidePanel from './components/SidePanel';
 import RightPanel from './components/RightPanel';
 
@@ -201,6 +202,7 @@ export default function App() {
             onInventory={() => actions.showScreen('inventory')}
             onShop={() => actions.showScreen('shop')}
             onMarket={() => actions.showScreen('market')}
+            onBase={() => actions.showScreen('base')}
             onJournal={() => actions.showScreen('journal')}
             onRest={actions.restAtInn}
             navLocked={navLocked}
@@ -221,6 +223,7 @@ export default function App() {
                 onBuy={actions.buyItem}
                 canRest={canRest}
                 onClaimDailyReward={actions.claimDailyReward}
+                onGoToBase={() => actions.showScreen('base')}
               />
             )}
 
@@ -332,6 +335,36 @@ export default function App() {
                 tasks={state.tasks}
                 onClaim={actions.claimTask}
                 onBack={actions.goToTown}
+              />
+            )}
+
+            {state.screen === 'base' && (
+              <BaseScreen
+                player={state.player}
+                base={state.base}
+                onBack={actions.goToTown}
+                onBuild={actions.baseBuild}
+                onAddFuel={actions.baseAddFuel}
+                onAddFuelFromStorage={actions.baseAddFuelFromStorage}
+                onStoreMaterial={actions.baseStoreMaterial}
+                onBrew={actions.baseBrew}
+                onSmelt={actions.baseSmelt}
+                onCraft={actions.baseCraft}
+                onCollectCraft={actions.baseCollectCraft}
+                onUpgradeInn={actions.baseUpgradeInn}
+                onUpgradeChamber={actions.baseUpgradeChamber}
+                onSendMission={actions.baseSendMission}
+                onCollectMission={actions.baseCollectMission}
+                onBankDeposit={actions.baseBankDeposit}
+                onBankWithdraw={actions.baseBankWithdraw}
+                onBankFreeze={actions.baseBankFreeze}
+                onBankCollectFrozen={actions.baseBankCollectFrozen}
+                onBankLoan={actions.baseBankLoan}
+                onBankRepay={actions.baseBankRepay}
+                onStartSpar={actions.baseStartSpar}
+                onSparAttack={actions.baseSparAttack}
+                onSparSkill={actions.baseSparSkill}
+                onResetSpar={actions.baseResetSpar}
               />
             )}
 
