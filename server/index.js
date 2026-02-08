@@ -6,6 +6,7 @@ import authRouter from './routes/auth.js';
 import saveRouter from './routes/save.js';
 import invitesRouter from './routes/invites.js';
 import dailyRewardsRouter from './routes/dailyRewards.js';
+import tradesRouter from './routes/trades.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -19,6 +20,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/save', saveRouter);
 app.use('/api/invites', invitesRouter);
 app.use('/api/daily-rewards', dailyRewardsRouter);
+app.use('/api/trades', tradesRouter);
 
 // Serve static frontend in production
 const distPath = join(__dirname, '..', 'dist');

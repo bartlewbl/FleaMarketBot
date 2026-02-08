@@ -326,6 +326,8 @@ export default function App() {
           <RightPanel
             collapsed={isRightPanelCollapsed}
             onToggle={() => setIsRightPanelCollapsed(v => !v)}
+            player={state.player}
+            onTradeComplete={actions.applyTrade}
           />
         </div>
 
