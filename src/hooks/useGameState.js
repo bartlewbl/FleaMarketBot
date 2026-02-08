@@ -7,6 +7,13 @@ import { applyAttackPassives, applySkillPassives, applyLifeTap, tryBladeDance, t
 import { scaleMonster, scaleBoss } from '../engine/scaling';
 import { rollDrop, generateItem, generateRewardItem } from '../engine/loot';
 import { saveGame } from '../api';
+import {
+  createInitialStats, createInitialTaskProgress,
+  getActiveDailyTasks, getActiveWeeklyTasks, getActiveMonthlyTasks,
+  STORY_TASKS,
+  isDailyExpired, isWeeklyExpired, isMonthlyExpired,
+  getDailySeed, getWeeklySeed, getMonthlySeed,
+} from '../data/tasks';
 
 export const ENERGY_MAX = 100;
 export const ENERGY_COST_PER_TRIP = 10;
@@ -52,6 +59,57 @@ function createInitialState() {
     energy: ENERGY_MAX,
     lastEnergyUpdate: Date.now(),
     pendingBoss: null,
+    stats: createInitialStats(),
+    tasks: createInitialTaskProgress(),
+  };
+}
+
+// ---- STAT TRACKING HELPERS ----
+function addStat(stats, key, amount = 1) {
+  return { ...stats, [key]: (stats[key] || 0) + amount };
+}
+
+function setStatMax(stats, key, value) {
+  return { ...stats, [key]: Math.max(stats[key] || 0, value) };
+}
+
+// Check if any resettable task cycles have expired and reset them
+function refreshTaskCycles(tasks) {
+  const now = Date.now();
+  let t = tasks;
+  if (isDailyExpired(t.lastDailySeed, now)) {
+    t = { ...t, dailyProgress: {}, dailyClaimed: [], lastDailySeed: getDailySeed(now) };
+  }
+  if (isWeeklyExpired(t.lastWeeklySeed, now)) {
+    t = { ...t, weeklyProgress: {}, weeklyClaimed: [], lastWeeklySeed: getWeeklySeed(now) };
+  }
+  if (isMonthlyExpired(t.lastMonthlySeed, now)) {
+    t = { ...t, monthlyProgress: {}, monthlyClaimed: [], lastMonthlySeed: getMonthlySeed(now) };
+  }
+  return t;
+}
+
+// Increment task progress for matching stat key
+function incrementTaskProgress(tasks, statKey, amount = 1) {
+  const now = Date.now();
+  let t = refreshTaskCycles(tasks);
+
+  // Helper to update progress for a task list
+  const updateProgress = (activeTasks, progress) => {
+    const updated = { ...progress };
+    for (const task of activeTasks) {
+      if (task.stat === statKey) {
+        updated[task.id] = (updated[task.id] || 0) + amount;
+      }
+    }
+    return updated;
+  };
+
+  return {
+    ...t,
+    dailyProgress: updateProgress(getActiveDailyTasks(now), t.dailyProgress),
+    weeklyProgress: updateProgress(getActiveWeeklyTasks(now), t.weeklyProgress),
+    monthlyProgress: updateProgress(getActiveMonthlyTasks(now), t.monthlyProgress),
   };
 }
 
@@ -120,6 +178,8 @@ function extractSaveData(state) {
     energy: state.energy,
     lastEnergyUpdate: state.lastEnergyUpdate,
     currentRegionId: state.currentRegion?.id || null,
+    stats: state.stats,
+    tasks: state.tasks,
   };
 }
 
@@ -127,7 +187,7 @@ function extractSaveData(state) {
 function gameReducer(state, action) {
   switch (action.type) {
     case 'LOAD_SAVE': {
-      const { player, screen, energy, lastEnergyUpdate, currentRegionId } = action.saveData || {};
+      const { player, screen, energy, lastEnergyUpdate, currentRegionId, stats, tasks } = action.saveData || {};
       const base = createInitialState();
       const regen = regenEnergy(
         energy ?? base.energy,
@@ -140,6 +200,8 @@ function gameReducer(state, action) {
       if (!mergedPlayer.characterClass) resolvedScreen = 'class-select';
       if (mergedPlayer.name === 'Hero') resolvedScreen = 'username-entry';
       const savedRegion = currentRegionId ? REGIONS.find(r => r.id === currentRegionId) : null;
+      const mergedStats = { ...createInitialStats(), ...stats };
+      const mergedTasks = refreshTaskCycles({ ...createInitialTaskProgress(), ...tasks });
       return {
         ...base,
         screen: resolvedScreen,
@@ -147,6 +209,8 @@ function gameReducer(state, action) {
         energy: regen.energy,
         lastEnergyUpdate: regen.lastEnergyUpdate,
         currentRegion: savedRegion,
+        stats: mergedStats,
+        tasks: mergedTasks,
       };
     }
 
@@ -289,7 +353,19 @@ function gameReducer(state, action) {
       } else {
         newText = text + '\n\nNothing but distant sirens... for now.';
       }
-      return { ...state, exploreText: newText, player: newPlayer };
+      // Track exploration
+      let newStats = addStat(state.stats, 'explorationsCompleted');
+      let newTasks = incrementTaskProgress(state.tasks, 'explorationsCompleted');
+      if (newPlayer !== state.player && newPlayer.inventory.length > state.player.inventory.length) {
+        newStats = addStat(newStats, 'itemsLooted');
+        newTasks = incrementTaskProgress(newTasks, 'itemsLooted');
+      }
+      if (newPlayer !== state.player && newPlayer.gold > state.player.gold) {
+        const goldFound = newPlayer.gold - state.player.gold;
+        newStats = addStat(newStats, 'goldEarned', goldFound);
+        newTasks = incrementTaskProgress(newTasks, 'goldEarned', goldFound);
+      }
+      return { ...state, exploreText: newText, player: newPlayer, stats: newStats, tasks: newTasks };
     }
 
     case 'BATTLE_PLAYER_ATTACK': {
@@ -325,10 +401,16 @@ function gameReducer(state, action) {
         log.push({ text: `Blade Dance! Extra attack for ${blade.dmg}!`, type: 'dmg-monster' });
       }
 
+      // Track total damage dealt
+      let totalDmg = dmg + (blade.attacked ? blade.dmg : 0);
+      let newStats = addStat(state.stats, 'damageDealt', totalDmg);
+      newStats = setStatMax(newStats, 'highestDamage', dmg);
+      let newTasks = incrementTaskProgress(state.tasks, 'damageDealt', totalDmg);
+
       if (m.hp <= 0) {
-        return handleVictory({ ...state, player: p, battle: b, battleLog: log });
+        return handleVictory({ ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks });
       }
-      return { ...state, player: p, battle: b, battleLog: log };
+      return { ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks };
     }
 
     case 'BATTLE_PLAYER_SKILL': {
@@ -381,10 +463,15 @@ function gameReducer(state, action) {
       // Post-skill passives (vampiric aura, bloodlust, soul siphon)
       ({ player: p, log } = applySkillPassives({ player: p, log, dmg }));
 
+      // Track damage
+      let newStats = addStat(state.stats, 'damageDealt', dmg);
+      newStats = setStatMax(newStats, 'highestDamage', dmg);
+      let newTasks = incrementTaskProgress(state.tasks, 'damageDealt', dmg);
+
       if (m.hp <= 0) {
-        return handleVictory({ ...state, player: p, battle: b, battleLog: log });
+        return handleVictory({ ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks });
       }
-      return { ...state, player: p, battle: b, battleLog: log };
+      return { ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks };
     }
 
     case 'BATTLE_USE_TREE_SKILL': {
@@ -442,10 +529,15 @@ function gameReducer(state, action) {
       // Post-skill passives (vampiric aura, bloodlust, soul siphon)
       ({ player: p, log } = applySkillPassives({ player: p, log, dmg }));
 
+      // Track damage
+      let newStats = addStat(state.stats, 'damageDealt', dmg);
+      newStats = setStatMax(newStats, 'highestDamage', dmg);
+      let newTasks = incrementTaskProgress(state.tasks, 'damageDealt', dmg);
+
       if (m.hp <= 0) {
-        return handleVictory({ ...state, player: p, battle: b, battleLog: log });
+        return handleVictory({ ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks });
       }
-      return { ...state, player: p, battle: b, battleLog: log };
+      return { ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks };
     }
 
     case 'TOGGLE_SKILL_MENU': {
@@ -486,7 +578,9 @@ function gameReducer(state, action) {
       }
       if (!valid) return state;
       p.skillTree = [...tree, skillId];
-      return { ...state, player: p };
+      const newStats = addStat(state.stats, 'skillsUnlocked');
+      const newTasks = incrementTaskProgress(state.tasks, 'skillsUnlocked');
+      return { ...state, player: p, stats: newStats, tasks: newTasks };
     }
 
     case 'BATTLE_DEFEND': {
@@ -516,7 +610,10 @@ function gameReducer(state, action) {
       const p = { ...state.player, hp: state.player.hp + healed, inventory: newInv };
       const b = { ...state.battle, defending: false, showSkillMenu: false };
       const log = [...state.battleLog, { text: `Used ${potion.name}, healed ${healed} HP!`, type: 'heal' }];
-      return { ...state, player: p, battle: b, battleLog: log };
+      let newStats = addStat(state.stats, 'potionsUsed');
+      newStats = addStat(newStats, 'totalHealing', healed);
+      let newTasks = incrementTaskProgress(state.tasks, 'potionsUsed');
+      return { ...state, player: p, battle: b, battleLog: log, stats: newStats, tasks: newTasks };
     }
 
     case 'BOSS_ACCEPT': {
@@ -554,9 +651,11 @@ function gameReducer(state, action) {
       let escapeChance = (cls?.passive === 'Greed') ? 0.75 : 0.5;
       if (playerHasSkill(state.player, 'thf_t7a')) escapeChance = 1.0;
       if (Math.random() < escapeChance) {
+        const newStats = addStat(state.stats, 'battlesRun');
         return {
           ...state, screen: 'explore', battle: null, battleLog: [],
           exploreText: 'You escaped the battle...',
+          stats: newStats,
         };
       }
       const b = { ...state.battle, defending: false };
@@ -687,11 +786,15 @@ function gameReducer(state, action) {
       b.isPlayerTurn = true;
       b.defending = false;
 
+      // Track damage taken (difference from start hp)
+      const hpLost = Math.max(0, state.player.hp - p.hp);
+      const newStats = hpLost > 0 ? addStat(state.stats, 'damageTaken', hpLost) : state.stats;
+
       if (p.hp <= 0) {
-        return handleDefeat({ ...state, player: p, battle: b, battleLog: log });
+        return handleDefeat({ ...state, player: p, battle: b, battleLog: log, stats: newStats });
       }
 
-      return { ...state, player: p, battle: b, battleLog: log };
+      return { ...state, player: p, battle: b, battleLog: log, stats: newStats };
     }
 
     case 'CONTINUE_AFTER_BATTLE': {
@@ -706,8 +809,10 @@ function gameReducer(state, action) {
 
     case 'REST_AT_INN': {
       if (state.player.gold < 10) return { ...state, message: 'Not enough gold! (10g needed)' };
+      const newStats = addStat(state.stats, 'goldSpent', 10);
       return {
         ...state, message: 'HP restored!',
+        stats: newStats,
         player: {
           ...state.player,
           gold: state.player.gold - 10,
@@ -751,7 +856,10 @@ function gameReducer(state, action) {
           hp: state.player.hp + healed,
           inventory: state.player.inventory.filter(i => i.id !== item.id),
         };
-        return { ...state, player: p, message: `Healed ${healed} HP!` };
+        let newStats = addStat(state.stats, 'potionsUsed');
+        newStats = addStat(newStats, 'totalHealing', healed);
+        const newTasks = incrementTaskProgress(state.tasks, 'potionsUsed');
+        return { ...state, player: p, message: `Healed ${healed} HP!`, stats: newStats, tasks: newTasks };
       }
       if (item.type === 'energy-drink') {
         const now = Date.now();
@@ -782,7 +890,11 @@ function gameReducer(state, action) {
         gold: state.player.gold + adjustedSellPrice,
         inventory: state.player.inventory.filter(i => i.id !== item.id),
       };
-      return { ...state, player: p, message: `Sold for ${adjustedSellPrice}g!` };
+      let newStats = addStat(state.stats, 'itemsSold');
+      newStats = addStat(newStats, 'goldEarned', item.sellPrice);
+      let newTasks = incrementTaskProgress(state.tasks, 'itemsSold');
+      newTasks = incrementTaskProgress(newTasks, 'goldEarned', item.sellPrice);
+      return { ...state, player: p, message: `Sold for ${item.sellPrice}g!`, stats: newStats, tasks: newTasks };
     }
 
     case 'REORDER_INVENTORY': {
@@ -815,7 +927,8 @@ function gameReducer(state, action) {
         gold: state.player.gold - adjustedBuyPrice,
         inventory: [...state.player.inventory, newItem],
       };
-      return { ...state, player: p, message: `Purchased ${item.name} for ${adjustedBuyPrice}g!` };
+      const newStats = addStat(state.stats, 'goldSpent', item.buyPrice);
+      return { ...state, player: p, message: `Purchased ${item.name}!`, stats: newStats };
     }
 
     case 'APPLY_TRADE': {
@@ -872,6 +985,53 @@ function gameReducer(state, action) {
       return { ...state, player: p, energy: newEnergy, message: msg };
     }
 
+    case 'CLAIM_TASK': {
+      const { taskId, taskType } = action;
+      const tasks = refreshTaskCycles(state.tasks);
+      const claimedKey = taskType + 'Claimed';
+      if (tasks[claimedKey]?.includes(taskId)) return state; // already claimed
+
+      // Find the task definition and verify completion
+      const now = Date.now();
+      let taskDef = null;
+      let progress = 0;
+      if (taskType === 'daily') {
+        taskDef = getActiveDailyTasks(now).find(t => t.id === taskId);
+        progress = tasks.dailyProgress[taskId] || 0;
+      } else if (taskType === 'weekly') {
+        taskDef = getActiveWeeklyTasks(now).find(t => t.id === taskId);
+        progress = tasks.weeklyProgress[taskId] || 0;
+      } else if (taskType === 'monthly') {
+        taskDef = getActiveMonthlyTasks(now).find(t => t.id === taskId);
+        progress = tasks.monthlyProgress[taskId] || 0;
+      } else if (taskType === 'story') {
+        taskDef = STORY_TASKS.find(t => t.id === taskId);
+        progress = state.stats[taskDef?.stat] || 0;
+      }
+
+      if (!taskDef || progress < taskDef.target) return state;
+
+      // Apply reward
+      let p = { ...state.player };
+      if (taskDef.reward.gold) {
+        p.gold += taskDef.reward.gold;
+      }
+
+      const newStats = taskDef.reward.gold ? addStat(state.stats, 'goldEarned', taskDef.reward.gold) : state.stats;
+      const newTasks = {
+        ...tasks,
+        [claimedKey]: [...(tasks[claimedKey] || []), taskId],
+      };
+
+      return {
+        ...state,
+        player: p,
+        stats: newStats,
+        tasks: newTasks,
+        message: `Task complete: ${taskDef.name}! +${taskDef.reward.gold || 0}g`,
+      };
+    }
+
     case 'ENERGY_TICK': {
       const now = action.now ?? Date.now();
       const { energy, lastEnergyUpdate } = regenEnergy(state.energy, state.lastEnergyUpdate, now);
@@ -907,12 +1067,37 @@ function handleVictory(state) {
     }
   }
 
+  const prevLevel = state.player.level;
   const { player: leveledPlayer, gains } = processLevelUps(p);
+
+  // Track stats
+  let newStats = state.stats || createInitialStats();
+  newStats = addStat(newStats, 'monstersKilled');
+  newStats = addStat(newStats, 'battlesWon');
+  newStats = addStat(newStats, 'goldEarned', goldGain);
+  if (m.isBoss) newStats = addStat(newStats, 'bossesKilled');
+  if (lootAdded) newStats = addStat(newStats, 'itemsLooted');
+  if (leveledPlayer.level > prevLevel) {
+    newStats = addStat(newStats, 'levelsGained', leveledPlayer.level - prevLevel);
+  }
+
+  // Track tasks
+  let newTasks = state.tasks || createInitialTaskProgress();
+  newTasks = incrementTaskProgress(newTasks, 'monstersKilled');
+  newTasks = incrementTaskProgress(newTasks, 'battlesWon');
+  newTasks = incrementTaskProgress(newTasks, 'goldEarned', goldGain);
+  if (m.isBoss) newTasks = incrementTaskProgress(newTasks, 'bossesKilled');
+  if (lootAdded) newTasks = incrementTaskProgress(newTasks, 'itemsLooted');
+  if (leveledPlayer.level > prevLevel) {
+    newTasks = incrementTaskProgress(newTasks, 'levelsGained', leveledPlayer.level - prevLevel);
+  }
 
   return {
     ...state,
     screen: 'battle-result',
     player: leveledPlayer,
+    stats: newStats,
+    tasks: newTasks,
     battleResult: {
       victory: true, expGain, goldGain,
       droppedItem: lootAdded ? droppedItem : null,
@@ -935,10 +1120,13 @@ function handleDefeat(state) {
     mana: Math.floor(state.player.maxMana * 0.5),
   };
 
+  const newStats = addStat(state.stats || createInitialStats(), 'battlesLost');
+
   return {
     ...state,
     screen: 'battle-result',
     player: p,
+    stats: newStats,
     battleResult: {
       defeated: true, goldLost,
       isBoss: !!m?.isBoss,
@@ -981,7 +1169,7 @@ export function useGameState(isLoggedIn) {
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
-  }, [state.player, state.screen, state.energy, state.lastEnergyUpdate, isLoggedIn]);
+  }, [state.player, state.screen, state.energy, state.lastEnergyUpdate, state.stats, state.tasks, isLoggedIn]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -1020,6 +1208,7 @@ export function useGameState(isLoggedIn) {
     reorderInventory: (fromIndex, toIndex) => dispatch({ type: 'REORDER_INVENTORY', fromIndex, toIndex }),
     buyItem: (item) => dispatch({ type: 'BUY_ITEM', item }),
     claimDailyReward: (rewards, label) => dispatch({ type: 'CLAIM_DAILY_REWARD', rewards, label }),
+    claimTask: (taskId, taskType) => dispatch({ type: 'CLAIM_TASK', taskId, taskType }),
     applyTrade: (receivedItems, receivedGold, givenItems, givenGold) => dispatch({ type: 'APPLY_TRADE', receivedItems, receivedGold, givenItems, givenGold }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),

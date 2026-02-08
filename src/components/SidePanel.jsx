@@ -19,6 +19,7 @@ export default function SidePanel({
   onExplore,
   onInventory,
   onShop,
+  onJournal,
   onRest,
   navLocked,
   onProfile,
@@ -56,6 +57,14 @@ export default function SidePanel({
       description: 'Buy gear and potions',
       onClick: onShop,
       active: screen === 'shop',
+      disabled: navLocked,
+    },
+    {
+      id: 'journal',
+      label: 'Journal',
+      description: 'Stats and tasks',
+      onClick: onJournal,
+      active: screen === 'journal',
       disabled: navLocked,
     },
   ];
