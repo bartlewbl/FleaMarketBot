@@ -235,7 +235,7 @@ function gameReducer(state, action) {
       const lootChance = loc.lootRate ?? 0.3;
       let newText = text;
       let newPlayer = state.player;
-      const lootTable = ['potion', 'ring', 'boots', 'helmet', 'armor', 'sword', 'shield'];
+      const lootTable = ['potion', 'ring', 'boots', 'helmet', 'armor', 'sword', 'shield', 'energy-drink'];
 
       if (Math.random() < lootChance) {
         if (state.player.inventory.length < state.player.maxInventory) {
@@ -715,6 +715,23 @@ function gameReducer(state, action) {
           inventory: state.player.inventory.filter(i => i.id !== item.id),
         };
         return { ...state, player: p, message: `Healed ${healed} HP!` };
+      }
+      if (item.type === 'energy-drink') {
+        const now = Date.now();
+        const { energy: currentEnergy, lastEnergyUpdate: currentLEU } = regenEnergy(state.energy, state.lastEnergyUpdate, now);
+        if (currentEnergy >= ENERGY_MAX) return { ...state, message: 'Energy is already full!' };
+        const restored = Math.min(item.energyAmount, ENERGY_MAX - currentEnergy);
+        const p = {
+          ...state.player,
+          inventory: state.player.inventory.filter(i => i.id !== item.id),
+        };
+        return {
+          ...state,
+          player: p,
+          energy: currentEnergy + restored,
+          lastEnergyUpdate: now,
+          message: `Restored ${restored} energy!`,
+        };
       }
       return state;
     }

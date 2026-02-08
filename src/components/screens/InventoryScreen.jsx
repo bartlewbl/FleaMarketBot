@@ -21,6 +21,7 @@ function itemStatLine(item) {
     if (item.def) stats.push('DEF+' + item.def);
     return stats.length ? stats.join(' ') : 'No bonuses';
   }
+  if (item.type === 'energy-drink') return `Energy +${item.energyAmount}`;
   return `Heal ${item.healAmount} HP`;
 }
 

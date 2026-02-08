@@ -60,17 +60,17 @@ export const MONSTERS = {
   rat: {
     name: 'Gutter Rat', sprite: 'rat', baseHp: 22, baseAtk: 5, baseDef: 1,
     baseExp: 12, baseGold: 6, skills: ['bite'],
-    dropTable: [{ type: 'potion', weight: 35 }, { type: 'boots', weight: 8 }],
+    dropTable: [{ type: 'potion', weight: 35 }, { type: 'boots', weight: 8 }, { type: 'energy-drink', weight: 5 }],
   },
   'alpha-rat': {
     name: 'Alpha Rat', sprite: 'rat', baseHp: 40, baseAtk: 10, baseDef: 3,
     baseExp: 24, baseGold: 15, skills: ['bite'],
-    dropTable: [{ type: 'sword', weight: 12 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 20 }],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'armor', weight: 8 }, { type: 'potion', weight: 20 }, { type: 'energy-drink', weight: 5 }],
   },
   slime: {
     name: 'Neon Slime', sprite: 'slime', baseHp: 28, baseAtk: 6, baseDef: 2,
     baseExp: 16, baseGold: 8, skills: [],
-    dropTable: [{ type: 'potion', weight: 45 }, { type: 'ring', weight: 5 }],
+    dropTable: [{ type: 'potion', weight: 45 }, { type: 'ring', weight: 5 }, { type: 'energy-drink', weight: 8 }],
   },
   'toxic-slime': {
     name: 'Toxic Slime', sprite: 'slime', baseHp: 45, baseAtk: 12, baseDef: 4,
@@ -80,12 +80,12 @@ export const MONSTERS = {
   vagrant: {
     name: 'Feral Vagrant', sprite: 'vagrant', baseHp: 36, baseAtk: 12, baseDef: 5,
     baseExp: 30, baseGold: 18, skills: ['slash'],
-    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 25 }],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 25 }, { type: 'energy-drink', weight: 6 }],
   },
   'rogue-vagrant': {
     name: 'Rogue Vagrant', sprite: 'vagrant', baseHp: 60, baseAtk: 18, baseDef: 7,
     baseExp: 48, baseGold: 28, skills: ['slash', 'steal'],
-    dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }],
+    dropTable: [{ type: 'armor', weight: 12 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 6 }, { type: 'potion', weight: 30 }, { type: 'energy-drink', weight: 7 }],
   },
   'sewer-roach': {
     name: 'Sewer Roach', sprite: 'rat', baseHp: 18, baseAtk: 4, baseDef: 1,
@@ -100,7 +100,7 @@ export const MONSTERS = {
   'neon-beetle': {
     name: 'Neon Beetle', sprite: 'rat', baseHp: 16, baseAtk: 3, baseDef: 3,
     baseExp: 9, baseGold: 5, skills: [],
-    dropTable: [{ type: 'potion', weight: 40 }, { type: 'helmet', weight: 5 }],
+    dropTable: [{ type: 'potion', weight: 40 }, { type: 'helmet', weight: 5 }, { type: 'energy-drink', weight: 8 }],
   },
   'alley-mutt': {
     name: 'Alley Mutt', sprite: 'wolf', baseHp: 26, baseAtk: 7, baseDef: 2,
@@ -140,7 +140,7 @@ export const MONSTERS = {
   'gutter-goblin': {
     name: 'Gutter Goblin', sprite: 'goblin', baseHp: 30, baseAtk: 10, baseDef: 3,
     baseExp: 22, baseGold: 12, skills: ['slash', 'steal'],
-    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 25 }],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'helmet', weight: 7 }, { type: 'potion', weight: 25 }, { type: 'energy-drink', weight: 6 }],
   },
   'alley-wolf': {
     name: 'Alley Wolf', sprite: 'wolf', baseHp: 32, baseAtk: 11, baseDef: 4,
@@ -270,7 +270,7 @@ export const MONSTERS = {
   'factory-drone': {
     name: 'Factory Drone', sprite: 'bat', baseHp: 48, baseAtk: 26, baseDef: 7,
     baseExp: 54, baseGold: 29, skills: ['shock', 'charge'],
-    dropTable: [{ type: 'helmet', weight: 9 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 22 }],
+    dropTable: [{ type: 'helmet', weight: 9 }, { type: 'boots', weight: 8 }, { type: 'potion', weight: 22 }, { type: 'energy-drink', weight: 6 }],
   },
   'acid-sprayer': {
     name: 'Acid Sprayer', sprite: 'snake', baseHp: 50, baseAtk: 23, baseDef: 6,
@@ -300,7 +300,7 @@ export const MONSTERS = {
   'terminal-enforcer': {
     name: 'Terminal Enforcer', sprite: 'vagrant', baseHp: 72, baseAtk: 28, baseDef: 10,
     baseExp: 65, baseGold: 35, skills: ['slash', 'bash', 'charge'],
-    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 9 }, { type: 'potion', weight: 18 }],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 9 }, { type: 'potion', weight: 18 }, { type: 'energy-drink', weight: 7 }],
   },
   'midnight-wolf': {
     name: 'Midnight Wolf', sprite: 'wolf', baseHp: 70, baseAtk: 27, baseDef: 11,
@@ -325,7 +325,7 @@ export const MONSTERS = {
   'dark-assassin': {
     name: 'Dark Assassin', sprite: 'vagrant', baseHp: 55, baseAtk: 32, baseDef: 7,
     baseExp: 67, baseGold: 36, skills: ['backstab', 'steal', 'slash'],
-    dropTable: [{ type: 'sword', weight: 12 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 18 }],
+    dropTable: [{ type: 'sword', weight: 12 }, { type: 'ring', weight: 8 }, { type: 'potion', weight: 18 }, { type: 'energy-drink', weight: 5 }],
   },
   'shadow-dragon': {
     name: 'Shadow Dragon', sprite: 'dragon', baseHp: 85, baseAtk: 30, baseDef: 12,
@@ -344,7 +344,7 @@ export const BOSSES = {
   'boss-king-rat': {
     name: 'King Rat', sprite: 'rat', isBoss: true, baseHp: 120, baseAtk: 14, baseDef: 5,
     baseExp: 80, baseGold: 50, skills: ['bite', 'screech', 'frenzy'],
-    dropTable: [{ type: 'sword', weight: 15 }, { type: 'armor', weight: 12 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 20 }],
+    dropTable: [{ type: 'sword', weight: 15 }, { type: 'armor', weight: 12 }, { type: 'ring', weight: 10 }, { type: 'potion', weight: 20 }, { type: 'energy-drink', weight: 8 }],
     title: 'Monarch of the Gutter',
   },
   'boss-shadow-lord': {
@@ -356,7 +356,7 @@ export const BOSSES = {
   'boss-conductor': {
     name: 'The Conductor', sprite: 'ghost', isBoss: true, baseHp: 250, baseAtk: 28, baseDef: 10,
     baseExp: 240, baseGold: 140, skills: ['shock', 'thunderclap', 'drain', 'curse'],
-    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 15 }],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 15 }, { type: 'energy-drink', weight: 6 }],
     title: 'Spectral Master of the Rails',
   },
   'boss-storm-sentinel': {
@@ -374,7 +374,7 @@ export const BOSSES = {
   'boss-void-overlord': {
     name: 'Void Overlord', sprite: 'dragon', isBoss: true, baseHp: 600, baseAtk: 48, baseDef: 20,
     baseExp: 650, baseGold: 400, skills: ['voidblast', 'inferno', 'deathgrip', 'frenzy'],
-    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }],
+    dropTable: [{ type: 'sword', weight: 10 }, { type: 'armor', weight: 10 }, { type: 'shield', weight: 10 }, { type: 'ring', weight: 10 }, { type: 'helmet', weight: 8 }, { type: 'potion', weight: 8 }, { type: 'energy-drink', weight: 6 }],
     title: 'Final Terminus Overlord',
   },
 };
@@ -430,6 +430,15 @@ export const POTION_TIERS = [
   { name: 'Combat Stims', baseHeal: 75 },
   { name: 'Mega Infusion', baseHeal: 100 },
   { name: 'Phoenix Serum', baseHeal: 130 },
+];
+
+// ---- ENERGY DRINK TIERS ----
+export const ENERGY_DRINK_TIERS = [
+  { name: 'Cheap Energy Shot', baseEnergy: 10 },
+  { name: 'Neon Buzz Cola', baseEnergy: 15 },
+  { name: 'Volt Surge Drink', baseEnergy: 20 },
+  { name: 'Plasma Energy Blast', baseEnergy: 30 },
+  { name: 'Hyperdrive Elixir', baseEnergy: 50 },
 ];
 
 // ---- ITEM LIBRARY ----
