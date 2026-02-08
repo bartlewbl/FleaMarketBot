@@ -801,6 +801,24 @@ function gameReducer(state, action) {
       return { ...state, player: p, message: `Purchased ${item.name}!` };
     }
 
+    case 'APPLY_TRADE': {
+      // After accepting a trade: add received items, remove given items, adjust gold
+      const { receivedItems, receivedGold, givenItems, givenGold } = action;
+      let p = { ...state.player, inventory: [...state.player.inventory] };
+      // Remove given items
+      if (givenItems && givenItems.length > 0) {
+        const givenIds = new Set(givenItems.map(i => i.id));
+        p.inventory = p.inventory.filter(i => !givenIds.has(i.id));
+      }
+      // Add received items
+      if (receivedItems && receivedItems.length > 0) {
+        p.inventory = p.inventory.concat(receivedItems);
+      }
+      // Adjust gold
+      p.gold = (p.gold || 0) + (receivedGold || 0) - (givenGold || 0);
+      return { ...state, player: p, message: 'Trade completed!' };
+    }
+
     case 'CLEAR_MESSAGE':
       return { ...state, message: null };
 
@@ -985,6 +1003,7 @@ export function useGameState(isLoggedIn) {
     reorderInventory: (fromIndex, toIndex) => dispatch({ type: 'REORDER_INVENTORY', fromIndex, toIndex }),
     buyItem: (item) => dispatch({ type: 'BUY_ITEM', item }),
     claimDailyReward: (rewards, label) => dispatch({ type: 'CLAIM_DAILY_REWARD', rewards, label }),
+    applyTrade: (receivedItems, receivedGold, givenItems, givenGold) => dispatch({ type: 'APPLY_TRADE', receivedItems, receivedGold, givenItems, givenGold }),
     clearMessage: () => dispatch({ type: 'CLEAR_MESSAGE' }),
     loadSave: (saveData) => dispatch({ type: 'LOAD_SAVE', saveData }),
   }), []);
